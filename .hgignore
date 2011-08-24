@@ -1,0 +1,7 @@
+syntax: glob
+build/
+dist/
+env/
+src/*.egg-info/
+*.pyc
+*.pyo

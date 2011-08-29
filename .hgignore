@@ -3,5 +3,6 @@ build/
 dist/
 env/
 src/*.egg-info/
+.coverage
 *.pyc
 *.pyo

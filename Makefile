@@ -5,7 +5,7 @@ all: clean test release
 
 env:
 	virtualenv --no-site-packages env
-	env/bin/easy_install nose
+	env/bin/easy_install nose coverage
 
 clean:
 	find src/ -name '*.py[co]' -delete
@@ -15,5 +15,5 @@ release:
 	python setup.py -q bdist_egg sdist
 
 test:
-	test -d env || make env
-	env/bin/nosetests
+	env/bin/nosetests --where=src/wheezy/routing --match=^test --with-doctest\
+		--detailed-errors --with-coverage --cover-package=wheezy.routing

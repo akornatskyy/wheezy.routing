@@ -142,9 +142,9 @@ class PathRouter(object):
             Path for inner router
 
             >>> r = PathRouter()
-            >>> admin_routes = [(r'login', Login)]
+            >>> admin_routes = [(r'login', Login, None, 'signin')]
             >>> r.add_routes([(r'admin/', admin_routes)])
-            >>> r.path_for(r'login') 
+            >>> r.path_for(r'signin') 
             'admin/login'
 
             Otherwise None

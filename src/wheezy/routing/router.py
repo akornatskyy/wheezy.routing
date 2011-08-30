@@ -33,7 +33,7 @@ class PathRouter(object):
         self.route_map[handler_name] = route
         self.mapping.append((route, handler_class))
 
-    def add_include(self, pattern, included, kwargs=None):
+    def include(self, pattern, included, kwargs=None):
         route = build_route(pattern, kwargs, self.route_builders)
         inner = PathRouter(self.route_builders)
         inner.add_routes(included)
@@ -75,7 +75,7 @@ class PathRouter(object):
                 pattern, handler, kwargs, name = m
                 
             if isinstance(handler, (tuple, list, PathRouter)):
-                self.add_include(pattern, handler, kwargs)
+                self.include(pattern, handler, kwargs)
             else:
                 self.add_route(pattern, handler, kwargs, name)
 

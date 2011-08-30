@@ -8,8 +8,18 @@ RE_STRIP_NAME = \
         re.compile(r'(Handler|Controller)$')
 
 
+def route_name(handler_class):
+    """ Return a name for the given handler_class.
+
+        >>> class Login: pass
+        >>> route_name(Login)
+        'login'
+    """
+    return camelcase_to_underscore(
+               strip_name(handler_class.__name__))
+
 def strip_name(s):
-    """ Strips the name per 
+    """ Strips the name per RE_STRIP_NAME regex.
 
         >>> strip_name('Login')
         'Login'

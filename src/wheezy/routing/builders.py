@@ -12,7 +12,7 @@ def try_build_plain_route(pattern):
         than create a PlainRoute instance.
 
         >>> r = try_build_plain_route(r'abc')
-        >>> assert r
+        >>> assert isinstance(r, PlainRoute)
 
         Otherwise return None.
 
@@ -20,7 +20,7 @@ def try_build_plain_route(pattern):
         >>> assert r is None
     """
     if PLAIN_ROUTE_REGEX.match(pattern):
-        return PlainRoute(pattern)
+        return PlainRoute(pattern, equals = pattern[-1:] != '/')
     return None
 
 def build_route(pattern, route_builders):
@@ -34,7 +34,6 @@ def build_route(pattern, route_builders):
         If ``pattern`` is a string than try to find 
         sutable route builder to create a route.
 
-        >>> r = build_route(r'abc', [try_build_plain_route])
         >>> from config import route_builders
         >>> r = build_route(r'abc', route_builders)
         >>> assert isinstance(r, PlainRoute)

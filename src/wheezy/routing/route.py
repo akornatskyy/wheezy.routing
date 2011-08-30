@@ -30,7 +30,7 @@ class PlainRoute(Route):
     """ Route based on string equalty operation.
     """
 
-    def __init__(self, pattern, equals = True):
+    def __init__(self, pattern, kwargs=None, equals=True):
         """ Initializes the route by given ``pattern``. If ``equals``
             is True (this is default) than equals_match strategy is 
             selected. 
@@ -44,48 +44,63 @@ class PlainRoute(Route):
             >>> r = PlainRoute(r'abc', equals = False)
             >>> assert r.match == r.startswith_match
         """
-        self.pattern = pattern.lower()
+        self.pattern = pattern
+        self.kwargs = kwargs
         self.matched = len(pattern)
         # Choose match strategy
         self.match = equals and self.equals_match or self.startswith_match
 
     def equals_match(self, path):
         """ If the ``path`` exactly equals pattern string, return the end
-            of substring matched and None.
+            of substring matched and ``self.kwargs``.
 
             >>> r = PlainRoute(r'abc')
             >>> matched, kwargs = r.equals_match('abc')
             >>> matched
             3
             >>> kwargs
+
+            Match returns ``self.kwargs``.
+
+            >>> r = PlainRoute(r'abc', {'a': 1})
+            >>> matched, kwargs = r.equals_match('abc')
+            >>> matched
+            3
+            >>> kwargs
+            {'a': 1}
             
             Otherwise return ``(-1, None)``.
 
             >>> matched, kwargs = r.equals_match('abc/')
             >>> matched
             -1
-            >>> kwargs
             >>> matched, kwargs = r.startswith_match('bc')
             >>> matched
             -1
             >>> kwargs
         """
-        return path == self.pattern and (self.matched, None) or (-1, None)
+        return path == self.pattern \
+                and (self.matched, self.kwargs) or (-1, None)
 
     def startswith_match(self, path):
         """ If the ``path`` starts with pattern string, return the end of
-            substring matched and None.
+            substring matched and ``self.kwargs``.
 
             >>> r = PlainRoute(r'abc')
             >>> matched, kwargs = r.startswith_match('abc')
             >>> matched
             3
             >>> kwargs
+
+            Match returns ``self.kwargs``.
+
+            >>> r = PlainRoute(r'abc', {'a': 1})
             >>> matched, kwargs = r.startswith_match('abc/')
             >>> matched
             3
             >>> kwargs
-            
+            {'a': 1}
+
             Otherwise return ``(None, None)``.
 
             >>> matched, kwargs = r.startswith_match('bc')
@@ -93,8 +108,8 @@ class PlainRoute(Route):
             -1
             >>> kwargs
         """
-        return path.startswith(self.pattern) and (self.matched, None) \
-                or (-1, None)
+        return path.startswith(self.pattern) \
+                and (self.matched, self.kwargs) or (-1, None)
 
     def path(self, values = None):
         """ Build the path for given route by simply returning the pattern 

@@ -5,20 +5,36 @@ from utils import route_name
 
 class PathRouter(object):
     
-    def __init__(self, route_builders = None):
+    def __init__(self, route_builders=None):
         self.mapping = []
         self.route_map = {}
         self.routers = []
         self.route_builders = route_builders or default_route_builders
 
-    def add_route(self, pattern, handler_class):
-        handler_name = route_name(handler_class)
-        route = build_route(pattern, self.route_builders)
+    def add_route(self, pattern, handler_class, 
+            kwargs=None, name=None):
+        """ Adds a pattern to route table
+
+            >>> r = PathRouter()
+            >>> class Login: pass
+            >>> r.add_route(r'login', Login)
+            >>> assert r.route_map['login']
+
+            You can override the generated name by suppling optional
+            ``name`` parameter
+
+            >>> r.add_route(r'login', Login, name='signin')
+            >>> assert r.route_map['signin']
+            >>> r.path_for('signin')
+            'login'
+        """
+        handler_name = name or route_name(handler_class)
+        route = build_route(pattern, kwargs, self.route_builders)
         self.route_map[handler_name] = route
         self.mapping.append((route, handler_class))
 
-    def add_include(self, pattern, included):
-        route = build_route(pattern, self.route_builders)
+    def add_include(self, pattern, included, kwargs=None):
+        route = build_route(pattern, kwargs, self.route_builders)
         inner = PathRouter(self.route_builders)
         inner.add_routes(included)
         self.mapping.append((route, inner))
@@ -48,11 +64,20 @@ class PathRouter(object):
             >>> len(r.mapping)
             1
         """
-        for pattern, handler in mapping:
-            if isinstance(handler,  (tuple, list, PathRouter)):
-                self.add_include(pattern, handler)
+        for m in mapping:
+            l = len(m)
+            kwargs, name = None, None
+            if l == 2:
+                pattern, handler = m
+            elif l == 3:
+                pattern, handler, kwargs = m
             else:
-                self.add_route(pattern, handler)
+                pattern, handler, kwargs, name = m
+                
+            if isinstance(handler, (tuple, list, PathRouter)):
+                self.add_include(pattern, handler, kwargs)
+            else:
+                self.add_route(pattern, handler, kwargs, name)
 
     def match(self, path):
         """ Tries to find a match for the given path in route table.
@@ -60,6 +85,7 @@ class PathRouter(object):
 
             >>> r = PathRouter()
             >>> class Login: pass
+            >>> class Message: pass
             >>> r.add_route(r'login', Login)
             >>> handler_class, kwargs = r.match(r'login')
             >>> assert handler_class == Login
@@ -72,6 +98,16 @@ class PathRouter(object):
             >>> r.add_routes([(r'admin/', admin_routes)])
             >>> handler_class, kwargs = r.match(r'admin/login')
             >>> assert handler_class == Login
+
+            Merge kwargs
+
+            >>> r = PathRouter()
+            >>> admin_routes = [(r'msg', Message, {'id': 1})]
+            >>> r.add_routes([(r'en/', admin_routes, {'lang': 'en'})])
+            >>> handler_class, kwargs = r.match(r'en/msg')
+            >>> assert handler_class == Message
+            >>> kwargs
+            {'lang': 'en', 'id': 1}
 
             Otherwise return (None, None)
 

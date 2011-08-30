@@ -11,8 +11,17 @@ def try_build_plain_route(pattern, kwargs=None):
     """ If the plain route regular expression match the pattern
         than create a PlainRoute instance.
 
+        ``equals_match`` strategy:
+
         >>> r = try_build_plain_route(r'abc')
         >>> assert isinstance(r, PlainRoute)
+        >>> assert r.match == r.equals_match
+
+        ``startswith_match`` strategy:
+
+        >>> r = try_build_plain_route(r'abc/')
+        >>> assert isinstance(r, PlainRoute)
+        >>> assert r.match == r.startswith_match
 
         Otherwise return None.
 

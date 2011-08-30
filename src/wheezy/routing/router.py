@@ -3,6 +3,28 @@ from config import route_builders as default_route_builders
 from utils import route_name
 
 
+def url(pattern, handler, kwargs=None, name=None):
+    """ Converts parameters to tupple of length four.
+        Used for convenience to name parameters and skip
+        unused.
+
+        >>> url(r'msg', 'handler', {'id': 1}, name='message')
+        ('msg', 'handler', {'id': 1}, 'message')
+
+        Usage:
+
+        >>> class Login: pass
+        >>> admin_routes = [
+        ...     url(r'login', Login, name='signin')
+        ... ]
+        >>> r = PathRouter()
+        >>> r.add_routes([
+        ...     url(r'admin/', admin_routes, kwargs={'site_id': 1})
+        ... ])
+    """
+    return pattern, handler, kwargs, name
+
+
 class PathRouter(object):
     
     def __init__(self, route_builders=None):
@@ -34,6 +56,20 @@ class PathRouter(object):
         self.mapping.append((route, handler_class))
 
     def include(self, pattern, included, kwargs=None):
+        """ Includes nested routes below the current.
+
+            >>> r = PathRouter()
+            >>> class Login: pass
+            >>> admin_routes = [
+            ...     (r'login', Login)
+            ... ]
+            >>> r.include(r'admin/', admin_routes)
+            >>> route, inner = r.mapping[0]
+            >>> inner2, route2 = r.routers[0]
+            >>> assert route == route2
+            >>> assert inner == inner2
+            >>> assert isinstance(inner, PathRouter)
+        """
         route = build_route(pattern, kwargs, self.route_builders)
         inner = PathRouter(self.route_builders)
         inner.add_routes(included)
@@ -46,19 +82,21 @@ class PathRouter(object):
 
             >>> r = PathRouter()
             >>> class Login: pass
-            >>> r.add_routes([(r'login', Login)])
-            >>> len(r.mapping)
-            1
-            >>> len(r.route_map)
-            1
+            >>> r.add_routes([
+            ...     (r'login', Login)
+            ... ])
+            >>> assert r.mapping
+            >>> assert r.route_map
 
             If ``handler`` is tuple, list or an instance of PathRouter
-            than we proceed with ``add_include`` function
+            than we proceed with ``include`` function
 
             >>> r = PathRouter()
             >>> class Login: pass
             >>> admin_routes = [(r'login', Login)]
-            >>> r.add_routes([(r'admin/', admin_routes)])
+            >>> r.add_routes([
+            ...     (r'admin/', admin_routes)
+            ... ])
             >>> len(r.routers)
             1
             >>> len(r.mapping)
@@ -94,16 +132,24 @@ class PathRouter(object):
             Tries to find inner match
 
             >>> r = PathRouter()
-            >>> admin_routes = [(r'login', Login)]
-            >>> r.add_routes([(r'admin/', admin_routes)])
+            >>> admin_routes = [
+            ...     (r'login', Login
+            ... )]
+            >>> r.add_routes([
+            ...     (r'admin/', admin_routes)
+            ... ])
             >>> handler_class, kwargs = r.match(r'admin/login')
             >>> assert handler_class == Login
 
             Merge kwargs
 
             >>> r = PathRouter()
-            >>> admin_routes = [(r'msg', Message, {'id': 1})]
-            >>> r.add_routes([(r'en/', admin_routes, {'lang': 'en'})])
+            >>> admin_routes = [
+            ...     (r'msg', Message, {'id': 1})
+            ... ]
+            >>> r.add_routes([
+            ...     (r'en/', admin_routes, {'lang': 'en'})
+            ... ])
             >>> handler_class, kwargs = r.match(r'en/msg')
             >>> assert handler_class == Message
             >>> kwargs
@@ -142,8 +188,12 @@ class PathRouter(object):
             Path for inner router
 
             >>> r = PathRouter()
-            >>> admin_routes = [(r'login', Login, None, 'signin')]
-            >>> r.add_routes([(r'admin/', admin_routes)])
+            >>> admin_routes = [
+            ...     (r'login', Login, None, 'signin')
+            ... ]
+            >>> r.add_routes([
+            ...     (r'admin/', admin_routes)
+            ... ])
             >>> r.path_for(r'signin') 
             'admin/login'
 
@@ -158,5 +208,4 @@ class PathRouter(object):
             inner_path = inner.path_for(name, **kwargs)
             if inner_path:
                 return route.path(kwargs) + inner_path
-        else:
-            return None
+        return None

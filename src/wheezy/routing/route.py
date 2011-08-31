@@ -75,7 +75,7 @@ class PlainRoute(Route):
             >>> matched, kwargs = r.equals_match('abc/')
             >>> matched
             -1
-            >>> matched, kwargs = r.startswith_match('bc')
+            >>> matched, kwargs = r.equals_match('bc')
             >>> matched
             -1
             >>> kwargs

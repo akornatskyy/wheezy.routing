@@ -1,22 +1,27 @@
 import re
 
 
-RE_CAMELCASE_TO_UNDERSCOPE = \
-        re.compile(r'(((?<=[a-z])[A-Z])|([A-Z](?![A-Z]|$)))')
-
-RE_STRIP_NAME = \
-        re.compile(r'(Handler|Controller)$')
+RE_STRIP_NAME = re.compile(r'(Handler|Controller)$')
+RE_CAMELCASE_TO_UNDERSCOPE_1 = re.compile('(.)([A-Z][a-z]+)')
+RE_CAMELCASE_TO_UNDERSCOPE_2 = re.compile('([a-z0-9])([A-Z])')
 
 
-def route_name(handler_class):
+def route_name(handler):
     """ Return a name for the given handler_class.
 
         >>> class Login: pass
         >>> route_name(Login)
         'login'
     """
+
+    try:
+        name = handler.__name__
+    except AttributeError:
+        name = handler.__class__.__name__
+
     return camelcase_to_underscore(
-               strip_name(handler_class.__name__))
+               strip_name(name))
+
 
 def strip_name(s):
     """ Strips the name per RE_STRIP_NAME regex.
@@ -40,6 +45,7 @@ def camelcase_to_underscore(s):
         >>> camelcase_to_underscore('Login')
         'login'
     """
-    return RE_CAMELCASE_TO_UNDERSCOPE.sub('_\\1', s).lower()[1:]
+    s = RE_CAMELCASE_TO_UNDERSCOPE_1.sub(r'\1_\2', s)
+    return RE_CAMELCASE_TO_UNDERSCOPE_2.sub(r'\1_\2', s).lower()
 
 

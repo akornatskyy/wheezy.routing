@@ -5,7 +5,7 @@ all: clean test release
 
 env:
 	virtualenv --no-site-packages env
-	env/bin/easy_install nose coverage
+	env/bin/easy_install nose coverage mocker
 
 clean:
 	find src/ -name '*.py[co]' -delete

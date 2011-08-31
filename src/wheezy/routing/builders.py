@@ -4,33 +4,25 @@ from route import Route
 from route import PlainRoute
 
 
-PLAIN_ROUTE_REGEX = re.compile('^[\w/-]+$')
+RE_PLAIN_ROUTE = re.compile('^[\w/-]+$')
 
 
 def try_build_plain_route(pattern, kwargs=None):
     """ If the plain route regular expression match the pattern
         than create a PlainRoute instance.
 
-        ``equals_match`` strategy:
-
         >>> r = try_build_plain_route(r'abc')
         >>> assert isinstance(r, PlainRoute)
-        >>> assert r.match == r.equals_match
-
-        ``startswith_match`` strategy:
-
-        >>> r = try_build_plain_route(r'abc/')
-        >>> assert isinstance(r, PlainRoute)
-        >>> assert r.match == r.startswith_match
 
         Otherwise return None.
 
         >>> r = try_build_plain_route(r'ab[c]')
         >>> assert r is None
     """
-    if PLAIN_ROUTE_REGEX.match(pattern):
-        return PlainRoute(pattern, kwargs, equals=pattern[-1:] != '/')
+    if RE_PLAIN_ROUTE.match(pattern):
+        return PlainRoute(pattern, kwargs)
     return None
+
 
 def build_route(pattern, kwargs, route_builders):
     """ If ``pattern`` is an object drived from ``Route`` than it 

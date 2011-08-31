@@ -1,11 +1,12 @@
 
-""" Unit tests for ``wheezy.routing.config``
+""" Unit tests for ``wheezy.routing.config``.
 """ 
 
 import unittest
 
 class RouteBuildersTestCase(unittest.TestCase):
-
+    """ Test the ``config.route_builders`` setting.
+    """
 
     def test_builder_callable(self):
         """ Ensure items in ``route_builders`` list are 

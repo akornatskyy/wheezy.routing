@@ -1,4 +1,9 @@
+
+""" Unit tests for ``wheezy.routing.utils``.
+"""
+
 import unittest
+
 from mocker import Mocker, expect
 
 
@@ -9,9 +14,11 @@ class RouteNameTestCase(unittest.TestCase):
     def setUp(self):
         self.m = Mocker()
 
+
     def tearDown(self):
         self.m.restore()
         self.m.verify()
+
 
     def test_class(self):
         """ ``handler`` can be a class.
@@ -41,8 +48,7 @@ class RouteNameTestCase(unittest.TestCase):
         """
         from wheezy.routing.utils import route_name
 
-        def my_view():
-            pass
+        def my_view(): pass
 
         self.assertEquals('my_view', route_name(my_view))
 

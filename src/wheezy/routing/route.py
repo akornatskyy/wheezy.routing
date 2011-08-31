@@ -30,25 +30,26 @@ class PlainRoute(Route):
     """ Route based on string equalty operation.
     """
 
-    def __init__(self, pattern, kwargs=None, equals=True):
-        """ Initializes the route by given ``pattern``. If ``equals``
-            is True (this is default) than equals_match strategy is 
-            selected. 
+    def __init__(self, pattern, kwargs=None):
+        """ Initializes the route by given ``pattern``. If 
+            pattern ends with ``/`` than it select ``startswith``
+            strategy. 
 
-            >>> r = PlainRoute(r'abc', equals = True)
-            >>> assert r.match == r.equals_match
-            
-            Otherwise startswith_match strategy is choosen 
-            (``equals`` = False).
-
-            >>> r = PlainRoute(r'abc', equals = False)
+            >>> r = PlainRoute(r'abc/')
             >>> assert r.match == r.startswith_match
+            
+            Otherwise ``equals`` strategy is selected.
+
+            >>> r = PlainRoute(r'abc')
+            >>> assert r.match == r.equals_match
         """
         self.pattern = pattern
         self.kwargs = kwargs
         self.matched = len(pattern)
         # Choose match strategy
-        self.match = equals and self.equals_match or self.startswith_match
+        self.match = pattern[-1:] == '/' \
+                and self.startswith_match \
+                or self.equals_match
 
     def equals_match(self, path):
         """ If the ``path`` exactly equals pattern string, return the end

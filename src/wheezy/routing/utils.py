@@ -7,7 +7,8 @@ RE_CAMELCASE_TO_UNDERSCOPE_2 = re.compile('([a-z0-9])([A-Z])')
 
 
 def route_name(handler):
-    """ Return a name for the given handler_class.
+    """ Return a name for the given handler.
+        ``handler`` can be an object, class or callable.
 
         >>> class Login: pass
         >>> route_name(Login)

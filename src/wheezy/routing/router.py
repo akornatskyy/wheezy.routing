@@ -26,14 +26,19 @@ def url(pattern, handler, kwargs=None, name=None):
 
 
 class PathRouter(object):
-    
+    """
+    """
+
     def __init__(self, route_builders=None):
+        """
+        """
         self.mapping = []
         self.route_map = {}
         self.routers = []
         self.route_builders = route_builders or default_route_builders
 
-    def add_route(self, pattern, handler_class, 
+
+    def add_route(self, pattern, handler, 
             kwargs=None, name=None):
         """ Adds a pattern to route table
 
@@ -50,10 +55,11 @@ class PathRouter(object):
             >>> r.path_for('signin')
             'login'
         """
-        handler_name = name or route_name(handler_class)
+        handler_name = name or route_name(handler)
         route = build_route(pattern, kwargs, self.route_builders)
         self.route_map[handler_name] = route
-        self.mapping.append((route, handler_class))
+        self.mapping.append((route, handler))
+
 
     def include(self, pattern, included, kwargs=None):
         """ Includes nested routes below the current.
@@ -75,6 +81,7 @@ class PathRouter(object):
         inner.add_routes(included)
         self.mapping.append((route, inner))
         self.routers.append((inner, route))
+
 
     def add_routes(self, mapping):
         """ Adds routes represented as a list of tuple 
@@ -117,16 +124,17 @@ class PathRouter(object):
             else:
                 self.add_route(pattern, handler, kwargs, name)
 
+
     def match(self, path):
         """ Tries to find a match for the given path in route table.
-            Returns a tupple of (handler_class, kwargs)
+            Returns a tupple of (handler, kwargs)
 
             >>> r = PathRouter()
             >>> class Login: pass
             >>> class Message: pass
             >>> r.add_route(r'login', Login)
-            >>> handler_class, kwargs = r.match(r'login')
-            >>> assert handler_class == Login
+            >>> handler, kwargs = r.match(r'login')
+            >>> assert handler == Login
             >>> kwargs
 
             Tries to find inner match
@@ -138,8 +146,8 @@ class PathRouter(object):
             >>> r.add_routes([
             ...     (r'admin/', admin_routes)
             ... ])
-            >>> handler_class, kwargs = r.match(r'admin/login')
-            >>> assert handler_class == Login
+            >>> handler, kwargs = r.match(r'admin/login')
+            >>> assert handler == Login
 
             Merge kwargs
 
@@ -150,31 +158,35 @@ class PathRouter(object):
             >>> r.add_routes([
             ...     (r'en/', admin_routes, {'lang': 'en'})
             ... ])
-            >>> handler_class, kwargs = r.match(r'en/msg')
-            >>> assert handler_class == Message
+            >>> handler, kwargs = r.match(r'en/msg')
+            >>> assert handler == Message
             >>> kwargs
             {'lang': 'en', 'id': 1}
 
             Otherwise return (None, None)
 
             >>> r = PathRouter()
-            >>> handler_class, kwargs = r.match(r'')
-            >>> handler_class
+            >>> handler, kwargs = r.match(r'')
+            >>> handler
             >>> kwargs
         """
-        for route, handler_class in self.mapping:
+        for route, handler in self.mapping:
             matched, kwargs = route.match(path)
             if matched >= 0:
-                if isinstance(handler_class, PathRouter):
-                    handler_class, kwargs2 = handler_class.match(
-                            path[matched:])
+                # TODO: isinstance(handler, PathRouter)
+                handler_match = getattr(handler, 'match', None)
+                if handler_match:
+                    handler, kwargs_inner = handler_match(
+                        path[matched:])
                     if kwargs:
-                        if kwargs2:
-                            kwargs.update(kwargs2)
+                        if kwargs_inner:
+                            kwargs_inner.update(kwargs)
+                            kwargs = kwargs_inner
                     else:
-                        kwargs = kwargs2
-                return handler_class, kwargs
+                        kwargs = kwargs_inner
+                return handler, kwargs
         return None, None
+
 
     def path_for(self, name, **kwargs):
         """ Returns the url for the given route name.

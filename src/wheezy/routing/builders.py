@@ -19,7 +19,7 @@ def try_build_plain_route(pattern, kwargs=None):
         >>> r = try_build_plain_route(r'ab[c]')
         >>> assert r is None
     """
-    if RE_PLAIN_ROUTE.match(pattern):
+    if pattern == '' or RE_PLAIN_ROUTE.match(pattern):
         return PlainRoute(pattern, kwargs)
     return None
 

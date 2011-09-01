@@ -6,7 +6,7 @@ import unittest
 
 
 class RouteTestCase(unittest.TestCase):
-    """ Test the Route class.
+    """ Test the ``Route` class.
     """
 
     def test_init(self):
@@ -39,11 +39,11 @@ class RouteTestCase(unittest.TestCase):
                 lambda: r.path())
 
 
-class PlainRouteTestCase(unittest.TestCase):
-    """ Test the PlainRoute class.
+class PlainRouteInitTestCase(unittest.TestCase):
+    """ Test the ``PlainRoute.__init__`` class.
     """
 
-    def test_init_equals(self):
+    def test_equals(self):
         """ ``pattern`` does not end with ``/``.
         """
         from wheezy.routing.route import PlainRoute
@@ -53,7 +53,7 @@ class PlainRouteTestCase(unittest.TestCase):
         assert r.equals_match == r.match
 
 
-    def test_init_startswith(self):
+    def test_startswith(self):
         """ ``pattern`` ends with ``/``.
         """
         from wheezy.routing.route import PlainRoute
@@ -63,30 +63,39 @@ class PlainRouteTestCase(unittest.TestCase):
         assert r.startswith_match == r.match
 
 
-    def test_init_arguments(self):
+    def test_arguments(self):
         """ The inner state is properly initialized.
         """
         from wheezy.routing.route import PlainRoute
 
-        r = PlainRoute(r'abc', {'a': 1})
+        kw = {'a': 1}
+        r = PlainRoute(r'abc', kw)
 
         self.assertEquals(r'abc', r.pattern)
-        self.assertEquals({'a': 1}, r.kwargs)
+        self.assertEquals(kw, r.kwargs)
         self.assertEquals(3, r.matched)
+        assert kw is r.kwargs
 
 
-    def test_equals_match(self):
-        """ ``equals_match`` strategy.
+class PlainRouteEqualsMatchTestCase(unittest.TestCase):
+    """ Test the ``PlainRoute.equals_match`` class.
+    """
+
+    def test_kwargs(self):
+        """ matched
         """
         from wheezy.routing.route import PlainRoute
 
-        r = PlainRoute(r'abc', {'a': 1})
+        kw = {'a': 1}
+        r = PlainRoute(r'abc', kw)
+
         matched, kwargs = r.equals_match(r'abc')
         self.assertEquals(3, matched)
         self.assertEquals({'a': 1}, r.kwargs)
+        assert kw is not kwargs
 
 
-    def test_equals_match_no_kwargs(self):
+    def test_no_kwargs(self):
         """ ``equals_match`` strategy when no kwargs supplied.
         """
         from wheezy.routing.route import PlainRoute
@@ -97,7 +106,7 @@ class PlainRouteTestCase(unittest.TestCase):
         self.assertEquals(None, r.kwargs)
 
 
-    def test_equals_no_match(self):
+    def test_no_match(self):
         """ ``equals_match`` strategy when there is no match.
         """
         from wheezy.routing.route import PlainRoute
@@ -107,18 +116,23 @@ class PlainRouteTestCase(unittest.TestCase):
         self.assertEquals(-1, matched)
 
 
-    def test_startswith_match(self):
-        """ ``startswith_match`` strategy.
+class PlainRouteStartswithMatchTestCase(unittest.TestCase):
+    """ Test the ``PlainRoute.startswith_match``.
+    """
+
+    def test_kwargs(self):
+        """ match strategy.
         """
         from wheezy.routing.route import PlainRoute
 
-        r = PlainRoute(r'abc/', {'a': 1})
+        kw = {'a': 1}
+        r = PlainRoute(r'abc/', kw)
         matched, kwargs = r.startswith_match(r'abc/de')
         self.assertEquals(4, matched)
-        self.assertEquals({'a': 1}, r.kwargs)
+        self.assertEquals(kw, kwargs)
+        assert kw is not kwargs
 
-
-    def test_startswith_match_no_kwargs(self):
+    def test_no_kwargs(self):
         """ ``startswith_match`` strategy when no 
             kwargs supplied.
         """
@@ -130,7 +144,7 @@ class PlainRouteTestCase(unittest.TestCase):
         self.assertEquals(None, r.kwargs)
 
 
-    def test_startswith_no_match(self):
+    def test_no_match(self):
         """ ``startswith_match`` strategy when there 
             is no match.
         """
@@ -140,6 +154,10 @@ class PlainRouteTestCase(unittest.TestCase):
         matched, kwargs = r.equals_match(r'ab')
         self.assertEquals(-1, matched)
 
+
+class PlainRoutePathTestCase(unittest.TestCase):
+    """ Test the ``PlainRoute.path``.
+    """
 
     def test_path(self):
         """ Simply return ``pattern``.
@@ -151,13 +169,13 @@ class PlainRouteTestCase(unittest.TestCase):
         self.assertEquals(p, r.pattern)
 
 
-    def test_path_values_ignored(self):
+    def test_values_ignored(self):
         """ Simply return ``pattern``.
         """
         from wheezy.routing.route import PlainRoute
 
         r = PlainRoute(r'abc/', {'a': 1})
-        p =  r.path()
+        p =  r.path({'b': 2})
         self.assertEquals(p, r.pattern)
 
 

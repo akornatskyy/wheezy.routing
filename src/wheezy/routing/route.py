@@ -52,8 +52,9 @@ class PlainRoute(Route):
                 or self.equals_match
 
     def equals_match(self, path):
-        """ If the ``path`` exactly equals pattern string, return the end
-            of substring matched and ``self.kwargs``.
+        """ If the ``path`` exactly equals pattern string, 
+            return end index of substring matched and a copy 
+            of ``self.kwargs``.
 
             >>> r = PlainRoute(r'abc')
             >>> matched, kwargs = r.equals_match('abc')
@@ -80,8 +81,9 @@ class PlainRoute(Route):
             -1
             >>> kwargs
         """
-        return path == self.pattern \
-                and (self.matched, self.kwargs) or (-1, None)
+        return path == self.pattern and \
+            (self.matched, self.kwargs and self.kwargs.copy()) or \
+            (-1, None)
 
     def startswith_match(self, path):
         """ If the ``path`` starts with pattern string, return the end of
@@ -109,8 +111,9 @@ class PlainRoute(Route):
             -1
             >>> kwargs
         """
-        return path.startswith(self.pattern) \
-                and (self.matched, self.kwargs) or (-1, None)
+        return path.startswith(self.pattern) and \
+            (self.matched, self.kwargs and self.kwargs.copy()) or \
+            (-1, None)
 
     def path(self, values = None):
         """ Build the path for given route by simply returning the pattern 

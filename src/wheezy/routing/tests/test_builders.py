@@ -22,6 +22,17 @@ class TryBuildPlainRouteTestCase(unittest.TestCase):
         assert not r.kwargs
 
 
+    def test_match_empty(self):
+        """ Match plain route strategy.
+        """
+        from wheezy.routing.builders import try_build_plain_route
+        from wheezy.routing.route import PlainRoute
+
+        r = try_build_plain_route(r'')
+        assert isinstance(r, PlainRoute)
+        assert not r.kwargs
+
+
     def test_kwards(self):
         """ Test whenever route is initialized with
             ``kwargs``.

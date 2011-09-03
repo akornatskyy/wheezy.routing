@@ -180,12 +180,13 @@ class PathRouter(object):
                     return handler, kwargs
                 handler, kwargs_inner = handler_match(
                     path[matched:])
-                if not kwargs:
-                    return handler, kwargs_inner
-                if kwargs_inner:
-                    kwargs = kwargs.copy()
-                    merge(kwargs, kwargs_inner)
-                return handler, kwargs
+                if handler:
+                    if not kwargs:
+                        return handler, kwargs_inner
+                    if kwargs_inner:
+                        kwargs = kwargs.copy()
+                        merge(kwargs, kwargs_inner)
+                    return handler, kwargs
         return None, None
 
     def path_for(self, name, **kwargs):

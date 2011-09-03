@@ -1,3 +1,7 @@
+
+""" ``router`` module.
+"""
+
 from builders import build_route
 from config import route_builders as default_route_builders
 from utils import route_name, merge

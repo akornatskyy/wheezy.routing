@@ -357,8 +357,8 @@ class PathRouterMatchInnerTestCase(unittest.TestCase):
         assert kwargs is None
 
     def test_no_match_continue(self):
-        """ there is no match, continue with the rest 
-        	in ``self.mapping``.
+        """ there is no match, continue with the rest
+            in ``self.mapping``.
         """
         expect(self.mock_inner.match('de')).result((None, None))
         self.m.replay()

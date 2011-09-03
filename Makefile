@@ -9,7 +9,7 @@ env:
 	virtualenv -q --python=$(PYTHON) --no-site-packages \
 		--relocatable env
 	env/bin/easy_install coverage mocker \
-		nose pytest pytest-pep8 pytest-cov
+		nose pytest pytest-pep8 pytest-cov wsgiref
 
 clean:
 	find src/ -name '*.py[co]' -delete
@@ -31,3 +31,9 @@ test-cover:
 	env/bin/py.test -q --cov wheezy.routing \
 		--cov-report term-missing \
 		src/wheezy/routing/tests
+
+run-hello:
+	env/bin/python demos/hello/helloworld.py
+
+run-time:
+	env/bin/python demos/time/app.py

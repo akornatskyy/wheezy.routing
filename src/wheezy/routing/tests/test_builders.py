@@ -52,6 +52,37 @@ class TryBuildPlainRouteTestCase(unittest.TestCase):
         assert r is None
 
 
+class TryBuildCurlyRouteTestCase(unittest.TestCase):
+    """ Test the ``builders.try_build_curly_route``.
+    """
+
+    def test_no_match(self):
+        """ Always return an instance of RegexRoute.
+        """
+        from wheezy.routing.builders import try_build_curly_route
+
+        r = try_build_curly_route(r'abc')
+        assert r is None
+
+    def test_match(self):
+        """ Always return an instance of RegexRoute.
+        """
+        from wheezy.routing.builders import try_build_curly_route
+        from wheezy.routing.route import RegexRoute
+
+        r = try_build_curly_route(r'abc/{n}')
+        assert isinstance(r, RegexRoute)
+
+    def test_pattern_name(self):
+        """ Always return an instance of RegexRoute.
+        """
+        from wheezy.routing.builders import try_build_curly_route
+        from wheezy.routing.route import RegexRoute
+
+        r = try_build_curly_route(r'abc/{n:i}')
+        assert isinstance(r, RegexRoute)
+
+
 class TryBuildRegexRouteTestCase(unittest.TestCase):
     """ Test the ``builders.try_build_regex_route``.
     """
@@ -144,6 +175,22 @@ class BuildRouteIntegrationTestCase(unittest.TestCase):
         r = build_route(r'abc', None,  config.route_builders)
 
         assert isinstance(r, PlainRoute)
+
+    def test_match_curly_route(self):
+        """ the chain of strategies match regex route.
+        """
+        from wheezy.routing import config
+        from wheezy.routing.builders import build_route
+        from wheezy.routing.route import RegexRoute
+
+        r = build_route(
+                r'abc/{id}',
+                None,
+                config.route_builders
+        )
+
+        assert isinstance(r, RegexRoute)
+        self.assertEquals('abc/(?P<id>[^/]+)', r.pattern)
 
     def test_match_regex_route(self):
         """ the chain of strategies match regex route.

@@ -6,6 +6,7 @@ import unittest
 
 from mocker import Mocker, expect
 
+
 class TryBuildPlainRouteTestCase(unittest.TestCase):
     """ Test the ``builders.try_build_plain_route``
         builder strategy.
@@ -21,7 +22,6 @@ class TryBuildPlainRouteTestCase(unittest.TestCase):
         assert isinstance(r, PlainRoute)
         assert not r.kwargs
 
-
     def test_match_empty(self):
         """ Match plain route strategy.
         """
@@ -31,7 +31,6 @@ class TryBuildPlainRouteTestCase(unittest.TestCase):
         r = try_build_plain_route(r'')
         assert isinstance(r, PlainRoute)
         assert not r.kwargs
-
 
     def test_kwards(self):
         """ Test whenever route is initialized with
@@ -43,7 +42,6 @@ class TryBuildPlainRouteTestCase(unittest.TestCase):
 
         self.assertEqual({'a': 1}, r.kwargs)
 
-
     def test_no_match(self):
         """ No match for plain route strategy.
         """
@@ -52,6 +50,20 @@ class TryBuildPlainRouteTestCase(unittest.TestCase):
         r = try_build_plain_route(r'abc/{name}')
 
         assert r is None
+
+
+class TryBuildRegexRouteTestCase(unittest.TestCase):
+    """ Test the ``builders.try_build_regex_route``.
+    """
+
+    def test_instance(self):
+        """ Always return an instance of RegexRoute.
+        """
+        from wheezy.routing.builders import try_build_regex_route
+        from wheezy.routing.route import RegexRoute
+
+        r = try_build_regex_route(r'abc')
+        assert isinstance(r, RegexRoute)
 
 
 class BuildRouteTestCase(unittest.TestCase):
@@ -68,7 +80,6 @@ class BuildRouteTestCase(unittest.TestCase):
         r = Route()
 
         self.assertEqual(r, build_route(r, None, None))
-    
 
     def test_found(self):
         """ Sutable route strategy has been found.
@@ -80,7 +91,6 @@ class BuildRouteTestCase(unittest.TestCase):
 
         assert r
         self.assertEqual({'a': 1}, r.kwargs)
-
 
     def test_first_matched(self):
         """ First matched strategy is selected.
@@ -101,7 +111,6 @@ class BuildRouteTestCase(unittest.TestCase):
         self.assertEqual('x', r)
         m.verify()
 
-
     def test_not_found(self):
         """ None of available route builders matched
             pattern.
@@ -116,7 +125,37 @@ class BuildRouteTestCase(unittest.TestCase):
         expect(b2(r'abc', None)).result(None)
         m.replay()
 
-        self.assertRaises(LookupError, 
+        self.assertRaises(LookupError,
                 lambda: build_route(r'abc', None, builders))
         m.verify()
 
+
+class BuildRouteIntegrationTestCase(unittest.TestCase):
+    """ Test integration with ``config.route_builders``.
+    """
+
+    def test_match_plain_route(self):
+        """ the chain of strategies match plain route.
+        """
+        from wheezy.routing import config
+        from wheezy.routing.builders import build_route
+        from wheezy.routing.route import PlainRoute
+
+        r = build_route(r'abc', None,  config.route_builders)
+
+        assert isinstance(r, PlainRoute)
+
+    def test_match_regex_route(self):
+        """ the chain of strategies match regex route.
+        """
+        from wheezy.routing import config
+        from wheezy.routing.builders import build_route
+        from wheezy.routing.route import RegexRoute
+
+        r = build_route(
+                r'abc/(?P<id>\d+)',
+                None,
+                config.route_builders
+        )
+
+        assert isinstance(r, RegexRoute)

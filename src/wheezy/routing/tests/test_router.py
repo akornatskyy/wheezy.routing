@@ -20,7 +20,6 @@ class UrlTestCase(unittest.TestCase):
 
         self.assertEquals(('abc', 'handler', None, None), u)
 
-
     def test_three_args(self):
         """ A call with three arguments.
         """
@@ -29,12 +28,11 @@ class UrlTestCase(unittest.TestCase):
         u = url('abc', 'handler', {'id': 1})
         self.assertEquals(('abc', 'handler', {'id': 1}, None), u)
 
-        u = url('abc', 'handler', kwargs = {'id': 1})
+        u = url('abc', 'handler', kwargs={'id': 1})
         self.assertEquals(('abc', 'handler', {'id': 1}, None), u)
 
         u = url('abc', 'handler', name='name')
         self.assertEquals(('abc', 'handler', None, 'name'), u)
-
 
     def test_four_args(self):
         """ A call with four arguments.
@@ -65,7 +63,6 @@ class PathRouterInitTestCase(unittest.TestCase):
         assert isinstance(r.routers, list)
         assert r.route_builders is config.route_builders
 
-
     def test_init(self):
         """ custom route builders.
         """
@@ -91,11 +88,9 @@ class PathRouterAddRouteTestCase(unittest.TestCase):
         self.m = Mocker()
         self.r = PathRouter()
 
-
     def tearDown(self):
         self.m.restore()
         self.m.verify()
-
 
     def test_with_default_name(self):
         """ ``name`` is None.
@@ -108,7 +103,6 @@ class PathRouterAddRouteTestCase(unittest.TestCase):
 
         assert 'mock_class' in self.r.route_map.keys()
 
-
     def test_with_name(self):
         """ ``name`` is supplied.
         """
@@ -116,7 +110,6 @@ class PathRouterAddRouteTestCase(unittest.TestCase):
 
         assert 'my_name' in self.r.route_map.keys()
 
-    
     def test_with_default_kwargs(self):
         """ ``kwargs`` is None.
         """
@@ -124,7 +117,6 @@ class PathRouterAddRouteTestCase(unittest.TestCase):
 
         route = self.r.route_map['n']
         assert route.kwargs is None
-
 
     def test_with_kwargs(self):
         """ ``kwargs`` is supplied.
@@ -135,7 +127,6 @@ class PathRouterAddRouteTestCase(unittest.TestCase):
         route = self.r.route_map['n']
         self.assertEquals(kw, route.kwargs)
 
-
     def test_build_route(self):
         """ ``build_route`` call.
         """
@@ -143,11 +134,12 @@ class PathRouterAddRouteTestCase(unittest.TestCase):
 
         kw = {'a': 1}
         mock_build_route = self.m.replace(builders.build_route)
-        expect(mock_build_route('abc', kw, self.r.route_builders)).result('x')
+        expect(
+            mock_build_route('abc', kw, self.r.route_builders)
+        ).result('x')
         self.m.replay()
 
         self.r.add_route('abc', 'x', kwargs=kw, name='n')
-
 
     def test_mapping(self):
         """ mapping has route and handler pair
@@ -170,11 +162,9 @@ class PathRouterIncludeTestCase(unittest.TestCase):
         self.m = Mocker()
         self.r = PathRouter()
 
-
     def tearDown(self):
         self.m.restore()
         self.m.verify()
-
 
     def test_build_route(self):
         """ ``build_route`` call.
@@ -183,20 +173,23 @@ class PathRouterIncludeTestCase(unittest.TestCase):
 
         kw = {'a': 1}
         mock_build_route = self.m.replace(builders.build_route)
-        expect(mock_build_route('abc', kw, self.r.route_builders)).result('x')
+        expect(
+            mock_build_route('abc', kw, self.r.route_builders)
+        ).result('x')
         self.m.replay()
 
         self.r.include('abc', [], kwargs=kw)
-
 
     def test_inner(self):
         """ init of inner ``PathRouter``.
         """
         from wheezy.routing import router
-        
+
         mock_router = self.m.proxy(router.PathRouter())
         MockPathRouter = self.m.replace(router.PathRouter)
-        expect(MockPathRouter(self.r.route_builders)).result(mock_router)
+        expect(
+            MockPathRouter(self.r.route_builders)
+        ).result(mock_router)
         expect(mock_router.add_routes([])).passthrough()
         self.m.replay()
 
@@ -204,10 +197,9 @@ class PathRouterIncludeTestCase(unittest.TestCase):
 
         assert mock_router is self.r.routers[0][0]
 
-
     def test_routers(self):
         """ reverse mapping between routers and mapping.
-        """ 
+        """
         self.r.include('abc', [])
 
         mr, mi = self.r.mapping[0]
@@ -226,11 +218,9 @@ class PathRouterAddRoutesTestCase(unittest.TestCase):
         self.m = Mocker()
         self.r = PathRouter()
 
-
     def tearDown(self):
         self.m.restore()
         self.m.verify()
-
 
     def test_mapping_is_tuple_of_two(self):
         """ ``mapping`` is a tuple of two elements.
@@ -242,7 +232,6 @@ class PathRouterAddRoutesTestCase(unittest.TestCase):
 
         self.r.add_routes(m)
 
-
     def test_mapping_is_tuple_of_three(self):
         """ ``mapping`` is a tuple of three elements.
         """
@@ -253,17 +242,17 @@ class PathRouterAddRoutesTestCase(unittest.TestCase):
 
         self.r.add_routes(m)
 
-
     def test_mapping_is_tuple_of_four(self):
         """ ``mapping`` is a tuple of four elements.
         """
         m = [('pattern', 'handler', 'kwargs', 'name')]
         self.r.add_route = mock_add_route = self.m.mock()
-        expect(mock_add_route('pattern', 'handler', 'kwargs', 'name'))
+        expect(
+            mock_add_route('pattern', 'handler', 'kwargs', 'name')
+        )
         self.m.replay()
 
         self.r.add_routes(m)
-
 
     def test_include(self):
         """ ``include`` call.
@@ -281,7 +270,6 @@ class PathRouterAddRoutesTestCase(unittest.TestCase):
             self.r.add_routes(m)
 
 
-
 class PathRouterMatchTestCase(unittest.TestCase):
     """ Test the ``PathRouter.match``.
     """
@@ -292,20 +280,17 @@ class PathRouterMatchTestCase(unittest.TestCase):
         self.m = Mocker()
         self.r = PathRouter()
 
-
     def tearDown(self):
         self.m.restore()
         self.m.verify()
-
 
     def test_no_match(self):
         """ there is no match.
         """
         handler, kwargs = self.r.match('abc')
-        
+
         assert handler is None
         assert kwargs is None
-
 
     def test_matched_is_zero(self):
         """ empty ``path`` is matched.
@@ -324,7 +309,6 @@ class PathRouterMatchTestCase(unittest.TestCase):
         handler, kwargs = self.r.match('')
 
         self.assertEquals(1, handler)
-
 
     def test_first_match(self):
         """ the first match is taken.
@@ -353,12 +337,10 @@ class PathRouterMatchInnerTestCase(unittest.TestCase):
             MockPathRouter(self.r.route_builders)
         ).result(self.mock_inner)
         expect(self.mock_inner.add_routes([]))
- 
 
     def tearDown(self):
         self.m.restore()
         self.m.verify()
-
 
     def test_no_match(self):
         """ there is a match is inner, kwargs and kwargs2 are None.
@@ -372,7 +354,6 @@ class PathRouterMatchInnerTestCase(unittest.TestCase):
         assert handler is None
         assert kwargs is None
 
-      
     def test_no_kwargs(self):
         """ there is a match is inner, kwargs and kwargs2 are None.
         """
@@ -381,10 +362,9 @@ class PathRouterMatchInnerTestCase(unittest.TestCase):
 
         self.r.include('abc/', [])
         handler, kwargs = self.r.match('abc/de')
-      
+
         self.assertEquals('h', handler)
         assert kwargs is None
-
 
     def test_kwargs_outer(self):
         """ there is a match is inner, kwargs in not None
@@ -396,14 +376,13 @@ class PathRouterMatchInnerTestCase(unittest.TestCase):
         kw = {'a': 1}
         self.r.include('abc/', [], kw)
         handler, kwargs = self.r.match('abc/de')
-      
+
         self.assertEquals('h', handler)
         self.assertEquals(kw, kwargs)
-        assert kw is not kwargs
-
+        assert kw is kwargs
 
     def test_kwargs_inner(self):
-        """ there is a match is inner, kwargs is None 
+        """ there is a match is inner, kwargs is None
             and kwargs2 not None.
         """
         kw = {'a': 1}
@@ -412,10 +391,9 @@ class PathRouterMatchInnerTestCase(unittest.TestCase):
 
         self.r.include('abc/', [])
         handler, kwargs = self.r.match('abc/de')
-      
+
         self.assertEquals('h', handler)
         self.assertEquals(kw, kwargs)
-
 
     def test_kwargs_merge(self):
         """ there is a match is inner, kwargs and kwargs2 are None.
@@ -425,22 +403,21 @@ class PathRouterMatchInnerTestCase(unittest.TestCase):
 
         self.r.include('abc/', [], {'a': 1})
         handler, kwargs = self.r.match('abc/de')
-      
-        self.assertEquals('h', handler)
- 
 
-    def test_merge_outer_override_inner(self):
-        """ there is a match is inner, kwargs and kwargs2 are None.
+        self.assertEquals('h', handler)
+
+    def test_merge_inner_override_outer(self):
+        """ inner match kwargs override outer kwargs.
         """
-        expect(self.mock_inner.match('de')).result(('h', 
-            {'a': 0, 'b': 2}))
+        expect(self.mock_inner.match('de')).result(('h',
+            {'a': 1000, 'b': 2}))
         self.m.replay()
 
         self.r.include('abc/', [], {'a': 1})
         handler, kwargs = self.r.match('abc/de')
-      
+
         self.assertEquals('h', handler)
-        self.assertEquals({'a': 1, 'b': 2}, kwargs)
+        self.assertEquals({'a': 1000, 'b': 2}, kwargs)
 
 
 class PathRouterPathForTestCase(unittest.TestCase):
@@ -453,18 +430,15 @@ class PathRouterPathForTestCase(unittest.TestCase):
         self.m = Mocker()
         self.r = router.PathRouter()
 
-
     def tearDown(self):
         self.m.restore()
         self.m.verify()
 
-
     def test_no_match(self):
         """ no match
         """
-        path = self.r.path_for('n', a = 1)
+        path = self.r.path_for('n', a=1)
         self.assertEquals(None, path)
-
 
     def test_route_map(self):
         """ the name exists in ``route_map``.
@@ -480,7 +454,7 @@ class PathRouterPathForTestCase(unittest.TestCase):
         self.m.replay()
 
         self.r.add_route('abc', 'handler', name='n')
-        path = self.r.path_for('n', a = 1)
+        path = self.r.path_for('n', a=1)
 
         self.assertEquals('abc', path)
 
@@ -501,11 +475,9 @@ class PathRouterPathForInnerTestCase(unittest.TestCase):
         ).result(self.mock_inner)
         expect(self.mock_inner.add_routes([]))
 
-
     def tearDown(self):
         self.m.restore()
         self.m.verify()
-
 
     def test_no_match(self):
         """ no match
@@ -518,7 +490,6 @@ class PathRouterPathForInnerTestCase(unittest.TestCase):
 
         assert p is None
 
-
     def test_match(self):
         """ match inner router
         """
@@ -529,7 +500,6 @@ class PathRouterPathForInnerTestCase(unittest.TestCase):
         p = self.r.path_for('n')
 
         self.assertEquals('abc/de', p)
-
 
     def test_match_first(self):
         """ match inner router
@@ -550,24 +520,3 @@ class PathRouterPathForInnerTestCase(unittest.TestCase):
         p = self.r.path_for('n')
 
         self.assertEquals('abc/de', p)
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

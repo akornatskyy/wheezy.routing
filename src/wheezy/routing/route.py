@@ -12,8 +12,9 @@ class Route(object):
     """
 
     def match(self, path):
-        """ if the ``path`` matches, return the end of substring matched
-            and a copy of kwargs. Otherwise return ``(-1, None)``.
+        """ if the ``path`` matches, return the end of
+            substring matched and kwargs. Otherwise
+            return ``(-1, None)``.
 
             >>> r = Route()
             >>> matched, kwargs = r.match('x')

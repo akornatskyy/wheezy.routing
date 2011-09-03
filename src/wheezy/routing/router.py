@@ -1,6 +1,6 @@
 from builders import build_route
 from config import route_builders as default_route_builders
-from utils import route_name
+from utils import route_name, merge
 
 
 def url(pattern, handler, kwargs=None, name=None):
@@ -35,10 +35,10 @@ class PathRouter(object):
         self.mapping = []
         self.route_map = {}
         self.routers = []
-        self.route_builders = route_builders or default_route_builders
+        self.route_builders = route_builders or \
+                default_route_builders
 
-
-    def add_route(self, pattern, handler, 
+    def add_route(self, pattern, handler,
             kwargs=None, name=None):
         """ Adds a pattern to route table
 
@@ -59,7 +59,6 @@ class PathRouter(object):
         route = build_route(pattern, kwargs, self.route_builders)
         self.route_map[handler_name] = route
         self.mapping.append((route, handler))
-
 
     def include(self, pattern, included, kwargs=None):
         """ Includes nested routes below the current.
@@ -82,9 +81,8 @@ class PathRouter(object):
         self.mapping.append((route, inner))
         self.routers.append((inner, route))
 
-
     def add_routes(self, mapping):
-        """ Adds routes represented as a list of tuple 
+        """ Adds routes represented as a list of tuple
             (pattern, handler) to route table
 
             >>> r = PathRouter()
@@ -95,8 +93,8 @@ class PathRouter(object):
             >>> assert r.mapping
             >>> assert r.route_map
 
-            If ``handler`` is tuple, list or an instance of PathRouter
-            than we proceed with ``include`` function
+            If ``handler`` is tuple, list or an instance of
+            PathRouter than we proceed with ``include`` function
 
             >>> r = PathRouter()
             >>> class Login: pass
@@ -118,12 +116,11 @@ class PathRouter(object):
                 pattern, handler, kwargs = m
             else:
                 pattern, handler, kwargs, name = m
-                
+
             if isinstance(handler, (tuple, list, PathRouter)):
                 self.include(pattern, handler, kwargs)
             else:
                 self.add_route(pattern, handler, kwargs, name)
-
 
     def match(self, path):
         """ Tries to find a match for the given path in route table.
@@ -175,18 +172,17 @@ class PathRouter(object):
             if matched >= 0:
                 # TODO: isinstance(handler, PathRouter)
                 handler_match = getattr(handler, 'match', None)
-                if handler_match:
-                    handler, kwargs_inner = handler_match(
-                        path[matched:])
-                    if kwargs:
-                        if kwargs_inner:
-                            kwargs_inner.update(kwargs)
-                            kwargs = kwargs_inner
-                    else:
-                        kwargs = kwargs_inner
+                if not handler_match:
+                    return handler, kwargs
+                handler, kwargs_inner = handler_match(
+                    path[matched:])
+                if not kwargs:
+                    return handler, kwargs_inner
+                if kwargs_inner:
+                    kwargs = kwargs.copy()
+                    merge(kwargs, kwargs_inner)
                 return handler, kwargs
         return None, None
-
 
     def path_for(self, name, **kwargs):
         """ Returns the url for the given route name.
@@ -206,7 +202,7 @@ class PathRouter(object):
             >>> r.add_routes([
             ...     (r'admin/', admin_routes)
             ... ])
-            >>> r.path_for(r'signin') 
+            >>> r.path_for(r'signin')
             'admin/login'
 
             Otherwise None

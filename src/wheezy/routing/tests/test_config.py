@@ -1,20 +1,21 @@
 
 """ Unit tests for ``wheezy.routing.config``.
-""" 
+"""
 
 import unittest
+
 
 class RouteBuildersTestCase(unittest.TestCase):
     """ Test the ``config.route_builders`` setting.
     """
 
     def test_builder_callable(self):
-        """ Ensure items in ``route_builders`` list are 
+        """ Ensure items in ``route_builders`` list are
             callable(pattern, kwargs=None)
         """
-        from wheezy.routing import config
-
         import inspect
+
+        from wheezy.routing import config
 
         for builder in config.route_builders:
             assert builder
@@ -25,4 +26,3 @@ class RouteBuildersTestCase(unittest.TestCase):
             self.assertEqual(None, varargs)
             self.assertEqual(None, keywords)
             self.assertEqual((None,), defaults)
-

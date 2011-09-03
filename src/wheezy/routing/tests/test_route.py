@@ -18,16 +18,14 @@ class RouteTestCase(unittest.TestCase):
 
         assert r
 
-
     def test_match_raise_error(self):
         """ ``Route.match`` raises error
         """
         from wheezy.routing.route import Route
 
         r = Route()
-        self.assertRaises(NotImplementedError, 
+        self.assertRaises(NotImplementedError,
                 lambda: r.match(''))
-
 
     def test_path_raise_error(self):
         """ ``Route.match`` raises error
@@ -35,7 +33,7 @@ class RouteTestCase(unittest.TestCase):
         from wheezy.routing.route import Route
 
         r = Route()
-        self.assertRaises(NotImplementedError, 
+        self.assertRaises(NotImplementedError,
                 lambda: r.path())
 
 
@@ -52,7 +50,6 @@ class PlainRouteInitTestCase(unittest.TestCase):
 
         assert r.equals_match == r.match
 
-
     def test_startswith(self):
         """ ``pattern`` ends with ``/``.
         """
@@ -61,7 +58,6 @@ class PlainRouteInitTestCase(unittest.TestCase):
         r = PlainRoute(r'abc/')
 
         assert r.startswith_match == r.match
-
 
     def test_arguments(self):
         """ The inner state is properly initialized.
@@ -92,8 +88,7 @@ class PlainRouteEqualsMatchTestCase(unittest.TestCase):
         matched, kwargs = r.equals_match(r'abc')
         self.assertEquals(3, matched)
         self.assertEquals({'a': 1}, r.kwargs)
-        assert kw is not kwargs
-
+        assert kw is kwargs
 
     def test_no_kwargs(self):
         """ ``equals_match`` strategy when no kwargs supplied.
@@ -104,7 +99,6 @@ class PlainRouteEqualsMatchTestCase(unittest.TestCase):
         matched, kwargs = r.equals_match(r'abc')
         self.assertEquals(3, matched)
         self.assertEquals(None, r.kwargs)
-
 
     def test_no_match(self):
         """ ``equals_match`` strategy when there is no match.
@@ -130,10 +124,10 @@ class PlainRouteStartswithMatchTestCase(unittest.TestCase):
         matched, kwargs = r.startswith_match(r'abc/de')
         self.assertEquals(4, matched)
         self.assertEquals(kw, kwargs)
-        assert kw is not kwargs
+        assert kw is kwargs
 
     def test_no_kwargs(self):
-        """ ``startswith_match`` strategy when no 
+        """ ``startswith_match`` strategy when no
             kwargs supplied.
         """
         from wheezy.routing.route import PlainRoute
@@ -143,9 +137,8 @@ class PlainRouteStartswithMatchTestCase(unittest.TestCase):
         self.assertEquals(4, matched)
         self.assertEquals(None, r.kwargs)
 
-
     def test_no_match(self):
-        """ ``startswith_match`` strategy when there 
+        """ ``startswith_match`` strategy when there
             is no match.
         """
         from wheezy.routing.route import PlainRoute
@@ -165,9 +158,8 @@ class PlainRoutePathTestCase(unittest.TestCase):
         from wheezy.routing.route import PlainRoute
 
         r = PlainRoute(r'abc/')
-        p =  r.path()
+        p = r.path()
         self.assertEquals(p, r.pattern)
-
 
     def test_values_ignored(self):
         """ Simply return ``pattern``.
@@ -175,8 +167,194 @@ class PlainRoutePathTestCase(unittest.TestCase):
         from wheezy.routing.route import PlainRoute
 
         r = PlainRoute(r'abc/', {'a': 1})
-        p =  r.path({'b': 2})
+        p = r.path({'b': 2})
         self.assertEquals(p, r.pattern)
 
 
+class RegexRouteInitTestCase(unittest.TestCase):
+    """ Test the ``RegexRoute.__init__``.
+    """
 
+    def test_with_kwargs(self):
+        """ If kwargs are supplied than choose
+            ``match_with_kwargs`` strategy.
+        """
+        from wheezy.routing.route import RegexRoute
+
+        r = RegexRoute(r'abc', {'a': 1})
+
+    def test_no_kwargs(self):
+        """ If kwargs omitted than choose
+            ``match_no_kwargs`` strategy.
+        """
+        from wheezy.routing.route import RegexRoute
+
+        r = RegexRoute(r'abc')
+
+
+class RegexRouteInitPartsTestCase(unittest.TestCase):
+    """ Test the ``RegexRoute.__init__`` self.parts.
+    """
+
+    def test_no_groups(self):
+        """ ``pattern`` has no named groups.
+        """
+        from wheezy.routing.route import RegexRoute
+
+        r = RegexRoute(r'abc', {'a': 1})
+
+    def test_groups(self):
+        """ ``pattern`` has named groups.
+        """
+        from wheezy.routing.route import RegexRoute
+
+        kw = {'a': 1, 'b': 2}
+        r = RegexRoute(r'abc/(?P<a>\d+)/(?P<b>\d+)', {'a': 1})
+
+        self.assertEquals('abc/', r.parts[0])
+        assert callable(r.parts[1])
+        self.assertEquals('1', r.parts[1](kw))
+        self.assertEquals('/', r.parts[2])
+        assert callable(r.parts[3])
+        self.assertEquals('2', r.parts[3](kw))
+
+
+class RegexRouteMatchNoKwargsPartsTestCase(unittest.TestCase):
+    """ Test the ``RegexRoute.match_no_kwargs``.
+    """
+
+    def test_no_match(self):
+        """ there is no match.
+        """
+        from wheezy.routing.route import RegexRoute
+
+        r = RegexRoute(r'abc')
+        matched, kwargs = r.match('bc')
+
+        self.assertEquals(-1, matched)
+        assert not kwargs
+
+    def test_match(self):
+        """ there is a match.
+        """
+        from wheezy.routing.route import RegexRoute
+
+        r = RegexRoute(r'abc')
+        matched, kwargs = r.match('abcd')
+
+        self.assertEquals(3, matched)
+        assert not kwargs
+
+
+class RegexRouteMatchWithKwargsPartsTestCase(unittest.TestCase):
+    """ Test the ``RegexRoute.match_with_kwargs``.
+    """
+
+    def test_no_match(self):
+        """  there is no match.
+        """
+        from wheezy.routing.route import RegexRoute
+
+        r = RegexRoute(r'abc', {'a': 1})
+        matched, kwargs = r.match('bc')
+
+        self.assertEquals(-1, matched)
+        assert not kwargs
+
+    def test_match(self):
+        """  there is a match.
+        """
+        from wheezy.routing.route import RegexRoute
+
+        kw = {'a': 1}
+        r = RegexRoute(r'abc', kw)
+        matched, kwargs = r.match('abcd')
+
+        self.assertEquals(3, matched)
+        self.assertEquals(kw, kwargs)
+        assert kw is kwargs
+
+    def test_match_merge(self):
+        """ default kwargs are merged with match kwargs.
+        """
+        from wheezy.routing.route import RegexRoute
+
+        kw = {'a': 1}
+        r = RegexRoute(r'abc/(?P<b>\d+)', kw)
+        matched, kwargs = r.match('abc/2')
+
+        self.assertEquals(5, matched)
+        self.assertEquals({'a': 1, 'b': '2'}, kwargs)
+        self.assertEquals(kw, r.kwargs)
+
+
+class RegexRoutePathTestCase(unittest.TestCase):
+    """ Test the ``RegexRoute.path``.
+    """
+
+    def setUp(self):
+        from wheezy.routing.route import RegexRoute
+
+        self.r = RegexRoute(r'abc/(?P<a>\d+)')
+
+    def test_no_values(self):
+        """
+        """
+        path = self.r.path()
+
+        self.assertEquals('abc', path)
+
+    def test_with_values(self):
+        """
+        """
+        path = self.r.path(dict(a=2))
+
+        self.assertEquals('abc/2', path)
+
+
+class RegexRoutePathNoDefaultsTestCase(unittest.TestCase):
+    """ Test the ``RegexRoute.path``.
+    """
+
+    def setUp(self):
+        from wheezy.routing.route import RegexRoute
+
+        self.r = RegexRoute(r'abc/(?P<a>\d+)')
+
+    def test_no_values(self):
+        """
+        """
+        path = self.r.path()
+
+        self.assertEquals('abc', path)
+
+    def test_with_values(self):
+        """
+        """
+        path = self.r.path(dict(a=2))
+
+        self.assertEquals('abc/2', path)
+
+
+class RegexRoutePathWithDefaultsTestCase(unittest.TestCase):
+    """ Test the ``RegexRoute.path``.
+    """
+
+    def setUp(self):
+        from wheezy.routing.route import RegexRoute
+
+        self.r = RegexRoute(r'abc/(?P<a>\d+)', {'a': 1})
+
+    def test_no_values(self):
+        """
+        """
+        path = self.r.path()
+
+        self.assertEquals('abc/1', path)
+
+    def test_with_values(self):
+        """
+        """
+        path = self.r.path(dict(a=2))
+
+        self.assertEquals('abc/2', path)

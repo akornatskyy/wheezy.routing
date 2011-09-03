@@ -20,8 +20,7 @@ def route_name(handler):
     except AttributeError:
         name = handler.__class__.__name__
 
-    return camelcase_to_underscore(
-               strip_name(name))
+    return camelcase_to_underscore(strip_name(name))
 
 
 def strip_name(s):
@@ -50,3 +49,14 @@ def camelcase_to_underscore(s):
     return RE_CAMELCASE_TO_UNDERSCOPE_2.sub(r'\1_\2', s).lower()
 
 
+def merge(d1, d2):
+    """ Update ``d1`` from ``d2`` only if a value in ``d2``
+        is evaluated to boolean True.
+
+        >>> d1 = dict(a=1,b=None,c=2)
+        >>> d2 = dict(a=None,b=2,c=1)
+        >>> merge(d1, d2)
+        {'a': 1, 'c': 1, 'b': 2}
+    """
+    d1.update(((k, v) for k, v in d2.iteritems() if v))
+    return d1

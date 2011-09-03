@@ -237,7 +237,9 @@ class PathRouterAddRoutesTestCase(unittest.TestCase):
         """
         m = [('pattern', 'handler', 'kwargs')]
         self.r.add_route = mock_add_route = self.m.mock()
-        expect(mock_add_route('pattern', 'handler', 'kwargs', None))
+        expect(
+            mock_add_route('pattern', 'handler', 'kwargs', None)
+        )
         self.m.replay()
 
         self.r.add_routes(m)
@@ -245,10 +247,10 @@ class PathRouterAddRoutesTestCase(unittest.TestCase):
     def test_mapping_is_tuple_of_four(self):
         """ ``mapping`` is a tuple of four elements.
         """
-        m = [('pattern', 'handler', 'kwargs', 'name')]
+        m = [('pattern', 'handler', 'kw', 'name')]
         self.r.add_route = mock_add_route = self.m.mock()
         expect(
-            mock_add_route('pattern', 'handler', 'kwargs', 'name')
+            mock_add_route('pattern', 'handler', 'kw', 'name')
         )
         self.m.replay()
 
@@ -343,7 +345,7 @@ class PathRouterMatchInnerTestCase(unittest.TestCase):
         self.m.verify()
 
     def test_no_match(self):
-        """ there is a match is inner, kwargs and kwargs2 are None.
+        """ there is no match.
         """
         expect(self.mock_inner.match('de')).result((None, None))
         self.m.replay()
@@ -354,8 +356,22 @@ class PathRouterMatchInnerTestCase(unittest.TestCase):
         assert handler is None
         assert kwargs is None
 
+    def test_no_match_continue(self):
+        """ there is no match, continue with the rest 
+        	in ``self.mapping``.
+        """
+        expect(self.mock_inner.match('de')).result((None, None))
+        self.m.replay()
+
+        self.r.include('abc/', [])
+        self.r.add_route('abc/de', 'h')
+        handler, kwargs = self.r.match('abc/de')
+
+        self.assertEquals('h', handler)
+
     def test_no_kwargs(self):
-        """ there is a match is inner, kwargs and kwargs2 are None.
+        """ there is a match is inner, kwargs and kwargs2
+            are None.
         """
         expect(self.mock_inner.match('de')).result(('h', None))
         self.m.replay()
@@ -396,7 +412,8 @@ class PathRouterMatchInnerTestCase(unittest.TestCase):
         self.assertEquals(kw, kwargs)
 
     def test_kwargs_merge(self):
-        """ there is a match is inner, kwargs and kwargs2 are None.
+        """ there is a match is inner, kwargs and kwargs2
+            are None.
         """
         expect(self.mock_inner.match('de')).result(('h', {'b': 2}))
         self.m.replay()

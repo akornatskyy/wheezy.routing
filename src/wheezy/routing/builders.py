@@ -1,8 +1,14 @@
+
+""" ``builders`` module.
+"""
+
 import re
 
 from route import Route
 from route import PlainRoute
 from route import RegexRoute
+from curly import RE_SPLIT as RE_CURLY_ROUTE
+from curly import convert as curly_convert
 
 
 RE_PLAIN_ROUTE = re.compile('^[\w/-]+$')
@@ -22,6 +28,22 @@ def try_build_plain_route(pattern, kwargs=None):
     """
     if pattern == '' or RE_PLAIN_ROUTE.match(pattern):
         return PlainRoute(pattern, kwargs)
+    return None
+
+
+def try_build_curly_route(pattern, kwargs=None):
+    """ Convert pattern expression into regex with
+        named groups and create regex route.
+
+        >>> r = try_build_curly_route('abc/{n}')
+        >>> assert isinstance(r, RegexRoute)
+
+        Otherwise return None.
+
+        >>> r = try_build_curly_route('abc')
+    """
+    if RE_CURLY_ROUTE.search(pattern):
+        return RegexRoute(curly_convert(pattern), kwargs)
     return None
 
 

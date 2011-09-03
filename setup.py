@@ -45,11 +45,12 @@ setup(
     ],
     extras_require = {
         'dev': [
+            'wsgiref',
             'coverage',
             'nose',
             'mocker',
-            'pytest', 
-            'pytest-pep8', 
+            'pytest',
+            'pytest-pep8',
             'pytest-cov'
         ]
     },

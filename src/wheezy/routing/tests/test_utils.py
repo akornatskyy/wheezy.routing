@@ -14,11 +14,9 @@ class RouteNameTestCase(unittest.TestCase):
     def setUp(self):
         self.m = Mocker()
 
-
     def tearDown(self):
         self.m.restore()
         self.m.verify()
-
 
     def test_class(self):
         """ ``handler`` can be a class.
@@ -31,27 +29,23 @@ class RouteNameTestCase(unittest.TestCase):
 
         self.assertEquals('mock_class', route_name(MockClass))
 
-
     def test_instance(self):
         """ ``handler`` can be an instance.
         """
         from wheezy.routing.utils import route_name
 
-        class TestHandler(): pass
-        h = TestHandler()
-
-        self.assertEquals('test', route_name(h))
-
+        self.assertEquals('route_name_test_case', route_name(self))
 
     def test_callable(self):
         """ ``handler`` can be a class.
         """
         from wheezy.routing.utils import route_name
 
-        def my_view(): pass
+        def my_view():
+            pass
 
+        my_view()
         self.assertEquals('my_view', route_name(my_view))
-
 
     def test_strip_name(self):
         """ Ensure call to ``strip_name`` function.
@@ -64,7 +58,6 @@ class RouteNameTestCase(unittest.TestCase):
         self.m.replay()
 
         self.assertEquals('test_case', route_name(unittest.TestCase))
-
 
     def test_camelcase_to_underscore(self):
         """ Ensure call to ``camelcase_to_underscore`` function.
@@ -81,23 +74,24 @@ class RouteNameTestCase(unittest.TestCase):
         self.assertEquals('Test', route_name(MockClass))
 
 
-
 class StripNameTestCase(unittest.TestCase):
     """ Test the ``strip_name`` function.
     """
-    
+
     def test_match(self):
         """ The ``name`` ends with a word that need to be removed.
         """
+        import re
+
         from wheezy.routing.utils import strip_name
         from wheezy.routing.utils import RE_STRIP_NAME as RE
 
-        import re
-        suffixes = re.match('\((.*)\)\$', RE.pattern).group(1).split('|')
+        suffixes = re.match(
+            '\((.*)\)\$', RE.pattern
+        ).group(1).split('|')
 
         for suffix in suffixes:
             self.assertEqual('Login', strip_name('Login' + suffix))
-
 
     def test_no_match(self):
         """ The ``name`` is returned unchanged if it doesn't
@@ -106,7 +100,6 @@ class StripNameTestCase(unittest.TestCase):
         from wheezy.routing.utils import strip_name
 
         self.assertEqual('Login', strip_name('Login'))
-
 
 
 class CamelCaseToUnderscoreTestCase(unittest.TestCase):
@@ -118,37 +111,52 @@ class CamelCaseToUnderscoreTestCase(unittest.TestCase):
         """
         from wheezy.routing.utils import camelcase_to_underscore
 
-        self.assertEqual('camel_case_to_underscore_test_case',
-           camelcase_to_underscore(self.__class__.__name__))
-
+        self.assertEqual(
+            'camel_case_to_underscore_test_case',
+            camelcase_to_underscore(self.__class__.__name__)
+        )
 
     def test_underscore(self):
         """ The input is with underscore.
         """
         from wheezy.routing.utils import camelcase_to_underscore
 
-        self.assertEqual('__test_case', camelcase_to_underscore('_TestCase'))
-        self.assertEqual('test_case', camelcase_to_underscore('Test_case'))
-        self.assertEqual('test__case', camelcase_to_underscore('Test_Case'))
-
+        self.assertEqual(
+            '__test_case', camelcase_to_underscore('_TestCase')
+        )
+        self.assertEqual(
+            'test_case', camelcase_to_underscore('Test_case')
+        )
+        self.assertEqual(
+            'test__case', camelcase_to_underscore('Test_Case')
+        )
 
     def test_digits(self):
         """ The input contains digits.
         """
         from wheezy.routing.utils import camelcase_to_underscore
 
-        self.assertEqual('test2_case', camelcase_to_underscore('Test2Case'))
-        self.assertEqual('test_case2', camelcase_to_underscore('TestCase2'))
-        self.assertEqual('test2_case', camelcase_to_underscore('test2Case'))
-
+        self.assertEqual(
+            'test2_case', camelcase_to_underscore('Test2Case')
+        )
+        self.assertEqual(
+            'test_case2', camelcase_to_underscore('TestCase2')
+        )
+        self.assertEqual(
+            'test2_case', camelcase_to_underscore('test2Case')
+        )
 
     def test_abbreviation(self):
         """ The input contains abbreviation.
-        """ 
+        """
         from wheezy.routing.utils import camelcase_to_underscore
 
-        self.assertEqual('abc_case', camelcase_to_underscore('ABCCase'))
-        self.assertEqual('test_abc', camelcase_to_underscore('TestABC'))
-        self.assertEqual('test2_abc', camelcase_to_underscore('test2ABC'))
-
-
+        self.assertEqual(
+            'abc_case', camelcase_to_underscore('ABCCase')
+        )
+        self.assertEqual(
+            'test_abc', camelcase_to_underscore('TestABC')
+        )
+        self.assertEqual(
+            'test2_abc', camelcase_to_underscore('test2ABC')
+        )

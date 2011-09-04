@@ -27,6 +27,24 @@ class PatternsTestCase(unittest.TestCase):
 
         assert default_pattern in patterns
 
+    def test_synonyms(self):
+        """ Make sure ``default_pattern`` is in ``patterns``.
+        """
+        from wheezy.routing.curly import patterns
+
+        self.assertEquals(12, len(patterns))
+        synonyms_map = (
+            ('i', ('int', 'digits', 'number')),
+            ('w', ('word', )),
+            ('s', ('segment', 'part')),
+            ('a', ('any', 'rest'))
+        )
+
+        for n, syns in synonyms_map:
+            pattern = patterns[n]
+            for s in syns:
+                assert pattern == patterns[s]
+
 
 class ConvertTestCase(unittest.TestCase):
     """ Test the ``curly.convert`` function.

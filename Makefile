@@ -32,6 +32,10 @@ test-cover:
 		--cov-report term-missing \
 		src/wheezy/routing/tests
 
+test-demos:
+	env/bin/py.test -q -x --pep8 \
+		demos/
+
 run-hello:
 	env/bin/python demos/hello/helloworld.py
 

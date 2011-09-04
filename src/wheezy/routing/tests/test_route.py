@@ -358,3 +358,151 @@ class RegexRoutePathWithDefaultsTestCase(unittest.TestCase):
         path = self.r.path(dict(a=2))
 
         self.assertEquals('abc/2', path)
+
+
+class RegexRouteCurlyIntTestCase(unittest.TestCase):
+    """ Test the ``RegexRoute`` while initialized
+        by curly route builder strategy that uses
+        ``curly.convert`` function to build regex
+        from curly ``int``  expression.
+    """
+
+    def setUp(self):
+        from wheezy.routing.curly import convert
+        from wheezy.routing.route import RegexRoute
+
+        self.r = RegexRoute(convert('abc/{id:int}'))
+
+    def test_match(self):
+        """ match
+        """
+        matched, kwargs = self.r.match('abc/1234')
+
+        self.assertEquals(8, matched)
+        self.assertEquals({'id': '1234'}, kwargs)
+
+    def test_no_match(self):
+        """ no match
+        """
+        matched, kwargs = self.r.match('abc/de')
+
+        self.assertEquals(-1, matched)
+        assert kwargs is None
+
+    def test_path(self):
+        """
+        """
+        path = self.r.path(dict(id=1234))
+
+        self.assertEquals('abc/1234', path)
+
+
+class RegexRouteCurlyWordTestCase(unittest.TestCase):
+    """ Test the ``RegexRoute`` while initialized
+        by curly route builder strategy that uses
+        ``curly.convert`` function to build regex
+        from curly ``word`` expression.
+    """
+
+    def setUp(self):
+        from wheezy.routing.curly import convert
+        from wheezy.routing.route import RegexRoute
+
+        self.r = RegexRoute(convert('abc/{id:word}'))
+
+    def test_match(self):
+        """ match
+        """
+        matched, kwargs = self.r.match('abc/de')
+
+        self.assertEquals(6, matched)
+        self.assertEquals({'id': 'de'}, kwargs)
+
+    def test_no_match(self):
+        """ no match
+        """
+        matched, kwargs = self.r.match('abc/*e')
+
+        self.assertEquals(-1, matched)
+        assert kwargs is None
+
+    def test_path(self):
+        """
+        """
+        path = self.r.path(dict(id=1234))
+
+        self.assertEquals('abc/1234', path)
+
+
+class RegexRouteCurlySegmentTestCase(unittest.TestCase):
+    """ Test the ``RegexRoute`` while initialized
+        by curly route builder strategy that uses
+        ``curly.convert`` function to build regex
+        from curly ``segment`` expression.
+    """
+
+    def setUp(self):
+        from wheezy.routing.curly import convert
+        from wheezy.routing.route import RegexRoute
+
+        self.r = RegexRoute(convert('abc/{id:segment}'))
+
+    def test_match(self):
+        """ match
+        """
+        matched, kwargs = self.r.match('abc/de/f')
+
+        self.assertEquals(6, matched)
+        self.assertEquals({'id': 'de'}, kwargs)
+
+    def test_no_match(self):
+        """ no match
+        """
+        matched, kwargs = self.r.match('abc')
+
+        self.assertEquals(-1, matched)
+        assert kwargs is None
+
+    def test_path(self):
+        """
+        """
+        path = self.r.path(dict(id=1234))
+
+        self.assertEquals('abc/1234', path)
+
+
+class RegexRouteCurlyAnyTestCase(unittest.TestCase):
+    """ Test the ``RegexRoute`` while initialized
+        by curly route builder strategy that uses
+        ``curly.convert`` function to build regex
+        from curly ``any`` expression.
+    """
+
+    def setUp(self):
+        from wheezy.routing.curly import convert
+        from wheezy.routing.route import RegexRoute
+
+        self.r = RegexRoute(convert('abc/{id:any}'))
+
+    def test_match(self):
+        """ match
+        """
+        matched, kwargs = self.r.match('abc/de/f')
+
+        self.assertEquals(8, matched)
+        self.assertEquals({'id': 'de/f'}, kwargs)
+
+    def test_no_match(self):
+        """ no match
+        """
+        matched, kwargs = self.r.match('abc')
+
+        self.assertEquals(-1, matched)
+        assert kwargs is None
+
+    def test_path(self):
+        """
+        """
+        path = self.r.path(dict(id=1234))
+
+        self.assertEquals('abc/1234', path)

@@ -22,7 +22,8 @@ patterns = {
     'part': r'[^/]+',
     # any
     'a': r'.+',
-    'any': r'.+'
+    'any': r'.+',
+    'rest': r'.+'
 }
 
 default_pattern = 's'

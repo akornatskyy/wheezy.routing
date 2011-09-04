@@ -6,6 +6,7 @@ from datetime import datetime
 
 from config import router as r
 
+
 def welcome(environ, start_response):
     start_response('200 OK', [
         ('Content-type', 'text/html')

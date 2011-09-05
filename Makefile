@@ -5,9 +5,14 @@ PYTHON=/usr/bin/python
 
 all: clean test release
 
+debian:
+	apt-get -yq update
+	apt-get -yq dist-upgrade
+	apt-get -yq install build-essential python python-dev \
+		python-setuptools python-virtualenv mercurial
+
 env:
-	virtualenv -q --python=$(PYTHON) --no-site-packages \
-		--relocatable env
+	virtualenv -q --python=$(PYTHON) --no-site-packages env
 	env/bin/easy_install coverage mocker \
 		nose pytest pytest-pep8 pytest-cov wsgiref
 
@@ -32,9 +37,12 @@ test-cover:
 		--cov-report term-missing \
 		src/wheezy/routing/tests
 
+# In order to run demos ensure:
+# 1. make env
+# 2. env/bin/python setup.py develop
+
 test-demos:
-	env/bin/py.test -q -x --pep8 \
-		demos/
+	env/bin/py.test -q -x --pep8 demos/
 
 run-hello:
 	env/bin/python demos/hello/helloworld.py

@@ -1,25 +1,24 @@
-"""
-Wheezy Routing
---------------
-
-Lightweight path routing.
-"""
+#!/usr/bin/env python
 
 try:
     from setuptools import setup
 except:
     from distutils.core import setup
 
+def read(fname):
+    from os.path import dirname, join
+    return open(join(dirname(__file__), fname)).read()
+
 setup(
     name = 'wheezy-routing',
     version = '0.1',
+    description = 'A lightweight path routing library',
+    long_description = read('README'),
     url = 'https://bitbucket.org/akorn/wheezy-routing',
 
     author = 'Andriy Kornatskyy',
     author_email = 'andriy.kornatskyy at live.com',
 
-    description = 'Lightweight path routing',
-    long_description = __doc__,
     license = 'MIT',
     classifiers = [
         'Development Status :: 4 - Beta',
@@ -34,6 +33,9 @@ setup(
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Topic :: Internet :: WWW/HTTP',
+        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+        'Topic :: Internet :: WWW/HTTP :: WSGI',
+        'Topic :: Internet :: WWW/HTTP :: WSGI :: Application',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Utilities'
     ],

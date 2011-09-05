@@ -1,7 +1,7 @@
 .SILENT: clean release test
 .PHONY: clean release test
 
-PYTHON=/usr/bin/python
+PYTHON=/usr/bin/python3.2
 
 all: clean test release
 

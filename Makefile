@@ -1,7 +1,7 @@
 .SILENT: clean release test
 .PHONY: clean release test
 
-PYTHON=/usr/bin/python3.2
+PYTHON=/usr/bin/python
 
 all: clean test release
 
@@ -21,7 +21,7 @@ clean:
 	rm -rf dist/ build/ MANIFEST src/*.egg-info
 
 release:
-	python setup.py -q bdist_egg sdist
+	env/bin/python setup.py -q bdist_egg sdist
 
 test:
 	env/bin/py.test -q -x --pep8 --doctest-modules \

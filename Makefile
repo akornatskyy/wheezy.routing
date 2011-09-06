@@ -1,7 +1,11 @@
-.SILENT: clean release test
-.PHONY: clean release test
+.SILENT: clean env release test
+.PHONY: clean env release test
 
-PYTHON=/usr/bin/python
+VERSION=2.6
+PYTHON=env/bin/python$(VERSION)
+EASY_INSTALL=env/bin/easy_install-$(VERSION)
+PYTEST=env/bin/py.test-$(VERSION)
+NOSE=env/bin/nosetest-$(VERSION)
 
 all: clean test release
 
@@ -12,8 +16,13 @@ debian:
 		python-setuptools python-virtualenv mercurial
 
 env:
-	virtualenv -q --python=$(PYTHON) --no-site-packages env
-	env/bin/easy_install coverage mocker \
+	PYTHON_EXE=/usr/local/bin/python$(VERSION); \
+	if [ ! -x $$PYTHON_EXE ]; then \
+		PYTHON_EXE=/usr/bin/python$(VERSION); \
+	fi;\
+	/usr/bin/virtualenv --python=$$PYTHON_EXE \
+		--no-site-packages env
+	$(EASY_INSTALL) coverage mocker \
 		nose pytest pytest-pep8 pytest-cov wsgiref
 
 clean:
@@ -21,31 +30,27 @@ clean:
 	rm -rf dist/ build/ MANIFEST src/*.egg-info
 
 release:
-	env/bin/python setup.py -q bdist_egg sdist
+	$(PYTHON) setup.py -q bdist_egg
 
 test:
-	env/bin/py.test -q -x --pep8 --doctest-modules \
+	$(PYTEST) -q -x --pep8 --doctest-modules \
 		src/wheezy/routing
 
 doctest-cover:
-	env/bin/nosetests --where=src/wheezy/routing --match=^test \
+	$(NOSE) --where=src/wheezy/routing --match=^test \
 		--with-doctest --detailed-errors --with-coverage \
 		--cover-package=wheezy.routing
 
 test-cover:
-	env/bin/py.test -q --cov wheezy.routing \
+	$(PYTEST) -q --cov wheezy.routing \
 		--cov-report term-missing \
 		src/wheezy/routing/tests
 
-# In order to run demos ensure:
-# 1. make env
-# 2. env/bin/python setup.py develop
-
 test-demos:
-	env/bin/py.test -q -x --pep8 demos/
+	$(PYTEST) -q -x --pep8 demos/
 
 run-hello:
-	env/bin/python demos/hello/helloworld.py
+	$(PYTHON) demos/hello/helloworld.py
 
 run-time:
-	env/bin/python demos/time/app.py
+	$(PYTHON) demos/time/app.py

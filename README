@@ -46,6 +46,7 @@ information.
 
 .. _`wheezy-routing`: http://pypi.python.org/pypi/wheezy-routing
 .. _`python`: http://www.python.org
+.. _`setuptools`: http://pypi.python.org/pypi/setuptools
 .. _`documented`: http://packages.python.org/wheezy-routing
 .. _`examples`: https://bitbucket.org/akorn/wheezy-routing/src/tip/demos/
 .. _`bitbucket`: https://bitbucket.org/akorn/wheezy-routing

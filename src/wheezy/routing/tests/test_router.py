@@ -101,14 +101,14 @@ class PathRouterAddRouteTestCase(unittest.TestCase):
 
         self.r.add_route(r'abc', MockClass)
 
-        assert 'mock_class' in self.r.route_map.keys()
+        assert 'mock_class' in tuple(self.r.route_map.keys())
 
     def test_with_name(self):
         """ ``name`` is supplied.
         """
         self.r.add_route(r'abc', 'x', name='my_name')
 
-        assert 'my_name' in self.r.route_map.keys()
+        assert 'my_name' in tuple(self.r.route_map.keys())
 
     def test_with_default_kwargs(self):
         """ ``kwargs`` is None.

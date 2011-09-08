@@ -16,7 +16,7 @@ class PatternsTestCase(unittest.TestCase):
 
         from wheezy.routing.curly import patterns
 
-        for p in patterns.itervalues():
+        for p in tuple(patterns.values()):
             assert re.compile(p)
 
     def test_default(self):

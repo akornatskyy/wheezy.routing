@@ -4,7 +4,7 @@
 
 import re
 
-from utils import merge
+from wheezy.routing.utils import merge
 
 
 class Route(object):

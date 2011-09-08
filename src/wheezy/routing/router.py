@@ -2,9 +2,9 @@
 """ ``router`` module.
 """
 
-from builders import build_route
-from config import route_builders as default_route_builders
-from utils import route_name, merge
+from wheezy.routing.builders import build_route
+from wheezy.routing.config import route_builders as default_route_builders
+from wheezy.routing.utils import route_name, merge
 
 
 def url(pattern, handler, kwargs=None, name=None):

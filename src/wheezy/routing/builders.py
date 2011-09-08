@@ -4,11 +4,11 @@
 
 import re
 
-from route import Route
-from route import PlainRoute
-from route import RegexRoute
-from curly import RE_SPLIT as RE_CURLY_ROUTE
-from curly import convert as curly_convert
+from wheezy.routing.route import Route
+from wheezy.routing.route import PlainRoute
+from wheezy.routing.route import RegexRoute
+from wheezy.routing.curly import RE_SPLIT as RE_CURLY_ROUTE
+from wheezy.routing.curly import convert as curly_convert
 
 
 RE_PLAIN_ROUTE = re.compile('^[\w/-]+$')

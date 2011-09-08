@@ -2,12 +2,12 @@
 """ ``config`` module.
 """
 
-from builders import try_build_plain_route
-from builders import try_build_curly_route
-from builders import try_build_regex_route
+from wheezy.routing.builders import try_build_plain_route
+from wheezy.routing.builders import try_build_curly_route
+from wheezy.routing.builders import try_build_regex_route
 
-from curly import patterns as curly_patterns
-from curly import default_pattern as curly_default_pattern
+from wheezy.routing.curly import patterns as curly_patterns
+from wheezy.routing.curly import default_pattern as curly_default_pattern
 
 route_builders = [
     try_build_plain_route,

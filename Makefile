@@ -12,15 +12,18 @@ all: clean test release
 debian:
 	apt-get -yq update
 	apt-get -yq dist-upgrade
-	apt-get -yq install build-essential python python-dev \
-		python-setuptools python-virtualenv mercurial
+	# How to Compile Python from Source
+	# http://mindref.blogspot.com/2011/09/compile-python-from-source.html
+	apt-get -yq install libbz2-dev build-essential python \
+		python-dev python-setuptools python-virtualenv \
+		mercurial
 
 env:
 	PYTHON_EXE=/usr/local/bin/python$(VERSION); \
 	if [ ! -x $$PYTHON_EXE ]; then \
 		PYTHON_EXE=/usr/bin/python$(VERSION); \
 	fi;\
-	/usr/bin/virtualenv --python=$$PYTHON_EXE \
+	virtualenv --python=$$PYTHON_EXE \
 		--no-site-packages env
 	$(EASY_INSTALL) coverage mocker \
 		nose pytest pytest-pep8 pytest-cov wsgiref

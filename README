@@ -14,8 +14,8 @@ The source code is available on `bitbucket`_.
 Install
 -------
 
-`wheezy-routing`_ requires `python`_ version 2.4 to 2.7. It is
-independent of operating system. You can install it using
+`wheezy-routing`_ requires `python`_ version 2.4 to 2.7 or 3.2.
+It is independent of operating system. You can install it using
 `setuptools`_::
 
     easy_install wheezy-routing
@@ -33,6 +33,10 @@ Prepare virtualenv environment in *env* directory and run
 all tests for python2.6 (default)::
 
     make env test VERSION=2.6
+
+doctests can be run with python3.2::
+
+    make env doctest-cover VERSION=3.2
 
 If you run into any issue or have comments, go ahead and add on
 `bitbucket`_.

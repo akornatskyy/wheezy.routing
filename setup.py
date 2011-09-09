@@ -44,7 +44,9 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Utilities'
     ],
-    keywords = ['routing', 'path', 'url', 'match', 'web', 'mapping'],
+    keywords = [
+        'routing', 'path', 'url', 'patterns', 'match', 'web', 'mapping'
+    ],
     packages = ['wheezy', 'wheezy.routing'],
     package_dir = {'': 'src'},
 

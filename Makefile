@@ -1,11 +1,12 @@
-.SILENT: clean env release test
-.PHONY: clean env release test
+.SILENT: clean env doc release test
+.PHONY: clean env doc release test
 
 VERSION=2.6
 PYTHON=env/bin/python$(VERSION)
 EASY_INSTALL=env/bin/easy_install-$(VERSION)
 PYTEST=env/bin/py.test-$(VERSION)
 NOSE=env/bin/nosetests-$(VERSION)
+SPHINX=env/bin/sphinx-build
 
 all: clean test release
 
@@ -48,6 +49,9 @@ test-cover:
 	$(PYTEST) -q --cov wheezy.routing \
 		--cov-report term-missing \
 		src/wheezy/routing/tests
+
+doc:
+	$(SPHINX) -a -b html doc/ doc/_build/
 
 test-demos:
 	$(PYTEST) -q -x --pep8 demos/

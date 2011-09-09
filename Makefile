@@ -29,6 +29,7 @@ env:
 		nose pytest pytest-pep8 pytest-cov wsgiref
 
 clean:
+	find src/ -type d -name __pycache__ -exec rm -rf {} \; 2>/dev/null
 	find src/ -name '*.py[co]' -delete
 	rm -rf dist/ build/ MANIFEST src/*.egg-info
 

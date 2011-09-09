@@ -68,7 +68,7 @@ def build_route(pattern, kwargs, route_builders):
         If ``pattern`` is a string than try to find
         sutable route builder to create a route.
 
-        >>> from config import route_builders
+        >>> from wheezy.routing.config import route_builders
         >>> r = build_route(r'abc', {'a': 1}, route_builders)
         >>> assert isinstance(r, PlainRoute)
         >>> r.kwargs

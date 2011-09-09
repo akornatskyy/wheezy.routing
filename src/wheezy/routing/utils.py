@@ -62,5 +62,6 @@ def merge(d1, d2):
         >>> merge(d1, d2)
         {'a': 1, 'c': 1, 'b': 2}
     """
-    d1.update(((k, v) for k, v in d2.iteritems() if v))
+    #d1.update(((k, v) for k, v in d2.iteritems() if v))
+    d1.update(((k, d2[k]) for k in d2 if d2[k]))
     return d1

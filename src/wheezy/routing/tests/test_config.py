@@ -4,6 +4,8 @@
 
 import unittest
 
+from wheezy.routing.p2t3 import iscallable
+
 
 class RouteBuildersTestCase(unittest.TestCase):
     """ Test the ``config.route_builders`` setting.
@@ -19,7 +21,7 @@ class RouteBuildersTestCase(unittest.TestCase):
 
         for builder in config.route_builders:
             assert builder
-            assert callable(builder)
+            assert iscallable(builder)
             args, varargs, keywords, defaults = \
                     inspect.getargspec(builder)
             self.assertEqual(['pattern', 'kwargs'], args)

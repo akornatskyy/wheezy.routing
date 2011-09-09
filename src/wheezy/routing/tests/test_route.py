@@ -4,6 +4,8 @@
 
 import unittest
 
+from wheezy.routing.p2t3 import iscallable
+
 
 class RouteTestCase(unittest.TestCase):
     """ Test the ``Route` class.
@@ -212,10 +214,10 @@ class RegexRouteInitPartsTestCase(unittest.TestCase):
         r = RegexRoute(r'abc/(?P<a>\d+)/(?P<b>\d+)', {'a': 1})
 
         self.assertEquals('abc/', r.parts[0])
-        assert callable(r.parts[1])
+        assert iscallable(r.parts[1])
         self.assertEquals('1', r.parts[1](kw))
         self.assertEquals('/', r.parts[2])
-        assert callable(r.parts[3])
+        assert iscallable(r.parts[3])
         self.assertEquals('2', r.parts[3](kw))
 
 

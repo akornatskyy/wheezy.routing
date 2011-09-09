@@ -17,6 +17,9 @@ def route_name(handler):
         >>> class Login: pass
         >>> route_name(Login)
         'login'
+        >>> l = Login()
+        >>> route_name(l)
+        'login'
     """
 
     try:

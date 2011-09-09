@@ -4,7 +4,7 @@
 
 import unittest
 
-from wheezy.routing.p2t3 import iscallable
+from wheezy.routing.p2to3 import iscallable
 
 
 class RouteBuildersTestCase(unittest.TestCase):

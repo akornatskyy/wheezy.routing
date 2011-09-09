@@ -1,2 +1,1 @@
-include Makefile
-recursive-include demos *.py
+include LICENSE README

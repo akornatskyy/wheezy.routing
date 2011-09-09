@@ -5,7 +5,7 @@ VERSION=2.6
 PYTHON=env/bin/python$(VERSION)
 EASY_INSTALL=env/bin/easy_install-$(VERSION)
 PYTEST=env/bin/py.test-$(VERSION)
-NOSE=env/bin/nosetest-$(VERSION)
+NOSE=env/bin/nosetests-$(VERSION)
 
 all: clean test release
 
@@ -41,9 +41,8 @@ test:
 		src/wheezy/routing
 
 doctest-cover:
-	$(NOSE) --where=src/wheezy/routing --match=^test \
-		--with-doctest --detailed-errors --with-coverage \
-		--cover-package=wheezy.routing
+	$(NOSE) --with-doctest --detailed-errors --with-coverage \
+		--cover-package=wheezy.routing src/wheezy/routing/*.py
 
 test-cover:
 	$(PYTEST) -q --cov wheezy.routing \

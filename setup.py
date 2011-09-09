@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 
+import os
+
 try:
     from setuptools import setup
 except:
     from distutils.core import setup
 
-def read(fname):
-    from os.path import dirname, join
-    return open(join(dirname(__file__), fname)).read()
+README = open(os.path.join(os.path.dirname(__file__), 'README')).read()
 
 setup(
     name = 'wheezy-routing',
     version = '0.1',
     description = 'A lightweight path routing library',
-    long_description = read('README'),
+    long_description = README,
     url = 'https://bitbucket.org/akorn/wheezy-routing',
 
     author = 'Andriy Kornatskyy',
@@ -28,10 +28,15 @@ setup(
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.4',
         'Programming Language :: Python :: 2.5',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.0',
+        'Programming Language :: Python :: 3.1',
+        'Programming Language :: Python :: 3.2',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Internet :: WWW/HTTP :: WSGI',
@@ -39,6 +44,7 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Utilities'
     ],
+    keywords = ['routing', 'path', 'url', 'match', 'web', 'mapping'],
     packages = ['wheezy', 'wheezy.routing'],
     package_dir = {'': 'src'},
 

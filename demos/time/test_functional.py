@@ -21,7 +21,8 @@ class FunctionalTestCase(unittest.TestCase):
             assert expected_status == status
 
         environ = {'PATH_INFO': path}
-        return ''.join(main(environ, start_response))
+        return ''.join(map(lambda chunk: chunk.decode('utf-8'),
+            main(environ, start_response)))
 
     def test_welcome(self):
         """ Welcome page must have a valid path

@@ -12,7 +12,8 @@ r.add_routes(urls.home)
 def main(environ, start_response):
     handler, kwargs = r.match(environ['PATH_INFO'][1:])
     environ['routing.kwargs'] = kwargs
-    return handler(environ, start_response)
+    return map(lambda chunk: chunk.encode('utf8'),
+            handler(environ, start_response))
 
 if __name__ == '__main__':
     from wsgiref.simple_server import make_server

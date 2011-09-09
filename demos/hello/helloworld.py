@@ -9,7 +9,7 @@ def hello_world(environ, start_response):
     start_response('200 OK', [
         ('Content-type', 'text/html')
     ])
-    return ["Hello World!"]
+    return ["Hello World!".encode('utf8')]
 
 
 r = Router()

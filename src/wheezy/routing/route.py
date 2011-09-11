@@ -236,9 +236,9 @@ class RegexRoute(object):
             >>> r = RegexRoute(
             ...     r'abc/(?P<month>\d+)/(?P<day>\d+)'
             ... )
-            >>> r.path_no_kwargs(dict(month = 6, day = 9))
+            >>> r.path_no_kwargs(dict(month=6, day=9))
             'abc/6/9'
-            >>> r.path_no_kwargs(dict(month = 6))
+            >>> r.path_no_kwargs(dict(month=6))
             'abc/6'
             >>> r.path()
             'abc'

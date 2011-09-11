@@ -10,7 +10,7 @@ r.add_routes(urls.home)
 
 
 def main(environ, start_response):
-    handler, kwargs = r.match(environ['PATH_INFO'][1:])
+    handler, kwargs = r.match(environ['PATH_INFO'].lstrip('/'))
     environ['routing.kwargs'] = kwargs
     return map(lambda chunk: chunk.encode('utf8'),
             handler(environ, start_response))

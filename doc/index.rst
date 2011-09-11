@@ -4,7 +4,7 @@ wheezy-routing
 ==============
 
 Introduction
--------------
+------------
 
 :ref:`wheezy-routing` is a `python`_ package written in pure Python
 code. It is a simple mapping between URL patterns (as plain
@@ -15,7 +15,12 @@ or prescription what handler is or should be).
 The mapping can include other mappings and constructed dynamically.
 It is optimized for performance, well tested and documented.
 
-The `source code`_ is available on `bitbucket`_. Eggs at `pypi`_.
+Resources:
+
+* `source code`_, `examples`_ and `issues`_ tracker are available
+  on `bitbucket`_
+* `documentation`_
+* `eggs`_ on `pypi`_
 
 Contents
 --------
@@ -31,4 +36,8 @@ Contents
 .. _`python`: http://www.python.org
 .. _`source code`: https://bitbucket.org/akorn/wheezy-routing/src
 .. _`bitbucket`: https://bitbucket.org/akorn/wheezy-routing
-.. _`pypi`: http://pypi.python.org/pypi/wheezy-routing
+.. _`issues`: https://bitbucket.org/akorn/wheezy-routing/issues
+.. _`documentation`: http://packages.python.org/wheezy-routing
+.. _`examples`: https://bitbucket.org/akorn/wheezy-routing/src/tip/demos
+.. _`pypi`: http://pypi.python.org
+.. _`eggs`: http://pypi.python.org/pypi/wheezy-routing

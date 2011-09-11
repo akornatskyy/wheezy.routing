@@ -1,6 +1,12 @@
 Modules
 =======
 
+wheezy.routing
+--------------
+
+.. automodule:: wheezy.routing
+   :members:
+
 wheezy.routing.builders
 -----------------------
 

@@ -11,7 +11,7 @@ Hello World
 -----------
 
 `helloworld.py`_ shows you how to use :ref:`wheezy-routing` in pretty
-simple WSGI application:
+simple `WSGI`_ application:
 
 .. literalinclude:: ../demos/hello/helloworld.py
    :lines: 5-
@@ -35,8 +35,8 @@ is a tuple of two values: ``path`` and ``handler``.
 .. literalinclude:: ../demos/hello/helloworld.py
    :lines: 15-18
 
-``main`` function serves as WSGI application entry point. The only thing
-we do here is to get a value of WSGI environment variable ``PATH_INFO``
+``main`` function serves as `WSGI`_ application entry point. The only thing
+we do here is to get a value of `WSGI`_ environment variable ``PATH_INFO``
 (the remainder of the request URL's path) and pass to router
 :py:meth:`~wheezy.routing.router.PathRouter.match` method, in return we
 get ``handler`` and ``kwargs`` (parameters discovered from matching rule,
@@ -58,11 +58,11 @@ Visit http://localhost:8080/.
 Server Time
 -----------
 
-This application consists of two screens. The first one has a link to the
-second that shows the time on server. The second page will be mapped as a
-separate application with its own routing. The disign used in this sample
-is moular. Let's start with ``config`` module. The only thing we need here
-is an instance of ``Route``.
+Server `time`_ application consists of two screens. The first one has a link
+to the second that shows the time on server. The second page will be mapped
+as a separate application with its own routing. The disign used in this
+sample is moular. Let's start with ``config`` module. The only thing we
+need here is an instance of ``Route``.
 
 .. literalinclude:: ../demos/time/config.py
    :lines: 5-8
@@ -97,6 +97,12 @@ We combine that all together in ``app`` module.
 .. literalinclude:: ../demos/time/app.py
    :lines: 5-
 
+Try it by running::
+
+    make run-time
+
+Visit http://localhost:8080/.
 
 .. _`helloworld.py`: https://bitbucket.org/akorn/wheezy-routing/src/tip/demos/hello/helloworld.py
-
+.. _`time`: https://bitbucket.org/akorn/wheezy-routing/src/tip/demos/time
+.. _`WSGI`: http://www.python.org/dev/peps/pep-3333/

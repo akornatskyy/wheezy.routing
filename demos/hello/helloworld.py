@@ -2,7 +2,7 @@
 """ ``helloworld`` module.
 """
 
-from wheezy.routing import url, Router
+from wheezy.routing import Router
 
 
 def hello_world(environ, start_response):

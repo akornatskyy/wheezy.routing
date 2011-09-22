@@ -206,17 +206,17 @@ class RegexRouteInitPartsTestCase(unittest.TestCase):
     def test_groups(self):
         """ ``pattern`` has named groups.
         """
-        from wheezy.routing.comp import iscallable
+        from wheezy.routing.comp import callable
         from wheezy.routing.route import RegexRoute
 
         kw = {'a': 1, 'b': 2}
         r = RegexRoute(r'abc/(?P<a>\d+)/(?P<b>\d+)', {'a': 1})
 
         self.assertEquals('abc/', r.parts[0])
-        assert iscallable(r.parts[1])
+        assert callable(r.parts[1])
         self.assertEquals('1', r.parts[1](kw))
         self.assertEquals('/', r.parts[2])
-        assert iscallable(r.parts[3])
+        assert callable(r.parts[3])
         self.assertEquals('2', r.parts[3](kw))
 
 

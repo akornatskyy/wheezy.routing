@@ -15,12 +15,12 @@ class RouteBuildersTestCase(unittest.TestCase):
         """
         import inspect
 
-        from wheezy.routing.comp import iscallable
+        from wheezy.routing.comp import callable
         from wheezy.routing import config
 
         for builder in config.route_builders:
             assert builder
-            assert iscallable(builder)
+            assert callable(builder)
             args, varargs, keywords, defaults = \
                     inspect.getargspec(builder)
             self.assertEqual(['pattern', 'kwargs'], args)

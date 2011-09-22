@@ -4,7 +4,7 @@
 
 import re
 
-from wheezy.routing.comp import string_type
+from wheezy.routing.comp import basestring
 from wheezy.routing.utils import merge
 
 
@@ -268,6 +268,6 @@ class RegexRoute(object):
 
         values = not values and self.kwargs or merge(
                 self.kwargs.copy(), values)
-        parts = (isinstance(f, string_type) and f or f(values)
+        parts = (isinstance(f, basestring) and f or f(values)
                 for f in self.parts)
         return ''.join(parts).rstrip('/')

@@ -4,8 +4,6 @@
 
 import unittest
 
-from wheezy.routing.p2to3 import iscallable
-
 
 class RouteTestCase(unittest.TestCase):
     """ Test the ``Route` class.
@@ -208,6 +206,7 @@ class RegexRouteInitPartsTestCase(unittest.TestCase):
     def test_groups(self):
         """ ``pattern`` has named groups.
         """
+        from wheezy.routing.comp import iscallable
         from wheezy.routing.route import RegexRoute
 
         kw = {'a': 1, 'b': 2}

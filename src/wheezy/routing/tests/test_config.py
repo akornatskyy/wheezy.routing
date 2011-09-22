@@ -4,8 +4,6 @@
 
 import unittest
 
-from wheezy.routing.p2to3 import iscallable
-
 
 class RouteBuildersTestCase(unittest.TestCase):
     """ Test the ``config.route_builders`` setting.
@@ -17,6 +15,7 @@ class RouteBuildersTestCase(unittest.TestCase):
         """
         import inspect
 
+        from wheezy.routing.comp import iscallable
         from wheezy.routing import config
 
         for builder in config.route_builders:

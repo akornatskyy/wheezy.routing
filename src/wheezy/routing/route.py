@@ -4,7 +4,7 @@
 
 import re
 
-from wheezy.routing.p2to3 import string_type
+from wheezy.routing.comp import string_type
 from wheezy.routing.utils import merge
 
 

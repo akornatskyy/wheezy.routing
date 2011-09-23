@@ -3,13 +3,14 @@
 """
 
 from wheezy.routing import Router
+from wheezy.routing.comp import ntob
 
 
 def hello_world(environ, start_response):
     start_response('200 OK', [
-        ('Content-type', 'text/html')
+        ('Content-Type', 'text/html')
     ])
-    return ["Hello World!".encode('utf8')]
+    yield ntob('Hello World!', 'utf-8')
 
 
 r = Router()

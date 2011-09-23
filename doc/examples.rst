@@ -26,14 +26,14 @@ exporting name for :py:class:`~wheezy.routing.router.PathRouter`:
 Next we create a pretty simple WSGI handler to provide a response.
 
 .. literalinclude:: ../demos/hello/helloworld.py
-   :lines: 8-12
+   :lines: 9-13
 
 The declaration and mapping of path to handler following. We create an
 instance of ``Router`` class and pass mapping that in this partucular case
 is a tuple of two values: ``path`` and ``handler``.
 
 .. literalinclude:: ../demos/hello/helloworld.py
-   :lines: 15-18
+   :lines: 16-19
 
 ``main`` function serves as `WSGI`_ application entry point. The only thing
 we do here is to get a value of `WSGI`_ environment variable ``PATH_INFO``
@@ -44,7 +44,7 @@ that we ignore for now). Due to specific of the route that ends with ``/``
 our handler will match any incomming request.
 
 .. literalinclude:: ../demos/hello/helloworld.py
-   :lines: 21-23
+   :lines: 22-24
 
 The rest in the ``helloworld`` application launch a simple wsgi server.
 Try it by running::

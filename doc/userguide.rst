@@ -18,7 +18,7 @@ It is completely up to you what is ``path`` or ``handler``. If you have
 a look at :ref:`helloworld` example you notice the following:
 
 .. literalinclude:: ../demos/hello/helloworld.py
-   :lines: 21-23
+   :lines: 22-24
 
 or more precisely::
 
@@ -29,7 +29,7 @@ router for matching against available mapping. ``handler`` in this case is a
 simple callable that represents WSGI call handler.
 
 .. literalinclude:: ../demos/hello/helloworld.py
-   :lines: 8-12
+   :lines: 9-13
 
 Extend Mapping
 --------------
@@ -69,7 +69,7 @@ Named groups is something that you can get out from url mapping::
 If we get back to :ref:`helloworld` example:
 
 .. literalinclude:: ../demos/hello/helloworld.py
-   :lines: 21-23
+   :lines: 22-24
 
 ``kwargs`` is assigned with ``dict`` that represends a key-value pair
 from match::
@@ -134,7 +134,7 @@ You have an instance of :py:class:`wheezy.routing.Router`
 mapping you have. Here is how we do it in :ref:`helloworld` example:
 
 .. literalinclude:: ../demos/hello/helloworld.py
-   :lines: 15-18
+   :lines: 16-19
 
 ... or :ref:`server time`:
 

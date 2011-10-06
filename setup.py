@@ -10,11 +10,11 @@ except:
 README = open(os.path.join(os.path.dirname(__file__), 'README')).read()
 
 setup(
-    name = 'wheezy-routing',
-    version = '0.1',
+    name = 'wheezy.routing',
+    version = '0.2',
     description = 'A lightweight path routing library',
     long_description = README,
-    url = 'https://bitbucket.org/akorn/wheezy-routing',
+    url = 'https://bitbucket.org/akorn/wheezy.routing',
 
     author = 'Andriy Kornatskyy',
     author_email = 'andriy.kornatskyy at live.com',
@@ -34,8 +34,6 @@ setup(
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.0',
-        'Programming Language :: Python :: 3.1',
         'Programming Language :: Python :: 3.2',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
@@ -49,6 +47,7 @@ setup(
     ],
     packages = ['wheezy', 'wheezy.routing'],
     package_dir = {'': 'src'},
+    namespace_packages=['wheezy'],
 
     zip_safe = True,
     install_requires = [
@@ -58,10 +57,10 @@ setup(
             'wsgiref',
             'coverage',
             'nose',
-            'mocker',
             'pytest',
             'pytest-pep8',
-            'pytest-cov'
+            'pytest-cov',
+            'mocker'
         ]
     },
 

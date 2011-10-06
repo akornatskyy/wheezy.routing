@@ -10,7 +10,7 @@ modularity in `server time`_.
 Hello World
 -----------
 
-`helloworld.py`_ shows you how to use :ref:`wheezy-routing` in pretty
+`helloworld.py`_ shows you how to use :ref:`wheezy.routing` in pretty
 simple `WSGI`_ application:
 
 .. literalinclude:: ../demos/hello/helloworld.py
@@ -103,6 +103,6 @@ Try it by running::
 
 Visit http://localhost:8080/.
 
-.. _`helloworld.py`: https://bitbucket.org/akorn/wheezy-routing/src/tip/demos/hello/helloworld.py
-.. _`time`: https://bitbucket.org/akorn/wheezy-routing/src/tip/demos/time
+.. _`helloworld.py`: https://bitbucket.org/akorn/wheezy.routing/src/tip/demos/hello/helloworld.py
+.. _`time`: https://bitbucket.org/akorn/wheezy.routing/src/tip/demos/time
 .. _`WSGI`: http://www.python.org/dev/peps/pep-3333/

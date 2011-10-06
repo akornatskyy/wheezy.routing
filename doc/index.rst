@@ -1,12 +1,12 @@
-.. _`wheezy-routing`:
+.. _`wheezy.routing`:
 
-wheezy-routing
+wheezy.routing
 ==============
 
 Introduction
 ------------
 
-:ref:`wheezy-routing` is a `python`_ package written in pure Python
+:ref:`wheezy.routing` is a `python`_ package written in pure Python
 code. It is a simple mapping between URL patterns (as plain
 simple strings, curly expressions or regular expressions) to
 a handler that can be anything you like (there is no limitation
@@ -34,10 +34,10 @@ Contents
    modules
 
 .. _`python`: http://www.python.org
-.. _`source code`: https://bitbucket.org/akorn/wheezy-routing/src
-.. _`bitbucket`: https://bitbucket.org/akorn/wheezy-routing
-.. _`issues`: https://bitbucket.org/akorn/wheezy-routing/issues
-.. _`documentation`: http://packages.python.org/wheezy-routing
-.. _`examples`: https://bitbucket.org/akorn/wheezy-routing/src/tip/demos
+.. _`source code`: https://bitbucket.org/akorn/wheezy.routing/src
+.. _`bitbucket`: https://bitbucket.org/akorn/wheezy.routing
+.. _`issues`: https://bitbucket.org/akorn/wheezy.routing/issues
+.. _`documentation`: http://packages.python.org/wheezy.routing
+.. _`examples`: https://bitbucket.org/akorn/wheezy.routing/src/tip/demos
 .. _`pypi`: http://pypi.python.org
-.. _`eggs`: http://pypi.python.org/pypi/wheezy-routing
+.. _`eggs`: http://pypi.python.org/pypi/wheezy.routing

@@ -1,5 +1,5 @@
 
-""" ``p2t3`` module.
+""" ``comp`` module.
 """
 
 import sys

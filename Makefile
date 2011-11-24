@@ -35,6 +35,7 @@ env:
 	if [ "$$(echo $(VERSION) | sed 's/\.//')" -lt 30 ]; then \
 		$(EASY_INSTALL) mocker; \
 	fi
+	$(PYTHON) setup.py develop -i $(PYPI)
 
 clean:
 	find src/ -type d -name __pycache__ | xargs rm -rf

@@ -8,7 +8,7 @@ PYTHON=env/bin/python$(VERSION)
 EASY_INSTALL=env/bin/easy_install-$(VERSION)
 PYTEST=env/bin/py.test-$(VERSION)
 NOSE=env/bin/nosetests-$(VERSION)
-SPHINX=env/bin/sphinx-build
+SPHINX=/usr/bin/python /usr/bin/sphinx-build
 
 all: clean doctest-cover test release
 

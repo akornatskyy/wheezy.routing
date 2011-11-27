@@ -40,7 +40,7 @@ env:
 		pytest-pep8 pytest-cov wsgiref
 	# The following packages available for python < 3.0
 	if [ "$$(echo $(VERSION) | sed 's/\.//')" -lt 30 ]; then \
-		$(EASY_INSTALL) mocker; \
+		$(EASY_INSTALL) -i $(PYPI) -O2 mocker; \
 	fi
 	$(PYTHON) setup.py develop -i $(PYPI)
 

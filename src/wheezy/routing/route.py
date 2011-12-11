@@ -239,16 +239,16 @@ class RegexRoute(object):
             >>> r.path_no_kwargs(dict(month=6, day=9))
             'abc/6/9'
             >>> r.path_no_kwargs(dict(month=6))
-            'abc/6'
-            >>> r.path()
-            'abc'
+            'abc/6/'
+            >>> r.path()  # stripped by router
+            'abc//'
         """
 
         if values is None:
             values = {}
         parts = (isinstance(f, str) and f or f(values)
                 for f in self.parts)
-        return ''.join(parts).rstrip('/')
+        return ''.join(parts)
 
     def path_with_kwargs(self, values=None):
         """ Build the path for the given route by substituting
@@ -270,4 +270,4 @@ class RegexRoute(object):
                 self.kwargs.copy(), values)
         parts = (isinstance(f, basestring) and f or f(values)
                 for f in self.parts)
-        return ''.join(parts).rstrip('/')
+        return ''.join(parts)

@@ -205,10 +205,20 @@ class PathRouter(object):
             ...     (r'login', Login, None, 'signin')
             ... ]
             >>> r.add_routes([
-            ...     (r'admin/', admin_routes)
+            ...     (r'{lang}/admin/', admin_routes, {'lang': 'en'})
             ... ])
             >>> r.path_for(r'signin')
-            'admin/login'
+            'en/admin/login'
+
+            >>> r = PathRouter()
+            >>> admin_routes = [
+            ...     (r'', Login, None, 'signin')
+            ... ]
+            >>> r.add_routes([
+            ...     (r'{lang}/', admin_routes, {'lang': 'en'})
+            ... ])
+            >>> r.path_for(r'signin')
+            'en/'
 
             Otherwise None
 
@@ -216,9 +226,9 @@ class PathRouter(object):
         """
         route = self.route_map.get(name, None)
         if route:
-            return route.path(kwargs)
+            return route.path(kwargs).rstrip('/')
         for inner, route in self.routers:
             inner_path = inner.path_for(name, **kwargs)
-            if inner_path:
+            if inner_path is not None:
                 return route.path(kwargs) + inner_path
         return None

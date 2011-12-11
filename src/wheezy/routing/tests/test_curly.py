@@ -32,7 +32,7 @@ class PatternsTestCase(unittest.TestCase):
         """
         from wheezy.routing.curly import patterns
 
-        self.assertEquals(12, len(patterns))
+        self.assertEquals(13, len(patterns))
         synonyms_map = (
             ('i', ('int', 'digits', 'number')),
             ('w', ('word', )),

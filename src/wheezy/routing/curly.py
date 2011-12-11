@@ -21,6 +21,7 @@ patterns = {
     'segment': r'[^/]+',
     'part': r'[^/]+',
     # any
+    '*': r'.+',
     'a': r'.+',
     'any': r'.+',
     'rest': r'.+'

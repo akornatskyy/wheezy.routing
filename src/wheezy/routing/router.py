@@ -59,9 +59,11 @@ class PathRouter(object):
             >>> r.path_for('signin')
             'login'
         """
-        handler_name = name or route_name(handler)
+        name = name or route_name(handler)
+        kwargs = kwargs or {}
+        kwargs['route_name'] = name
         route = build_route(pattern, kwargs, self.route_builders)
-        self.route_map[handler_name] = route
+        self.route_map[name] = route
         self.mapping.append((route, handler))
 
     def include(self, pattern, included, kwargs=None):
@@ -137,6 +139,7 @@ class PathRouter(object):
             >>> handler, kwargs = r.match(r'login')
             >>> assert handler == Login
             >>> kwargs
+            {'route_name': 'login'}
 
             Tries to find inner match
 
@@ -162,7 +165,7 @@ class PathRouter(object):
             >>> handler, kwargs = r.match(r'en/msg')
             >>> assert handler == Message
             >>> kwargs
-            {'lang': 'en', 'id': 1}
+            {'lang': 'en', 'id': 1, 'route_name': 'message'}
 
             Otherwise return (None, None)
 
@@ -170,6 +173,7 @@ class PathRouter(object):
             >>> handler, kwargs = r.match(r'')
             >>> handler
             >>> kwargs
+            {}
         """
         for route, handler in self.mapping:
             matched, kwargs = route.match(path)
@@ -187,7 +191,7 @@ class PathRouter(object):
                         kwargs = kwargs.copy()
                         merge(kwargs, kwargs_inner)
                     return handler, kwargs
-        return None, None
+        return None, {}
 
     def path_for(self, name, **kwargs):
         """ Returns the url for the given route name.

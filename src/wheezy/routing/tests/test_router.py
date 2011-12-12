@@ -116,7 +116,8 @@ class PathRouterAddRouteTestCase(unittest.TestCase):
         self.r.add_route(r'abc', 'x', kwargs=None, name='n')
 
         route = self.r.route_map['n']
-        assert route.kwargs is None
+        assert route.kwargs
+        assert 'n' == route.kwargs['route_name']
 
     def test_with_kwargs(self):
         """ ``kwargs`` is supplied.
@@ -292,7 +293,7 @@ class PathRouterMatchTestCase(unittest.TestCase):
         handler, kwargs = self.r.match('abc')
 
         assert handler is None
-        assert kwargs is None
+        assert kwargs == {}
 
     def test_matched_is_zero(self):
         """ empty ``path`` is matched.
@@ -302,7 +303,8 @@ class PathRouterMatchTestCase(unittest.TestCase):
         mock_route = self.m.mock()
         mock_build_route = self.m.replace(builders.build_route)
         expect(
-            mock_build_route('', None, self.r.route_builders)
+                mock_build_route('', {'route_name': 'x'},
+                    self.r.route_builders)
         ).result(mock_route)
         expect(mock_route.match('')).result((0, None))
         self.m.replay()
@@ -354,7 +356,7 @@ class PathRouterMatchInnerTestCase(unittest.TestCase):
         handler, kwargs = self.r.match('abc/de')
 
         assert handler is None
-        assert kwargs is None
+        assert kwargs == {}
 
     def test_no_match_continue(self):
         """ there is no match, continue with the rest
@@ -465,7 +467,10 @@ class PathRouterPathForTestCase(unittest.TestCase):
         mock_route = self.m.mock()
         mock_build_route = self.m.replace(builders.build_route)
         expect(
-            mock_build_route('abc', None, self.r.route_builders)
+                mock_build_route(
+                    'abc',
+                    {'route_name': 'n'},
+                    self.r.route_builders)
         ).result(mock_route)
         expect(mock_route.path({'a': 1})).result('abc')
         self.m.replay()

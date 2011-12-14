@@ -6,6 +6,7 @@ import re
 
 from wheezy.routing.comp import basestring
 from wheezy.routing.utils import merge
+from wheezy.routing.utils import outer_split
 
 
 class Route(object):
@@ -135,28 +136,37 @@ class PlainRoute(Route):
         return self.pattern
 
 
+RE_SPLIT = re.compile(r'\<(\w+)\>')
+
+
+def parse_pattern(pattern, value_provider):
+    """
+        >>> f = lambda v: '{%s}' % v
+        >>> parse_pattern('abc/(?P<id>[^/]+)', f)
+        ('abc/', '{id}')
+        >>> parse_pattern('abc/(?P<n>[^/]+)/(?P<x>\\\w+)', f)
+        ('abc/', '{n}', '/', '{x}')
+        >>> parse_pattern('(?P<locale>(en|ru))/home', f)
+        ('{locale}', '/home')
+    """
+    parts = outer_split(pattern, sep='()')
+    parts[1::2] = [value_provider(RE_SPLIT.split(p)[1])
+            for p in parts[1::2]]
+    return tuple(v for v in parts if v)
+
+
 class RegexRoute(object):
     """ Route based on regular expression matching.
     """
 
-    RE_SPLIT = re.compile(r'\(\?P(\<\w+\>).+?\)')
-
     def __init__(self, pattern, kwargs=None):
-        """
-        """
         self.pattern = pattern
         self.kwargs = kwargs
         self.regex = re.compile(pattern)
 
-        def f(value):
-            if value.startswith('<') and value.endswith('>'):
-                value = value[1:-1]
-                return lambda values: str(values.get(value, ''))
-            else:
-                return value
-
-        split = RegexRoute.RE_SPLIT.split(pattern)
-        self.parts = tuple((f(v) for v in split if v))
+        self.parts = parse_pattern(
+                pattern,
+                lambda name: lambda values: str(values.get(name, '')))
         # Choose match strategy
         if kwargs:
             self.match = self.match_with_kwargs

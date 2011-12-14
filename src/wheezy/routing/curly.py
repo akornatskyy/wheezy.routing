@@ -5,7 +5,7 @@
 import re
 
 
-RE_SPLIT = re.compile('(?P<n>\{[\w:]+\})')
+RE_SPLIT = re.compile('(?P<n>\{[\w:]+.*?\})')
 
 patterns = {
     # one or more digits
@@ -42,6 +42,9 @@ def convert(s):
 
         >>> convert(r'abc/{n}/{x:w}')
         'abc/(?P<n>[^/]+)/(?P<x>\\\w+)'
+
+        >>> convert(r'{locale:(en|ru)}/home')
+        '(?P<locale>(en|ru))/home'
     """
     parts = RE_SPLIT.split(s)
     return ''.join(map(replace, parts))
@@ -68,16 +71,14 @@ def replace(val):
         >>> replace('{abc:i}')
         '(?P<abc>\\\d+)'
 
-        The ``pattern_name`` not found raise ``KeyError``.
+        The ``pattern_name`` not found use it as pattern.
 
-        >>> replace('{abc:x}')
-        Traceback (most recent call last):
-            ...
-        KeyError: 'x'
+        >>> replace('{locale:(en|ru)}')
+        '(?P<locale>(en|ru))'
     """
     if val.startswith('{') and val.endswith('}'):
         group_name, pattern_name = parse(val[1:-1])
-        pattern = patterns[pattern_name]
+        pattern = patterns.get(pattern_name, pattern_name)
         return '(?P<%s>%s)' % (group_name, pattern)
     return val
 

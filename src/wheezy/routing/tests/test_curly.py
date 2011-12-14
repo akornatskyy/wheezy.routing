@@ -108,10 +108,9 @@ class ReplaceTestCase(unittest.TestCase):
         """
         from wheezy.routing.curly import replace
 
-        self.assertRaises(
-                KeyError,
-                lambda: replace('{abc:x}')
-        )
+        p = replace('{abc:(x|y)}')
+
+        self.assertEquals(r'(?P<abc>(x|y))', p)
 
 
 class ParseTestCase(unittest.TestCase):

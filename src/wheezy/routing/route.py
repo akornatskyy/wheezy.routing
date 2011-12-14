@@ -149,7 +149,7 @@ def parse_pattern(pattern, value_provider):
         >>> parse_pattern('(?P<locale>(en|ru))/home', f)
         ('{locale}', '/home')
 
-        >>> from curly import convert
+        >>> from wheezy.routing.curly import convert
         >>> parse_pattern(convert('[{locale:(en|ru)}/]home'), f)
         ('{locale}', '/home')
         >>> parse_pattern(convert('item[/{id:i}]'), f)

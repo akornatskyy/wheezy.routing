@@ -161,7 +161,6 @@ def parse_pattern(pattern, value_provider):
     """
     pattern = strip_optional(pattern)
     parts = outer_split(pattern, sep='()')
-    parts[::2] = [p.lstrip('?') for p in parts[::2]]
     parts[1::2] = [value_provider(RE_SPLIT.split(p)[1])
             for p in parts[1::2]]
     return tuple(v for v in parts if v)

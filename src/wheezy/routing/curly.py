@@ -3,6 +3,7 @@
 """
 
 import re
+from wheezy.routing.utils import outer_split
 
 
 RE_SPLIT = re.compile('(?P<n>\{[\w:]+.*?\})')
@@ -45,6 +46,30 @@ def convert(s):
 
         >>> convert(r'{locale:(en|ru)}/home')
         '(?P<locale>(en|ru))/home'
+
+        >>> convert(r'{locale:(en|ru)}/home')
+        '(?P<locale>(en|ru))/home'
+
+        Operates with optional values in square brackets
+
+        >>> convert(r'[{locale:(en|ru)}/]home')
+        '((?P<locale>(en|ru))/)?home'
+
+        >>> convert(r'item[/{id:i}]')
+        'item(/(?P<id>\\\d+))?'
+
+        >>> convert(r'{controller:w}[/{action:w}[/{id:i}]]')
+        '(?P<controller>\\\w+)(/(?P<action>\\\w+)(/(?P<id>\\\d+))?)?'
+    """
+    parts = outer_split(s, sep='[]')
+    parts[1::2] = ['(%s)?' % p for p in map(convert, parts[1::2])]
+    parts[::2] = map(conver_single, parts[::2])
+    return ''.join(parts)
+
+
+def conver_single(s):
+    """ Convert curly expression into regex with
+        named groups.
     """
     parts = RE_SPLIT.split(s)
     return ''.join(map(replace, parts))

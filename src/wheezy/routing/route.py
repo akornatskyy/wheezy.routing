@@ -148,11 +148,54 @@ def parse_pattern(pattern, value_provider):
         ('abc/', '{n}', '/', '{x}')
         >>> parse_pattern('(?P<locale>(en|ru))/home', f)
         ('{locale}', '/home')
+
+        >>> from curly import convert
+        >>> parse_pattern(convert('[{locale:(en|ru)}/]home'), f)
+        ('{locale}', '/home')
+        >>> parse_pattern(convert('item[/{id:i}]'), f)
+        ('item/', '{id}')
+
+        >> p = convert(r'{controller:w}[/{action:w}[/{id:i}]]')
+        >> parse_pattern(p, f)
+        ('{controller}', '/', '{action}', '/', '{id}')
     """
+    pattern = strip_optional(pattern)
     parts = outer_split(pattern, sep='()')
+    parts[::2] = [p.lstrip('?') for p in parts[::2]]
     parts[1::2] = [value_provider(RE_SPLIT.split(p)[1])
             for p in parts[1::2]]
     return tuple(v for v in parts if v)
+
+
+def strip_optional(pattern):
+    """
+        at the beginning
+
+        >>> strip_optional('((?P<locale>(en|ru))/)?home')
+        '(?P<locale>(en|ru))/home'
+
+        at the end
+
+        >>> strip_optional('item(/(?P<id>\\\d+))?')
+        'item/(?P<id>\\\d+)'
+
+        nested:
+
+        >>> p = '(?P<controller>\\\w+)(/(?P<action>\\\w+)(/(?P<id>\\\d+))?)?'
+        >>> strip_optional(p)
+        '(?P<controller>\\\w+)/(?P<action>\\\w+)/(?P<id>\\\d+)'
+    """
+    if ')?' not in pattern:
+        return pattern
+    parts = outer_split(pattern, sep='()')
+    for i in range(2, len(parts), 2):
+        part = parts[i]
+        if part.startswith('?'):
+            parts[i] = part[1:]
+            parts[i - 1] = strip_optional(parts[i - 1])
+        else:
+            parts[i - 1] = "(%s)" % parts[i - 1]
+    return ''.join(parts)
 
 
 class RegexRoute(object):

@@ -29,6 +29,7 @@ else:  # pragma: nocover
 
     callable = callable
 
+
 if PY3:  # pragma: nocover
     iteritems = lambda d: d.items()
     copyitems = lambda d: list(d.items())

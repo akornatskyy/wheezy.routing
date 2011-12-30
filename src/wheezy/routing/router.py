@@ -4,7 +4,8 @@
 
 from wheezy.routing.builders import build_route
 from wheezy.routing.config import route_builders as default_route_builders
-from wheezy.routing.utils import route_name, merge
+from wheezy.routing.utils import merge
+from wheezy.routing.utils import route_name
 
 
 def url(pattern, handler, kwargs=None, name=None):

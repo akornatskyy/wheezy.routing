@@ -7,7 +7,7 @@ import re
 from wheezy.routing.comp import iteritems
 
 
-RE_STRIP_NAME = re.compile(r'(Handler|Controller)$')
+RE_STRIP_NAME = re.compile(r'(Handler|Controller|Page|View)$')
 RE_CAMELCASE_TO_UNDERSCOPE_1 = re.compile('(.)([A-Z][a-z]+)')
 RE_CAMELCASE_TO_UNDERSCOPE_2 = re.compile('([a-z0-9])([A-Z])')
 
@@ -40,6 +40,10 @@ def strip_name(s):
         >>> strip_name('LoginHandler')
         'Login'
         >>> strip_name('LoginController')
+        'Login'
+        >>> strip_name('LoginPage')
+        'Login'
+        >>> strip_name('LoginView')
         'Login'
         >>> strip_name('LoginHandler2')
         'LoginHandler2'

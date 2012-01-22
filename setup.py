@@ -11,7 +11,7 @@ README = open(os.path.join(os.path.dirname(__file__), 'README')).read()
 
 setup(
     name = 'wheezy.routing',
-    version = '0.2',
+    version = '0.1',
     description = 'A lightweight path routing library',
     long_description = README,
     url = 'https://bitbucket.org/akorn/wheezy.routing',
@@ -42,9 +42,7 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Utilities'
     ],
-    keywords = [
-        'routing', 'path', 'url', 'patterns', 'match', 'web', 'mapping'
-    ],
+    keywords = 'routing path url patterns match web mapping',
     packages = ['wheezy', 'wheezy.routing'],
     package_dir = {'': 'src'},
     namespace_packages=['wheezy'],

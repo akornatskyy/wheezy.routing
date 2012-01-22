@@ -10,17 +10,17 @@ except:
 README = open(os.path.join(os.path.dirname(__file__), 'README')).read()
 
 setup(
-    name = 'wheezy.routing',
-    version = '0.1',
-    description = 'A lightweight path routing library',
-    long_description = README,
-    url = 'https://bitbucket.org/akorn/wheezy.routing',
+    name='wheezy.routing',
+    version='0.1',
+    description='A lightweight path routing library',
+    long_description=README,
+    url='https://bitbucket.org/akorn/wheezy.routing',
 
-    author = 'Andriy Kornatskyy',
-    author_email = 'andriy.kornatskyy at live.com',
+    author='Andriy Kornatskyy',
+    author_email='andriy.kornatskyy at live.com',
 
-    license = 'MIT',
-    classifiers = [
+    license='MIT',
+    classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
@@ -42,15 +42,15 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Utilities'
     ],
-    keywords = 'routing path url patterns match web mapping',
-    packages = ['wheezy', 'wheezy.routing'],
-    package_dir = {'': 'src'},
+    keywords='routing path url patterns match web mapping',
+    packages=['wheezy', 'wheezy.routing'],
+    package_dir={'': 'src'},
     namespace_packages=['wheezy'],
 
-    zip_safe = True,
-    install_requires = [
+    zip_safe=True,
+    install_requires=[
     ],
-    extras_require = {
+    extras_require={
         'dev': [
             'wsgiref',
             'coverage',
@@ -62,5 +62,5 @@ setup(
         ]
     },
 
-    platforms = 'any'
+    platforms='any'
 )

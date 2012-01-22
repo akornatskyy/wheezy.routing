@@ -1,5 +1,6 @@
 
-""" Package ``wheezy.routing``.
+""" ``routing`` package.
 """
 
-from wheezy.routing.router import url, PathRouter as Router
+from wheezy.routing.router import PathRouter
+from wheezy.routing.router import url

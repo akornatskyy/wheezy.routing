@@ -19,4 +19,4 @@ class RoutingPackageImportTestCase(unittest.TestCase):
         x = [x for x in dir(routing) if x[:2] != '__'
                 and not ismodule(eval('routing.' + x))]
 
-        self.assertEqual(['Router', 'url'], x)
+        self.assertEqual(['PathRouter', 'url'], x)

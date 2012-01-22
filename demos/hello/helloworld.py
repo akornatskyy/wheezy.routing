@@ -2,7 +2,7 @@
 """ ``helloworld`` module.
 """
 
-from wheezy.routing import Router
+from wheezy.routing import PathRouter
 from wheezy.routing.comp import ntob
 
 
@@ -13,7 +13,7 @@ def hello_world(environ, start_response):
     yield ntob('Hello World!', 'utf-8')
 
 
-r = Router()
+r = PathRouter()
 r.add_routes([
     ('/', hello_world)
 ])

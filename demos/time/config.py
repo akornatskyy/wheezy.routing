@@ -2,7 +2,8 @@
 """ ``config`` module.
 """
 
-from wheezy.routing import url, Router
+from wheezy.routing import PathRouter
+from wheezy.routing import url
 
 
-router = Router()
+router = PathRouter()

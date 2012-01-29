@@ -3,21 +3,26 @@ Examples
 ========
 
 We start with a simple `helloworld`_ example, than add a bit more
-modularity in `server time`_.
+modularity in `server time`_. Before we proceed with examples below
+let setup `virtualenv`_ environment::
+
+    $ virtualenv env
+    $ env/bin/easy_install wheezy.routing
+
 
 .. _helloworld:
 
 Hello World
 -----------
 
-`helloworld.py`_ shows you how to use :ref:`wheezy.routing` in pretty
+`helloworld.py`_ shows you how to use :ref:`wheezy.routing` in pretty a
 simple `WSGI`_ application:
 
 .. literalinclude:: ../demos/hello/helloworld.py
    :lines: 5-
 
 Let have a look through each line in this application. First of all we
-import :py:class:`~wheezy.routing.Router` that is actually just an
+import :py:class:`~wheezy.routing.PathRouter` that is actually just an
 exporting name for :py:class:`~wheezy.routing.router.PathRouter`:
 
 .. literalinclude:: ../demos/hello/helloworld.py
@@ -28,9 +33,9 @@ Next we create a pretty simple WSGI handler to provide a response.
 .. literalinclude:: ../demos/hello/helloworld.py
    :lines: 9-13
 
-The declaration and mapping of path to handler following. We create an
-instance of ``Router`` class and pass mapping that in this partucular case
-is a tuple of two values: ``path`` and ``handler``.
+The declaration and mapping of pattern to handler following. We create an
+instance of ``PathRouter`` class and pass mapping that in this partucular case
+is a tuple of two values: ``pattern`` and ``handler``.
 
 .. literalinclude:: ../demos/hello/helloworld.py
    :lines: 16-19
@@ -49,7 +54,7 @@ our handler will match any incomming request.
 The rest in the ``helloworld`` application launch a simple wsgi server.
 Try it by running::
 
-    make run-hello
+    $ python helloworld.py
 
 Visit http://localhost:8080/.
 
@@ -65,10 +70,10 @@ sample is moular. Let's start with ``config`` module. The only thing we
 need here is an instance of ``Route``.
 
 .. literalinclude:: ../demos/time/config.py
-   :lines: 5-8
+   :lines: 5-9
 
 ``view`` module is pretty straight: a ``welcome`` view with a link to
-``server_time`` view. The time page returns the server time. And finally
+``server_time`` view. The server time page returns server time. And finally
 catch all ``not_found`` handler to display http 404 error, page not found.
 
 .. literalinclude:: ../demos/time/views.py
@@ -87,9 +92,9 @@ The name ``now`` was used during url mapping that you can see below (module
    :lines: 5-
 
 ``server_urls`` than included under the parent path ``server/``, so
-anything tha starts from ``server/`` path will be directed to
+anything that starts from ``server/`` path will be directed to
 ``server_urls`` url mapping. Lastly we add a curly expression that maps
-any url to our ``not_found`` handler.
+any url match to our ``not_found`` handler.
 
 We combine that all together in ``app`` module.
 
@@ -99,10 +104,11 @@ We combine that all together in ``app`` module.
 
 Try it by running::
 
-    make run-time
+    $ python app.py
 
 Visit http://localhost:8080/.
 
+.. _`virtualenv`: http://pypi.python.org/pypi/virtualenv
 .. _`helloworld.py`: https://bitbucket.org/akorn/wheezy.routing/src/tip/demos/hello/helloworld.py
 .. _`time`: https://bitbucket.org/akorn/wheezy.routing/src/tip/demos/time
-.. _`WSGI`: http://www.python.org/dev/peps/pep-3333/
+.. _`WSGI`: http://www.python.org/dev/peps/pep-3333

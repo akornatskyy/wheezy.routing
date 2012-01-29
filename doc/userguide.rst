@@ -2,11 +2,12 @@
 User Guide
 ==========
 
-Path and Handler
-----------------
+Pattern and Handler
+-------------------
 
-You create a mapping between: a remainder of the request URL (virtual
-location or url ``path``) and a ``handler``.::
+You create a mapping between: ``pattern`` (a remainder of the request URL,
+script name, http schema, host name or whatever else) and ``handler``
+(callable, string, etc.)::
 
     urls = [
          ('posts/2003', posts_for_2003),
@@ -14,8 +15,9 @@ location or url ``path``) and a ``handler``.::
          ('posts/(?P<year>\d+)/(?P<month>\d+)', posts_by_month)
     ]
 
-It is completely up to you what is ``path`` or ``handler``. If you have
-a look at :ref:`helloworld` example you notice the following:
+It is completely up to you how to interpret ``pattern`` (you can add own
+patterns interpretation) and/or ``handler``. If you have a look at
+:ref:`helloworld` example you notice the following:
 
 .. literalinclude:: ../demos/hello/helloworld.py
    :lines: 22-24
@@ -36,7 +38,7 @@ Extend Mapping
 
 Since ``mapping`` is nothing more than python list, you can make any
 manipulation you like, e.g. add other mappings, construct them dynamically,
-etc. Here is example from :ref:`server time` example:
+etc. Here is snippet from :ref:`server time` example:
 
 .. literalinclude:: ../demos/time/urls.py
    :lines: 12-19
@@ -47,8 +49,9 @@ Mapping Inclusion
 -----------------
 
 Your application may be constructed with several modules, each of them
-can have own urls mapping. You can easily include them in case a ``handler``
-place is used by other mapping. Here is an example from :ref:`server time`:
+can have own url mapping. You can easily include them as a ``handler`` (the
+system checks if the handler is another mapping it creates nested
+``PathRouter``). Here is an example from :ref:`server time`:
 
 .. literalinclude:: ../demos/time/urls.py
    :lines: 8-15
@@ -128,7 +131,7 @@ When you know name for url mapping you can reconstruct it path.
 Adding Routes
 -------------
 
-You have an instance of :py:class:`wheezy.routing.Router`
+You have an instance of :py:class:`wheezy.routing.PathRouter`
 (:py:class:`~wheezy.routing.router.PathRouter`). Call it method
 :py:meth:`~wheezy.routing.router.PathRouter.add_routes` to add any
 mapping you have. Here is how we do it in :ref:`helloworld` example:
@@ -144,27 +147,33 @@ mapping you have. Here is how we do it in :ref:`helloworld` example:
 Route Builders
 --------------
 
-Every path mapping you add to router is translated to appropriate route
-match strategy. The avaiable routing match strategies are definded in
-:py:mod:`~wheezy.routing.config` module by ``route_builders`` list include:
+Every pattern mapping you add to router is translated to appropriate route
+match strategy. The available routing match strategies are definded in
+:py:mod:`~wheezy.routing.config` module by ``route_builders`` list and 
+include:
 
 #. plain
 #. regex
 #. curly
 
+You can easily extend this list with your own route strategies.
+
 Plain Route
 ~~~~~~~~~~~
 
 The plain route is selected in case the path satisfy the following regular
-expression (at least one ``word``, ``'/'`` or ``'-'`` character)::
+expression (at least one ``word``, ``'/'`` or ``'-'`` character):
 
-    ^[\w/-]+$
+.. literalinclude:: ../src/wheezy/routing/builders.py
+   :lines: 14-14
 
 The matching paths include: ``account/login``, ``blog/list``, etc. The
-strategy performs exact string marching. In case the matching string ends
-with path segment delimiter character ``'/'``, the strategy is changed to
-match the beginning of path, thus ``server/`` pattern match any path starting
-with ``server/``, e.g. ``server/info``, etc.
+strategy performs exact string marching.
+
+In case the matching string ends with path segment delimiter character 
+``'/'``, the strategy is changed to match the beginning of path, thus 
+``server/`` pattern match any path starting with ``server/``, e.g. 
+``server/info``, etc.
 
 Regex Route
 ~~~~~~~~~~~
@@ -178,25 +187,50 @@ named groups with values supplied.
 Curly Route
 ~~~~~~~~~~~
 
-This is just a simplified version of regex routes. You define a named group
-by using curly brakets. The curly expression ``abc/{id}`` is convered into
-regex ``abc/(?P<id>[^/]+)``. The form of curly expression (``pattern`` is
-optional and corresponds to segment by default)::
+This is just a simplified version of regex routes. Curly route is something
+that match the following regular expression:
+
+.. literalinclude:: ../src/wheezy/routing/curly.py
+   :lines: 9-9
+
+You define a named group by using curly brakets. The form of 
+curly expression (``pattern`` is optional and corresponds to segment by 
+default)::
 
     {name[:pattern]}
+    
+The curly expression ``abc/{id}`` is convered into regex ``abc/(?P<id>[^/]+)``.
 
-The name inside curly expression can be
-constrained with the following patterns:
+The name inside curly expression can be constrained with the following 
+patterns:
 
 - ``i``, ``int``, ``number``, ``digits`` - one or more digits
 - ``w``, ``word`` - one or more word characters
 - ``s``, ``segment``, ``part`` - everything until ``'/'`` (path segment)
-- ``a``, ``any``, ``rest`` - match anything
+- ``*``, ``a``, ``any``, ``rest`` - match anything
+
+Note that if pattern constraint doesn't corresponds to anything mentioned 
+above than it is interpreted as a regular expression::
+
+    locale:(en|ru)}/home => (?P<locale>(en|ru))/home
+
+Curly route also supports optional values (these should be taken into
+square brackets)::
+
+    [{locale:(en|ru)}/]home => ((?P<locale>(en|ru))/)?home
 
 Here are examples of valid expressions::
 
     posts/{year:i}/{month:i}
     account/{name:w}
+    
+You can extend recognized curly patterns::
+
+    from wheezy.routing.curly import patterns
+    
+    patterns['w'] = r'\w+'
+
+This way you can add your custom patterns.
 
 Building Paths
 --------------
@@ -208,8 +242,8 @@ how the name of url mapping is cunstructed. Here is a example from
 .. literalinclude:: ../demos/time/views.py
    :lines: 14-15
 
-You can pass optional ``values`` that will be used to replace named groups
-of the path matching pattern::
+You can pass optional values (``kwargs`` argument) that will be used 
+to replace named groups of the path matching pattern::
 
     >>> r = RegexRoute(
     ...     r'abc/(?P<month>\d+)/(?P<day>\d+)'

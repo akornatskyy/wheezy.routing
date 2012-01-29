@@ -9,11 +9,11 @@ server_urls = [
     url('time', server_time, name='now')
 ]
 
-home = [
+all_urls = [
     ('', welcome),
     ('server/', server_urls)
 ]
 
-home += [
+all_urls += [
     url('{url:any}', not_found)
 ]

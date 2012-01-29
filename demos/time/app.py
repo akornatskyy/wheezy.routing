@@ -2,11 +2,11 @@
 """ ``app`` module.
 """
 
-import config
-import urls
+from config import router
+from urls import all_urls
 
-r = config.router
-r.add_routes(urls.home)
+
+router.add_routes(all_urls)
 
 
 def main(environ, start_response):

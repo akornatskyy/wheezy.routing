@@ -53,7 +53,7 @@ def strip_name(s):
 
 def camelcase_to_underscore(s):
     """ Convert CamelCase to camel_case.
-    
+
         >>> camelcase_to_underscore('MainPage')
         'main_page'
         >>> camelcase_to_underscore('Login')

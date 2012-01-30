@@ -81,7 +81,7 @@ def replace(val):
 
         If the ``val`` is not an expression in curly brackets
         simply return it.
-        
+
         >>> replace('abc')
         'abc'
 
@@ -114,7 +114,7 @@ def parse(s):
 
         There is just ``group_name``, return default
         ``pattern_name``.
-        
+
         >>> parse('abc')
         ('abc', 's')
 

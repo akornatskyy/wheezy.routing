@@ -14,13 +14,14 @@ you like (there is no limitation or prescription what handler is
 or should be).
 
 The mapping can include other mappings and constructed dynamically.
+
 It is optimized for performance, well tested and documented.
 
 Resources:
 
 * `source code`_, `examples`_ and `issues`_ tracker are available
   on `bitbucket`_
-* `documentation`_
+* `documentation`_, `readthedocs`_
 * `eggs`_ on `pypi`_
 
 Contents
@@ -34,11 +35,12 @@ Contents
    userguide
    modules
 
-.. _`python`: http://www.python.org
-.. _`source code`: https://bitbucket.org/akorn/wheezy.routing/src
 .. _`bitbucket`: https://bitbucket.org/akorn/wheezy.routing
-.. _`issues`: https://bitbucket.org/akorn/wheezy.routing/issues
 .. _`documentation`: http://packages.python.org/wheezy.routing
-.. _`examples`: https://bitbucket.org/akorn/wheezy.routing/src/tip/demos
-.. _`pypi`: http://pypi.python.org
 .. _`eggs`: http://pypi.python.org/pypi/wheezy.routing
+.. _`examples`: https://bitbucket.org/akorn/wheezy.routing/src/tip/demos
+.. _`issues`: https://bitbucket.org/akorn/wheezy.routing/issues
+.. _`pypi`: http://pypi.python.org
+.. _`python`: http://www.python.org
+.. _`readthedocs`: http://readthedocs.org/builds/wheezyrouting/
+.. _`source code`: https://bitbucket.org/akorn/wheezy.routing/src

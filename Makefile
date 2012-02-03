@@ -72,6 +72,10 @@ test-cover:
 doc:
 	$(SPHINX) -a -b html doc/ doc/_build/
 
+pdf:
+	$(SPHINX) -b latex -d doc/_build/doctrees doc/ doc/_build/latex
+	make -C doc/_build/latex all-pdf
+
 test-demos:
 	$(PYTEST) -q -x --pep8 demos/
 

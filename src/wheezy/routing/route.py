@@ -143,27 +143,29 @@ def parse_pattern(pattern, value_provider):
     """
         >>> f = lambda v: '{%s}' % v
         >>> parse_pattern('abc/(?P<id>[^/]+)', f)
-        ('abc/', '{id}')
+        ['abc/', '{id}']
         >>> parse_pattern('abc/(?P<n>[^/]+)/(?P<x>\\\w+)', f)
-        ('abc/', '{n}', '/', '{x}')
+        ['abc/', '{n}', '/', '{x}']
         >>> parse_pattern('(?P<locale>(en|ru))/home', f)
-        ('{locale}', '/home')
+        ['', '{locale}', '/home']
 
         >>> from wheezy.routing.curly import convert
         >>> parse_pattern(convert('[{locale:(en|ru)}/]home'), f)
-        ('{locale}', '/home')
+        ['', '{locale}', '/home']
         >>> parse_pattern(convert('item[/{id:i}]'), f)
-        ('item/', '{id}')
+        ['item/', '{id}']
 
         >> p = convert(r'{controller:w}[/{action:w}[/{id:i}]]')
         >> parse_pattern(p, f)
-        ('{controller}', '/', '{action}', '/', '{id}')
+        ['', '{controller}', '/', '{action}', '/', '{id}']
     """
     pattern = strip_optional(pattern)
     parts = outer_split(pattern, sep='()')
+    if len(parts) % 2 == 1 and not parts[-1]:
+        parts = parts[:-1]
     parts[1::2] = [value_provider(RE_SPLIT.split(p)[1])
             for p in parts[1::2]]
-    return tuple(v for v in parts if v)
+    return parts
 
 
 def strip_optional(pattern):
@@ -300,8 +302,9 @@ class RegexRoute(object):
 
         if values is None:
             values = {}
-        return ''.join([isinstance(f, basestring) and f or f(values)
-                for f in self.parts])
+        parts = self.parts[:]
+        parts[1::2] = [f(values) for f in parts[1::2]]
+        return ''.join(parts)
 
     def path_with_kwargs(self, values=None):
         """ Build the path for the given route by substituting
@@ -322,5 +325,6 @@ class RegexRoute(object):
             values = dict(self.kwargs, **values)
         else:
             values = self.kwargs
-        return ''.join([isinstance(f, basestring) and f or f(values)
-                for f in self.parts])
+        parts = self.parts[:]
+        parts[1::2] = [f(values) for f in parts[1::2]]
+        return ''.join(parts)

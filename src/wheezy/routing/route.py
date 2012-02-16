@@ -206,16 +206,19 @@ class RegexRoute(object):
         self.kwargs = kwargs
         self.regex = re.compile(pattern)
 
-        self.parts = parse_pattern(
-                pattern,
-                lambda name: lambda values: str(values.get(name, '')))
         # Choose match strategy
         if kwargs:
+            def value_provider(name):
+                self.kwargs.setdefault(name, '')
+                return lambda values: str(values[name])
             self.match = self.match_with_kwargs
             self.path = self.path_with_kwargs
         else:
+            def value_provider(name):
+                return lambda values: str(values.get(name, ''))
             self.match = self.match_no_kwargs
             self.path = self.path_no_kwargs
+        self.parts = parse_pattern(pattern, value_provider)
 
     def match_no_kwargs(self, path):
         """ If the ``path`` match the regex pattern.
@@ -277,8 +280,7 @@ class RegexRoute(object):
         m = self.regex.match(path)
         if m:
             kwargs = m.groupdict()
-            return (m.end(), not kwargs and self.kwargs or merge(
-                        self.kwargs.copy(), kwargs))
+            return (m.end(), merge(self.kwargs.copy(), kwargs))
         return -1, None
 
     def path_no_kwargs(self, values=None):
@@ -298,9 +300,8 @@ class RegexRoute(object):
 
         if values is None:
             values = {}
-        parts = (isinstance(f, str) and f or f(values)
-                for f in self.parts)
-        return ''.join(parts)
+        return ''.join([isinstance(f, basestring) and f or f(values)
+                for f in self.parts])
 
     def path_with_kwargs(self, values=None):
         """ Build the path for the given route by substituting
@@ -317,9 +318,9 @@ class RegexRoute(object):
             >>> r.path()
             'abc/1/1'
         """
-
-        values = not values and self.kwargs or merge(
-                self.kwargs.copy(), values)
-        parts = (isinstance(f, basestring) and f or f(values)
-                for f in self.parts)
-        return ''.join(parts)
+        if values:
+            values = dict(self.kwargs, **values)
+        else:
+            values = self.kwargs
+        return ''.join([isinstance(f, basestring) and f or f(values)
+                for f in self.parts])

@@ -273,7 +273,7 @@ class RegexRouteMatchWithKwargsPartsTestCase(unittest.TestCase):
 
         self.assertEquals(3, matched)
         self.assertEquals(kw, kwargs)
-        assert kw is kwargs
+        assert kw is not kwargs
 
     def test_match_merge(self):
         """ default kwargs are merged with match kwargs.

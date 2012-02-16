@@ -4,8 +4,6 @@
 
 import re
 
-from wheezy.routing.comp import iteritems
-
 
 RE_STRIP_NAME = re.compile(r'(Handler|Controller|Page|View)$')
 RE_CAMELCASE_TO_UNDERSCOPE_1 = re.compile('(.)([A-Z][a-z]+)')
@@ -67,14 +65,15 @@ def merge(d1, d2):
     """ Update ``d1`` from ``d2`` only if a value in ``d2``
         is evaluated to boolean True.
 
-        >>> d1 = dict(a=1,b=None,c=2)
-        >>> d2 = dict(a=None,b=2,c=1)
+        >>> d1 = dict(a=1,b=None,c=2, d=3)
+        >>> d2 = dict(a=None,b=2,c=1, e=4)
         >>> merge(d1, d2)
-        {'a': 1, 'c': 1, 'b': 2}
+        {'a': 1, 'c': 1, 'b': 2, 'e': 4, 'd': 3}
     """
     #d1.update(((k, v) for k, v in d2.iteritems() if v))
     #d1.update(((k, d2[k]) for k in d2 if d2[k]))
-    d1.update(((k, v) for k, v in iteritems(d2) if v))
+    #d1.update([(k, v) for k, v in iteritems(d2) if v])
+    d1.update([(k, v) for k, v in d2.items() if v])
     return d1
 
 

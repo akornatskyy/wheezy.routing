@@ -19,11 +19,11 @@ Install
 -------
 
 `wheezy.routing`_ requires `python`_ version 2.4 to 2.7 or 3.2.
-It is independent of operating system. You can install it from `pypi`_ 
+It is independent of operating system. You can install it from `pypi`_
 site using `setuptools`_::
 
     $ easy_install wheezy.routing
-    
+
 If you are using `virtualenv`_::
 
     $ virtualenv env
@@ -45,14 +45,14 @@ Prepare `virtualenv`_ environment in *env* directory ::
 
     $ make test
 
-You can read how to compile from source code different versions of 
+You can read how to compile from source code different versions of
 `python`_ in the `article`_ published on `mind reference`_ blog.
 
 You can run certain make targets with specific python version. Here
 we are going to run `doctest`_ with python3.2::
 
     $ make env doctest-cover VERSION=3.2
-    
+
 Generate documentation with `sphinx`_::
 
 	$ make doc
@@ -67,13 +67,13 @@ If you run into any issue or have comments, go ahead and add on
 .. _`eggs`: http://pypi.python.org/pypi/wheezy.routing
 .. _`examples`: https://bitbucket.org/akorn/wheezy.routing/src/tip/demos
 .. _`issues`: https://bitbucket.org/akorn/wheezy.routing/issues
-.. _`mercurial`: http://mercurial.selenic.com/
-.. _`mind reference`: http://mindref.blogspot.com/
-.. _`pypi`: http://pypi.python.org/pypi/wheezy.routing
+.. _`mercurial`: http://mercurial.selenic.com
+.. _`mind reference`: http://mindref.blogspot.com
+.. _`pypi`: http://pypi.python.org/
 .. _`python`: http://www.python.org
-.. _`readthedocs`: http://readthedocs.org/builds/wheezyrouting/
+.. _`readthedocs`: http://readthedocs.org/builds/wheezyrouting
 .. _`setuptools`: http://pypi.python.org/pypi/setuptools
 .. _`source code`: https://bitbucket.org/akorn/wheezy.routing/src
-.. _`sphinx`: http://sphinx.pocoo.org/
+.. _`sphinx`: http://sphinx.pocoo.org
 .. _`virtualenv`: http://pypi.python.org/pypi/virtualenv
 .. _`wheezy.routing`: http://pypi.python.org/pypi/wheezy.routing

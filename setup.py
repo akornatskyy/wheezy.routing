@@ -35,19 +35,20 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.2',
+        'Programming Language :: Python :: Implementation :: CPython',
+        'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Internet :: WWW/HTTP :: WSGI',
         'Topic :: Internet :: WWW/HTTP :: WSGI :: Application',
-        'Topic :: Software Development :: Libraries :: Python Modules',
-        'Topic :: Utilities'
+        'Topic :: Software Development :: Libraries :: Python Modules'
     ],
     keywords='routing path url patterns match web mapping',
     packages=['wheezy', 'wheezy.routing'],
     package_dir={'': 'src'},
     namespace_packages=['wheezy'],
 
-    zip_safe=True,
+    zip_safe=False,
     install_requires=[
     ],
     extras_require={

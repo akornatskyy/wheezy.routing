@@ -63,7 +63,8 @@ class PathRouter(object):
         name = name or route_name(handler)
         kwargs = kwargs or {}
         kwargs['route_name'] = name
-        route = build_route(pattern, kwargs, self.route_builders)
+        # build finishing route
+        route = build_route(pattern, True, kwargs, self.route_builders)
         self.route_map[name] = route
         self.mapping.append((route, handler))
 
@@ -82,7 +83,8 @@ class PathRouter(object):
             >>> assert inner == inner2
             >>> assert isinstance(inner, PathRouter)
         """
-        route = build_route(pattern, kwargs, self.route_builders)
+        # try build intermediate route
+        route = build_route(pattern, False, kwargs, self.route_builders)
         inner = PathRouter(self.route_builders)
         inner.add_routes(included)
         self.mapping.append((route, inner))
@@ -123,7 +125,6 @@ class PathRouter(object):
                 pattern, handler, kwargs = m
             else:
                 pattern, handler, kwargs, name = m
-
             if isinstance(handler, (tuple, list, PathRouter)):
                 self.include(pattern, handler, kwargs)
             else:

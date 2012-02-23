@@ -67,7 +67,6 @@ class PathRouterInitTestCase(unittest.TestCase):
         """ custom route builders.
         """
         from wheezy.routing.router import PathRouter
-        from wheezy.routing import config
 
         route_builders = ('x')
         r = PathRouter(route_builders)
@@ -136,7 +135,7 @@ class PathRouterAddRouteTestCase(unittest.TestCase):
         kw = {'a': 1}
         mock_build_route = self.m.replace(builders.build_route)
         expect(
-            mock_build_route('abc', kw, self.r.route_builders)
+            mock_build_route('abc', True, kw, self.r.route_builders)
         ).result('x')
         self.m.replay()
 
@@ -175,7 +174,7 @@ class PathRouterIncludeTestCase(unittest.TestCase):
         kw = {'a': 1}
         mock_build_route = self.m.replace(builders.build_route)
         expect(
-            mock_build_route('abc', kw, self.r.route_builders)
+            mock_build_route('abc', False, kw, self.r.route_builders)
         ).result('x')
         self.m.replay()
 
@@ -303,7 +302,8 @@ class PathRouterMatchTestCase(unittest.TestCase):
         mock_route = self.m.mock()
         mock_build_route = self.m.replace(builders.build_route)
         expect(
-                mock_build_route('', {'route_name': 'x'},
+                mock_build_route('', True,
+                    {'route_name': 'x'},
                     self.r.route_builders)
         ).result(mock_route)
         expect(mock_route.match('')).result((0, None))
@@ -469,6 +469,7 @@ class PathRouterPathForTestCase(unittest.TestCase):
         expect(
                 mock_build_route(
                     'abc',
+                    True,
                     {'route_name': 'n'},
                     self.r.route_builders)
         ).result(mock_route)

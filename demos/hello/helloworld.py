@@ -13,9 +13,17 @@ def hello_world(environ, start_response):
     yield ntob('Hello World!', 'utf-8')
 
 
+def not_found(environ, start_response):
+    start_response('404 Not Found', [
+        ('Content-Type', 'text/html')
+    ])
+    yield ntob('', 'utf-8')
+
+
 r = PathRouter()
 r.add_routes([
-    ('/', hello_world)
+    ('/', hello_world),
+    ('/{any}', not_found)
 ])
 
 

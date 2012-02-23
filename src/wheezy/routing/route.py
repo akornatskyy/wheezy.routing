@@ -4,7 +4,6 @@
 
 import re
 
-from wheezy.routing.comp import basestring
 from wheezy.routing.utils import merge
 from wheezy.routing.utils import outer_split
 
@@ -42,33 +41,32 @@ class PlainRoute(Route):
     """ Route based on string equalty operation.
     """
 
-    def __init__(self, pattern, kwargs=None):
+    def __init__(self, pattern, finishing, kwargs=None):
         """ Initializes the route by given ``pattern``. If
-            pattern ends with ``/`` than it select ``startswith``
-            strategy.
+            ``finishing`` is True than choose ``equals_math``
+            strategy
 
-            >>> r = PlainRoute(r'abc/')
-            >>> assert r.match == r.startswith_match
-
-            Otherwise ``equals`` strategy is selected.
-
-            >>> r = PlainRoute(r'abc')
+            >>> r = PlainRoute(r'abc', True)
             >>> assert r.match == r.equals_match
+
+            Otherwise ``startswith_match`` strategy is selected.
+
+            >>> r = PlainRoute(r'abc', False)
+            >>> assert r.match == r.startswith_match
         """
         self.pattern = pattern
         self.kwargs = kwargs
         self.matched = len(pattern)
         # Choose match strategy
-        self.match = pattern[-1:] == '/' \
-                and self.startswith_match \
-                or self.equals_match
+        self.match = finishing and self.equals_match \
+                or self.startswith_match
 
     def equals_match(self, path):
         """ If the ``path`` exactly equals pattern string,
             return end index of substring matched and a copy
             of ``self.kwargs``.
 
-            >>> r = PlainRoute(r'abc')
+            >>> r = PlainRoute(r'abc', True)
             >>> matched, kwargs = r.equals_match('abc')
             >>> matched
             3
@@ -76,7 +74,7 @@ class PlainRoute(Route):
 
             Match returns ``self.kwargs``.
 
-            >>> r = PlainRoute(r'abc', {'a': 1})
+            >>> r = PlainRoute(r'abc', True, {'a': 1})
             >>> matched, kwargs = r.equals_match('abc')
             >>> matched
             3
@@ -100,7 +98,7 @@ class PlainRoute(Route):
         """ If the ``path`` starts with pattern string, return
             the end of substring matched and ``self.kwargs``.
 
-            >>> r = PlainRoute(r'abc')
+            >>> r = PlainRoute(r'abc', False)
             >>> matched, kwargs = r.startswith_match('abc')
             >>> matched
             3
@@ -108,7 +106,7 @@ class PlainRoute(Route):
 
             Match returns ``self.kwargs``.
 
-            >>> r = PlainRoute(r'abc', {'a': 1})
+            >>> r = PlainRoute(r'abc', False, {'a': 1})
             >>> matched, kwargs = r.startswith_match('abc/')
             >>> matched
             3
@@ -129,7 +127,7 @@ class PlainRoute(Route):
         """ Build the path for given route by simply returning
             the pattern used during initialization.
 
-            >>> r = PlainRoute(r'abc')
+            >>> r = PlainRoute(r'abc', True)
             >>> r.path()
             'abc'
         """
@@ -203,15 +201,12 @@ class RegexRoute(object):
     """ Route based on regular expression matching.
     """
 
-    def __init__(self, pattern, kwargs=None):
-        self.pattern = pattern
-        self.kwargs = kwargs
-        self.regex = re.compile(pattern)
-
+    def __init__(self, pattern, finishing, kwargs=None):
+        pattern = pattern.lstrip('^').rstrip('$')
         # Choose match strategy
         if kwargs:
             def value_provider(name):
-                self.kwargs.setdefault(name, '')
+                kwargs.setdefault(name, '')
                 return lambda values: str(values[name])
             self.match = self.match_with_kwargs
             self.path = self.path_with_kwargs
@@ -220,12 +215,18 @@ class RegexRoute(object):
                 return lambda values: str(values.get(name, ''))
             self.match = self.match_no_kwargs
             self.path = self.path_no_kwargs
+
         self.parts = parse_pattern(pattern, value_provider)
+        pattern = '^' + pattern
+        if finishing:
+            pattern = pattern + '$'
+        self.kwargs = kwargs
+        self.regex = re.compile(pattern)
 
     def match_no_kwargs(self, path):
         """ If the ``path`` match the regex pattern.
 
-            >>> r = RegexRoute(r'abc/(?P<id>\d+$)')
+            >>> r = RegexRoute(r'abc/(?P<id>\d+$)', True)
             >>> matched, kwargs = r.match_no_kwargs('abc/1234')
             >>> matched
             8
@@ -247,14 +248,14 @@ class RegexRoute(object):
     def match_with_kwargs(self, path):
         """ If the ``path`` match the regex pattern.
 
-            >>> r = RegexRoute(r'abc/\d+', {'lang': 'en'})
+            >>> r = RegexRoute(r'abc/\d+', False, {'lang': 'en'})
             >>> matched, kwargs = r.match_with_kwargs('abc/1234')
             >>> matched
             8
             >>> kwargs
             {'lang': 'en'}
 
-            >>> r = RegexRoute(r'abc/(?P<id>\d+$)', {
+            >>> r = RegexRoute(r'abc/(?P<id>\d+$)', True, {
             ...     'lang': 'en'
             ... })
             >>> matched, kwargs = r.match_with_kwargs('abc/1234')
@@ -264,7 +265,7 @@ class RegexRoute(object):
             ``kwargs`` from ``pattern`` match must override
             defaults.
 
-            >>> r = RegexRoute(r'abc/?(?P<id>\d*$)', {'id': '1'})
+            >>> r = RegexRoute(r'abc/?(?P<id>\d*$)', True, {'id': '1'})
             >>> matched, kwargs = r.match_with_kwargs('abc')
             >>> kwargs
             {'id': '1'}
@@ -290,7 +291,8 @@ class RegexRoute(object):
             the named places of the regual expression.
 
             >>> r = RegexRoute(
-            ...     r'abc/(?P<month>\d+)/(?P<day>\d+)'
+            ...     r'abc/(?P<month>\d+)/(?P<day>\d+)',
+            ...     True
             ... )
             >>> r.path_no_kwargs(dict(month=6, day=9))
             'abc/6/9'
@@ -312,6 +314,7 @@ class RegexRoute(object):
 
             >>> r = RegexRoute(
             ...     r'abc/(?P<month>\d+)/(?P<day>\d+)',
+            ...     True,
             ...     dict(month=1, day=1)
             ... )
             >>> r.path_with_kwargs(dict(month=6, day=9))

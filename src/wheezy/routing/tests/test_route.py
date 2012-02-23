@@ -42,20 +42,20 @@ class PlainRouteInitTestCase(unittest.TestCase):
     """
 
     def test_equals(self):
-        """ ``pattern`` does not end with ``/``.
+        """ Finishing route.
         """
         from wheezy.routing.route import PlainRoute
 
-        r = PlainRoute(r'abc')
+        r = PlainRoute(r'abc', True)
 
         assert r.equals_match == r.match
 
     def test_startswith(self):
-        """ ``pattern`` ends with ``/``.
+        """ Intermediate route.
         """
         from wheezy.routing.route import PlainRoute
 
-        r = PlainRoute(r'abc/')
+        r = PlainRoute(r'abc/', False)
 
         assert r.startswith_match == r.match
 
@@ -65,7 +65,7 @@ class PlainRouteInitTestCase(unittest.TestCase):
         from wheezy.routing.route import PlainRoute
 
         kw = {'a': 1}
-        r = PlainRoute(r'abc', kw)
+        r = PlainRoute(r'abc', True, kw)
 
         self.assertEquals(r'abc', r.pattern)
         self.assertEquals(kw, r.kwargs)
@@ -83,7 +83,7 @@ class PlainRouteEqualsMatchTestCase(unittest.TestCase):
         from wheezy.routing.route import PlainRoute
 
         kw = {'a': 1}
-        r = PlainRoute(r'abc', kw)
+        r = PlainRoute(r'abc', True, kw)
 
         matched, kwargs = r.equals_match(r'abc')
         self.assertEquals(3, matched)
@@ -95,7 +95,7 @@ class PlainRouteEqualsMatchTestCase(unittest.TestCase):
         """
         from wheezy.routing.route import PlainRoute
 
-        r = PlainRoute(r'abc')
+        r = PlainRoute(r'abc', True)
         matched, kwargs = r.equals_match(r'abc')
         self.assertEquals(3, matched)
         self.assertEquals(None, r.kwargs)
@@ -105,7 +105,7 @@ class PlainRouteEqualsMatchTestCase(unittest.TestCase):
         """
         from wheezy.routing.route import PlainRoute
 
-        r = PlainRoute(r'abc')
+        r = PlainRoute(r'abc', True)
         matched, kwargs = r.equals_match(r'ab')
         self.assertEquals(-1, matched)
 
@@ -120,7 +120,7 @@ class PlainRouteStartswithMatchTestCase(unittest.TestCase):
         from wheezy.routing.route import PlainRoute
 
         kw = {'a': 1}
-        r = PlainRoute(r'abc/', kw)
+        r = PlainRoute(r'abc/', False, kw)
         matched, kwargs = r.startswith_match(r'abc/de')
         self.assertEquals(4, matched)
         self.assertEquals(kw, kwargs)
@@ -132,7 +132,7 @@ class PlainRouteStartswithMatchTestCase(unittest.TestCase):
         """
         from wheezy.routing.route import PlainRoute
 
-        r = PlainRoute(r'abc/')
+        r = PlainRoute(r'abc/', False)
         matched, kwargs = r.startswith_match(r'abc/de')
         self.assertEquals(4, matched)
         self.assertEquals(None, r.kwargs)
@@ -143,7 +143,7 @@ class PlainRouteStartswithMatchTestCase(unittest.TestCase):
         """
         from wheezy.routing.route import PlainRoute
 
-        r = PlainRoute(r'abc/')
+        r = PlainRoute(r'abc/', False)
         matched, kwargs = r.equals_match(r'ab')
         self.assertEquals(-1, matched)
 
@@ -157,7 +157,7 @@ class PlainRoutePathTestCase(unittest.TestCase):
         """
         from wheezy.routing.route import PlainRoute
 
-        r = PlainRoute(r'abc/')
+        r = PlainRoute(r'abc/', False)
         p = r.path()
         self.assertEquals(p, r.pattern)
 
@@ -166,7 +166,7 @@ class PlainRoutePathTestCase(unittest.TestCase):
         """
         from wheezy.routing.route import PlainRoute
 
-        r = PlainRoute(r'abc/', {'a': 1})
+        r = PlainRoute(r'abc/', True, {'a': 1})
         p = r.path({'b': 2})
         self.assertEquals(p, r.pattern)
 
@@ -181,7 +181,9 @@ class RegexRouteInitTestCase(unittest.TestCase):
         """
         from wheezy.routing.route import RegexRoute
 
-        r = RegexRoute(r'abc', {'a': 1})
+        r = RegexRoute(r'abc', False, {'a': 1})
+
+        assert r.match == r.match_with_kwargs
 
     def test_no_kwargs(self):
         """ If kwargs omitted than choose
@@ -189,7 +191,9 @@ class RegexRouteInitTestCase(unittest.TestCase):
         """
         from wheezy.routing.route import RegexRoute
 
-        r = RegexRoute(r'abc')
+        r = RegexRoute(r'abc', True)
+
+        assert r.match == r.match_no_kwargs
 
 
 class RegexRouteInitPartsTestCase(unittest.TestCase):
@@ -224,24 +228,46 @@ class RegexRouteMatchNoKwargsPartsTestCase(unittest.TestCase):
     """ Test the ``RegexRoute.match_no_kwargs``.
     """
 
-    def test_no_match(self):
+    def test_no_match_intermediate(self):
         """ there is no match.
         """
         from wheezy.routing.route import RegexRoute
 
-        r = RegexRoute(r'abc')
-        matched, kwargs = r.match('bc')
+        r = RegexRoute(r'abc', False)
+        matched, kwargs = r.match('ab')
 
         self.assertEquals(-1, matched)
         assert not kwargs
 
-    def test_match(self):
+    def test_no_match_finishing(self):
+        """ there is no match.
+        """
+        from wheezy.routing.route import RegexRoute
+
+        r = RegexRoute(r'abc', True)
+        matched, kwargs = r.match('abcd')
+
+        self.assertEquals(-1, matched)
+        assert not kwargs
+
+    def test_match_intermediate(self):
         """ there is a match.
         """
         from wheezy.routing.route import RegexRoute
 
-        r = RegexRoute(r'abc')
+        r = RegexRoute(r'abc', False)
         matched, kwargs = r.match('abcd')
+
+        self.assertEquals(3, matched)
+        assert not kwargs
+
+    def test_match_finishing(self):
+        """ there is a match.
+        """
+        from wheezy.routing.route import RegexRoute
+
+        r = RegexRoute(r'abc', True)
+        matched, kwargs = r.match('abc')
 
         self.assertEquals(3, matched)
         assert not kwargs
@@ -268,7 +294,7 @@ class RegexRouteMatchWithKwargsPartsTestCase(unittest.TestCase):
         from wheezy.routing.route import RegexRoute
 
         kw = {'a': 1}
-        r = RegexRoute(r'abc', kw)
+        r = RegexRoute(r'abc', False, kw)
         matched, kwargs = r.match('abcd')
 
         self.assertEquals(3, matched)
@@ -281,7 +307,7 @@ class RegexRouteMatchWithKwargsPartsTestCase(unittest.TestCase):
         from wheezy.routing.route import RegexRoute
 
         kw = {'a': 1}
-        r = RegexRoute(r'abc/(?P<b>\d+)', kw)
+        r = RegexRoute(r'abc/(?P<b>\d+)', True, kw)
         matched, kwargs = r.match('abc/2')
 
         self.assertEquals(5, matched)
@@ -296,7 +322,7 @@ class RegexRoutePathTestCase(unittest.TestCase):
     def setUp(self):
         from wheezy.routing.route import RegexRoute
 
-        self.r = RegexRoute(r'abc/(?P<a>\d+)')
+        self.r = RegexRoute(r'abc/(?P<a>\d+)', False)
 
     def test_no_values(self):
         """
@@ -320,7 +346,7 @@ class RegexRoutePathNoDefaultsTestCase(unittest.TestCase):
     def setUp(self):
         from wheezy.routing.route import RegexRoute
 
-        self.r = RegexRoute(r'abc/(?P<a>\d+)')
+        self.r = RegexRoute(r'abc/(?P<a>\d+)', True)
 
     def test_no_values(self):
         """
@@ -344,7 +370,7 @@ class RegexRoutePathWithDefaultsTestCase(unittest.TestCase):
     def setUp(self):
         from wheezy.routing.route import RegexRoute
 
-        self.r = RegexRoute(r'abc/(?P<a>\d+)', {'a': 1})
+        self.r = RegexRoute(r'abc/(?P<a>\d+)', True, {'a': 1})
 
     def test_no_values(self):
         """
@@ -372,7 +398,7 @@ class RegexRouteCurlyIntTestCase(unittest.TestCase):
         from wheezy.routing.curly import convert
         from wheezy.routing.route import RegexRoute
 
-        self.r = RegexRoute(convert('abc/{id:int}'))
+        self.r = RegexRoute(convert('abc/{id:int}'), True)
 
     def test_match(self):
         """ match
@@ -409,7 +435,7 @@ class RegexRouteCurlyWordTestCase(unittest.TestCase):
         from wheezy.routing.curly import convert
         from wheezy.routing.route import RegexRoute
 
-        self.r = RegexRoute(convert('abc/{id:word}'))
+        self.r = RegexRoute(convert('abc/{id:word}'), True)
 
     def test_match(self):
         """ match
@@ -446,7 +472,7 @@ class RegexRouteCurlySegmentTestCase(unittest.TestCase):
         from wheezy.routing.curly import convert
         from wheezy.routing.route import RegexRoute
 
-        self.r = RegexRoute(convert('abc/{id:segment}'))
+        self.r = RegexRoute(convert('abc/{id:segment}'), False)
 
     def test_match(self):
         """ match
@@ -483,7 +509,7 @@ class RegexRouteCurlyAnyTestCase(unittest.TestCase):
         from wheezy.routing.curly import convert
         from wheezy.routing.route import RegexRoute
 
-        self.r = RegexRoute(convert('abc/{id:any}'))
+        self.r = RegexRoute(convert('abc/{id:any}'), True)
 
     def test_match(self):
         """ match

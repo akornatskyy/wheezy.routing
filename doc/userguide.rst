@@ -20,7 +20,7 @@ patterns interpretation) and/or ``handler``. If you have a look at
 :ref:`helloworld` example you notice the following:
 
 .. literalinclude:: ../demos/hello/helloworld.py
-   :lines: 22-24
+   :lines: 29-31
 
 or more precisely::
 
@@ -58,6 +58,10 @@ system checks if the handler is another mapping it creates nested
 
 ``server_urls`` included into ``server/`` subpath. So effective path for
 ``server_time`` handler is ``server/time``.
+
+Note that route selected for ``'server/'`` pattern is intermediate (it is not
+finishing since there is included another after it). ``'time'`` pattern is
+finishing since it is the last in the match chain.
 
 Named Groups
 ------------
@@ -98,8 +102,7 @@ passed during initialization.
 ``url`` helper
 --------------
 
-There is :py:func:`wheezy.routing.url` function (that is actually just
-an exporting name for :py:func:`~wheezy.routing.router.url`) that let you
+There is :py:func:`wheezy.routing.router.url` function that let you
 make your url mapping more readable::
 
     from wheezy.routing import url
@@ -108,6 +111,8 @@ make your url mapping more readable::
     urls = [
         url('posts', latest_posts, kwargs={'blog_id': 100})
     ]
+
+All it does just convers arguments to a tupple of four.
 
 .. _named:
 
@@ -131,13 +136,13 @@ When you know name for url mapping you can reconstruct it path.
 Adding Routes
 -------------
 
-You have an instance of :py:class:`wheezy.routing.PathRouter`
-(:py:class:`~wheezy.routing.router.PathRouter`). Call it method
-:py:meth:`~wheezy.routing.router.PathRouter.add_routes` to add any
-mapping you have. Here is how we do it in :ref:`helloworld` example:
+You have an instance of :py:class:`~wheezy.routing.router.PathRouter`.
+Call it method :py:meth:`~wheezy.routing.router.PathRouter.add_routes`
+to add any pattern mapping you have. Here is how we do it in
+:ref:`helloworld` example:
 
 .. literalinclude:: ../demos/hello/helloworld.py
-   :lines: 16-19
+   :lines: 24-27
 
 ... or :ref:`server time`:
 
@@ -149,7 +154,7 @@ Route Builders
 
 Every pattern mapping you add to router is translated to appropriate route
 match strategy. The available routing match strategies are definded in
-:py:mod:`~wheezy.routing.config` module by ``route_builders`` list and 
+:py:mod:`~wheezy.routing.config` module by ``route_builders`` list and
 include:
 
 #. plain
@@ -168,12 +173,10 @@ expression (at least one ``word``, ``'/'`` or ``'-'`` character):
    :lines: 14-14
 
 The matching paths include: ``account/login``, ``blog/list``, etc. The
-strategy performs exact string marching.
+strategy performs string marching.
 
-In case the matching string ends with path segment delimiter character 
-``'/'``, the strategy is changed to match the beginning of path, thus 
-``server/`` pattern match any path starting with ``server/``, e.g. 
-``server/info``, etc.
+Finishing routes are matched by exact string ``equals`` operation, intermediate
+routes are matched with ``startswith`` string operation.
 
 Regex Route
 ~~~~~~~~~~~
@@ -182,7 +185,7 @@ Any valid regular expression will match this strategy. However there few
 limitation that applies if you would like to build paths by name (reverse
 function to path matching). Use regex syntax only inside named groups,
 create them as much as necessary. The path build strategy simply replaces
-named groups with values supplied.
+named groups with values supplied. Optional named groups are supported.
 
 Curly Route
 ~~~~~~~~~~~
@@ -193,15 +196,15 @@ that match the following regular expression:
 .. literalinclude:: ../src/wheezy/routing/curly.py
    :lines: 9-9
 
-You define a named group by using curly brakets. The form of 
-curly expression (``pattern`` is optional and corresponds to segment by 
+You define a named group by using curly brakets. The form of
+curly expression (``pattern`` is optional and corresponds to segment by
 default)::
 
     {name[:pattern]}
-    
+
 The curly expression ``abc/{id}`` is convered into regex ``abc/(?P<id>[^/]+)``.
 
-The name inside curly expression can be constrained with the following 
+The name inside curly expression can be constrained with the following
 patterns:
 
 - ``i``, ``int``, ``number``, ``digits`` - one or more digits
@@ -209,7 +212,7 @@ patterns:
 - ``s``, ``segment``, ``part`` - everything until ``'/'`` (path segment)
 - ``*``, ``a``, ``any``, ``rest`` - match anything
 
-Note that if pattern constraint doesn't corresponds to anything mentioned 
+Note that if pattern constraint doesn't corresponds to anything mentioned
 above than it is interpreted as a regular expression::
 
     locale:(en|ru)}/home => (?P<locale>(en|ru))/home
@@ -223,11 +226,11 @@ Here are examples of valid expressions::
 
     posts/{year:i}/{month:i}
     account/{name:w}
-    
+
 You can extend recognized curly patterns::
 
     from wheezy.routing.curly import patterns
-    
+
     patterns['w'] = r'\w+'
 
 This way you can add your custom patterns.
@@ -242,7 +245,7 @@ how the name of url mapping is cunstructed. Here is a example from
 .. literalinclude:: ../demos/time/views.py
    :lines: 14-15
 
-You can pass optional values (``kwargs`` argument) that will be used 
+You can pass optional values (``kwargs`` argument) that will be used
 to replace named groups of the path matching pattern::
 
     >>> r = RegexRoute(

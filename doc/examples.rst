@@ -33,23 +33,32 @@ Next we create a pretty simple WSGI handler to provide a response.
 .. literalinclude:: ../demos/hello/helloworld.py
    :lines: 9-13
 
+In addition let add a handler for not found response.
+
+.. literalinclude:: ../demos/hello/helloworld.py
+   :lines: 16-20
+
 The declaration and mapping of pattern to handler following. We create an
 instance of ``PathRouter`` class and pass mapping that in this partucular case
 is a tuple of two values: ``pattern`` and ``handler``.
 
 .. literalinclude:: ../demos/hello/helloworld.py
-   :lines: 16-19
+   :lines: 23-27
+
+The first pattern ``'/'`` will match only root path of the request (it is
+finishing route in match chain). The second pattern ``'/{any}'`` is a curly
+expression that is translated to regular expression that ultimately match
+any path and is finishing route as well.
 
 ``main`` function serves as `WSGI`_ application entry point. The only thing
 we do here is to get a value of `WSGI`_ environment variable ``PATH_INFO``
 (the remainder of the request URL's path) and pass to router
 :py:meth:`~wheezy.routing.router.PathRouter.match` method, in return we
 get ``handler`` and ``kwargs`` (parameters discovered from matching rule,
-that we ignore for now). Due to specific of the route that ends with ``/``
-our handler will match any incomming request.
+that we ignore for now).
 
 .. literalinclude:: ../demos/hello/helloworld.py
-   :lines: 22-24
+   :lines: 30-32
 
 The rest in the ``helloworld`` application launch a simple wsgi server.
 Try it by running::

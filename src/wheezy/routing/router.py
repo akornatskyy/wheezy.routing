@@ -2,6 +2,8 @@
 """ ``router`` module.
 """
 
+from warnings import warn
+
 from wheezy.routing.builders import build_route
 from wheezy.routing.config import route_builders as default_route_builders
 from wheezy.routing.utils import merge
@@ -59,8 +61,21 @@ class PathRouter(object):
             >>> assert r.route_map['signin']
             >>> r.path_for('signin')
             'login'
+
+            If ``name`` already mapped to some route allow
+            override it but show a warning.
+
+            >>> import warnings
+            >>> warnings.simplefilter('ignore')
+            >>> def login_handler(): pass
+            >>> r.add_route(r'test', login_handler, name='signin')
+            >>> warnings.simplefilter('default')
+            >>> r.path_for('signin')
+            'test'
         """
         name = name or route_name(handler)
+        if name in self.route_map:
+            warn('PathRouter: overriding route: %s.' % name)
         kwargs = kwargs or {}
         kwargs['route_name'] = name
         # build finishing route

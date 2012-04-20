@@ -29,51 +29,19 @@ If you are using `virtualenv`_::
     $ virtualenv env
     $ env/bin/easy_install wheezy.routing
 
-Develop
--------
-
-You can get the `source code`_ using `mercurial`_::
-
-    $ hg clone https://bitbucket.org/akorn/wheezy.routing
-    $ cd wheezy.routing
-
-Prepare `virtualenv`_ environment in *env* directory ::
-
-    $ make env
-
-... and run all tests::
-
-    $ make test
-
-You can read how to compile from source code different versions of
-`python`_ in the `article`_ published on `mind reference`_ blog.
-
-You can run certain make targets with specific python version. Here
-we are going to run `doctest`_ with python3.2::
-
-    $ make env doctest-cover VERSION=3.2
-
-Generate documentation with `sphinx`_::
-
-	$ make doc
-
 If you run into any issue or have comments, go ahead and add on
 `bitbucket`_.
 
-.. _`article`: http://mindref.blogspot.com/2011/09/compile-python-from-source.html
 .. _`bitbucket`: https://bitbucket.org/akorn/wheezy.routing
 .. _`doctest`: http://docs.python.org/library/doctest.html
 .. _`documentation`: http://packages.python.org/wheezy.routing
 .. _`eggs`: http://pypi.python.org/pypi/wheezy.routing
 .. _`examples`: https://bitbucket.org/akorn/wheezy.routing/src/tip/demos
 .. _`issues`: https://bitbucket.org/akorn/wheezy.routing/issues
-.. _`mercurial`: http://mercurial.selenic.com
-.. _`mind reference`: http://mindref.blogspot.com
 .. _`pypi`: http://pypi.python.org/
 .. _`python`: http://www.python.org
 .. _`readthedocs`: http://readthedocs.org/builds/wheezyrouting
 .. _`setuptools`: http://pypi.python.org/pypi/setuptools
 .. _`source code`: https://bitbucket.org/akorn/wheezy.routing/src
-.. _`sphinx`: http://sphinx.pocoo.org
 .. _`virtualenv`: http://pypi.python.org/pypi/virtualenv
 .. _`wheezy.routing`: http://pypi.python.org/pypi/wheezy.routing

@@ -106,11 +106,12 @@ class BuildRouteTestCase(unittest.TestCase):
         """ ``pattern`` is an object drived from Route.
         """
         from wheezy.routing.builders import build_route
-        from wheezy.routing.route import Route
+        from wheezy.routing.route import PlainRoute
 
-        r = Route()
+        r = PlainRoute('', True)
 
-        self.assertEqual(r, build_route(r, False, None, None))
+        self.assertRaises(LookupError,
+                lambda: build_route(r, False, None, []))
 
     def test_found(self):
         """ Sutable route strategy has been found.

@@ -35,6 +35,7 @@ def url(pattern, handler, kwargs=None, name=None):
 class PathRouter(object):
     """
     """
+    __slots__ = ('mapping', 'route_map', 'routers', 'route_builders')
 
     def __init__(self, route_builders=None):
         """
@@ -97,11 +98,17 @@ class PathRouter(object):
             >>> assert route == route2
             >>> assert inner == inner2
             >>> assert isinstance(inner, PathRouter)
+            >>> r = PathRouter()
+            >>> r.include(r'admin/', PathRouter())
+            >>> assert r.routers
         """
         # try build intermediate route
         route = build_route(pattern, False, kwargs, self.route_builders)
-        inner = PathRouter(self.route_builders)
-        inner.add_routes(included)
+        if isinstance(included, PathRouter):
+            inner = included
+        else:
+            inner = PathRouter(self.route_builders)
+            inner.add_routes(included)
         self.mapping.append((route, inner))
         self.routers.append((inner, route))
 

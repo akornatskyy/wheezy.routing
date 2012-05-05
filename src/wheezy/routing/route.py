@@ -11,6 +11,7 @@ from wheezy.routing.utils import outer_split
 class Route(object):
     """ Route abstract contract.
     """
+    __slots__ = ()
 
     def match(self, path):
         """ if the ``path`` matches, return the end of
@@ -37,9 +38,10 @@ class Route(object):
         raise NotImplementedError()
 
 
-class PlainRoute(Route):
+class PlainRoute(object):
     """ Route based on string equalty operation.
     """
+    __slots__ = ('pattern', 'kwargs', 'matched', 'match')
 
     def __init__(self, pattern, finishing, kwargs=None):
         """ Initializes the route by given ``pattern``. If
@@ -200,6 +202,7 @@ def strip_optional(pattern):
 class RegexRoute(object):
     """ Route based on regular expression matching.
     """
+    __slots__ = ('match', 'path', 'parts', 'kwargs', 'regex')
 
     def __init__(self, pattern, finishing, kwargs=None):
         pattern = pattern.lstrip('^').rstrip('$')

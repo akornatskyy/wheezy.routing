@@ -213,63 +213,42 @@ class PathRouterAddRoutesTestCase(unittest.TestCase):
     """ Test the ``PathRouter.add_routes``.
     """
 
-    def setUp(self):
-        from wheezy.routing.router import PathRouter
-        self.m = Mocker()
-        self.r = PathRouter()
-
-    def tearDown(self):
-        self.m.restore()
-        self.m.verify()
-
     def test_mapping_is_tuple_of_two(self):
         """ ``mapping`` is a tuple of two elements.
         """
-        m = [('pattern', 'handler')]
-        self.r.add_route = mock_add_route = self.m.mock()
-        expect(mock_add_route('pattern', 'handler', None, None))
-        self.m.replay()
-
-        self.r.add_routes(m)
+        from wheezy.routing.router import PathRouter
+        r = PathRouter()
+        r.add_routes([('pattern', 'handler')])
+        assert r.route_map
+        assert r.mapping
 
     def test_mapping_is_tuple_of_three(self):
         """ ``mapping`` is a tuple of three elements.
         """
-        m = [('pattern', 'handler', 'kwargs')]
-        self.r.add_route = mock_add_route = self.m.mock()
-        expect(
-            mock_add_route('pattern', 'handler', 'kwargs', None)
-        )
-        self.m.replay()
-
-        self.r.add_routes(m)
+        from wheezy.routing.router import PathRouter
+        r = PathRouter()
+        r.add_routes([('pattern', 'handler', {})])
+        assert r.route_map
+        assert r.mapping
 
     def test_mapping_is_tuple_of_four(self):
         """ ``mapping`` is a tuple of four elements.
         """
-        m = [('pattern', 'handler', 'kw', 'name')]
-        self.r.add_route = mock_add_route = self.m.mock()
-        expect(
-            mock_add_route('pattern', 'handler', 'kw', 'name')
-        )
-        self.m.replay()
-
-        self.r.add_routes(m)
+        from wheezy.routing.router import PathRouter
+        r = PathRouter()
+        r.add_routes([('pattern', 'handler', {}, 'name')])
+        assert r.route_map
+        assert r.mapping
 
     def test_include(self):
         """ ``include`` call.
         """
         from wheezy.routing.router import PathRouter
-
-        r = PathRouter()
-        self.r.include = mock_include = self.m.mock()
-        for h in ([], (), r):
-            expect(mock_include('pattern', h, 'kwargs'))
-        self.m.replay()
-
-        for h in ([], (), r):
-            m = [('pattern', h, 'kwargs')]
-            self.r.add_routes(m)
+        for h in ([], (), PathRouter()):
+            r = PathRouter()
+            r.add_routes([('pattern', h, {})])
+            assert r.mapping
+            assert r.routers
 
 
 class PathRouterMatchTestCase(unittest.TestCase):

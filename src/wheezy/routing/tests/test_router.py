@@ -107,16 +107,14 @@ class PathRouterAddRouteTestCase(unittest.TestCase):
         """
         self.r.add_route(r'abc', 'x', name='my_name')
 
-        assert 'my_name' in tuple(self.r.route_map.keys())
+        assert self.r.route_map
 
     def test_with_default_kwargs(self):
         """ ``kwargs`` is None.
         """
         self.r.add_route(r'abc', 'x', kwargs=None, name='n')
 
-        route = self.r.route_map['n']
-        assert route.kwargs
-        assert 'n' == route.kwargs['route_name']
+        assert self.r.route_map['n']
 
     def test_with_kwargs(self):
         """ ``kwargs`` is supplied.
@@ -124,8 +122,7 @@ class PathRouterAddRouteTestCase(unittest.TestCase):
         kw = {'a': 1}
         self.r.add_route(r'abc', 'x', kwargs=kw, name='n')
 
-        route = self.r.route_map['n']
-        self.assertEquals(kw, route.kwargs)
+        assert self.r.route_map['n']
 
     def test_build_route(self):
         """ ``build_route`` call.
@@ -133,13 +130,16 @@ class PathRouterAddRouteTestCase(unittest.TestCase):
         from wheezy.routing import builders
 
         kw = {'a': 1}
+        mock_route = self.m.mock()
+        expect(mock_route.match)
+        expect(mock_route.path)
         mock_build_route = self.m.replace(builders.build_route)
         expect(
             mock_build_route('abc', True, kw, self.r.route_builders)
-        ).result('x')
+        ).result(mock_route)
         self.m.replay()
 
-        self.r.add_route('abc', 'x', kwargs=kw, name='n')
+        self.r.add_route('abc', mock_route, kwargs=kw, name='n')
 
     def test_mapping(self):
         """ mapping has route and handler pair
@@ -147,9 +147,7 @@ class PathRouterAddRouteTestCase(unittest.TestCase):
         self.r.add_route(r'abc', 'x', kwargs=None, name='n')
 
         assert 1 == len(self.r.route_map) == len(self.r.mapping)
-        route = self.r.route_map['n']
-        mroute, handler = self.r.mapping[0]
-        assert route is mroute
+        assert self.r.route_map['n']
 
 
 class PathRouterIncludeTestCase(unittest.TestCase):
@@ -172,10 +170,13 @@ class PathRouterIncludeTestCase(unittest.TestCase):
         from wheezy.routing import builders
 
         kw = {'a': 1}
+        mock_route = self.m.mock()
+        expect(mock_route.match)
+        expect(mock_route.path)
         mock_build_route = self.m.replace(builders.build_route)
         expect(
             mock_build_route('abc', False, kw, self.r.route_builders)
-        ).result('x')
+        ).result(mock_route)
         self.m.replay()
 
         self.r.include('abc', [], kwargs=kw)
@@ -195,18 +196,7 @@ class PathRouterIncludeTestCase(unittest.TestCase):
 
         self.r.include('abc', [])
 
-        assert mock_router is self.r.routers[0][0]
-
-    def test_routers(self):
-        """ reverse mapping between routers and mapping.
-        """
-        self.r.include('abc', [])
-
-        mr, mi = self.r.mapping[0]
-        ri, rr = self.r.routers[0]
-
-        assert mr is rr
-        assert mi is ri
+        assert self.r.routers[0][0]
 
 
 class PathRouterAddRoutesTestCase(unittest.TestCase):
@@ -279,6 +269,7 @@ class PathRouterMatchTestCase(unittest.TestCase):
         from wheezy.routing import builders
 
         mock_route = self.m.mock()
+        expect(mock_route.path)
         mock_build_route = self.m.replace(builders.build_route)
         expect(
                 mock_build_route('', True,
@@ -444,6 +435,7 @@ class PathRouterPathForTestCase(unittest.TestCase):
         from wheezy.routing import builders
 
         mock_route = self.m.mock()
+        expect(mock_route.match)
         mock_build_route = self.m.replace(builders.build_route)
         expect(
                 mock_build_route(

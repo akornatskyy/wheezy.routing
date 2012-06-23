@@ -81,8 +81,8 @@ class PathRouter(object):
         kwargs['route_name'] = name
         # build finishing route
         route = build_route(pattern, True, kwargs, self.route_builders)
-        self.route_map[name] = route
-        self.mapping.append((route, handler))
+        self.route_map[name] = route.path
+        self.mapping.append((route.match, handler))
 
     def include(self, pattern, included, kwargs=None):
         """ Includes nested routes below the current.
@@ -94,9 +94,6 @@ class PathRouter(object):
             ... ]
             >>> r.include(r'admin/', admin_routes)
             >>> route, inner = r.mapping[0]
-            >>> inner2, route2 = r.routers[0]
-            >>> assert route == route2
-            >>> assert inner == inner2
             >>> assert isinstance(inner, PathRouter)
             >>> r = PathRouter()
             >>> r.include(r'admin/', PathRouter())
@@ -109,8 +106,8 @@ class PathRouter(object):
         else:
             inner = PathRouter(self.route_builders)
             inner.add_routes(included)
-        self.mapping.append((route, inner))
-        self.routers.append((inner, route))
+        self.mapping.append((route.match, inner))
+        self.routers.append((inner.path_for, route.path))
 
     def add_routes(self, mapping):
         """ Adds routes represented as a list of tuple
@@ -199,8 +196,8 @@ class PathRouter(object):
             >>> kwargs
             {}
         """
-        for route, handler in self.mapping:
-            matched, kwargs = route.match(path)
+        for route_match, handler in self.mapping:
+            matched, kwargs = route_match(path)
             if matched >= 0:
                 # TODO: isinstance(handler, PathRouter)
                 handler_match = getattr(handler, 'match', None)
@@ -252,11 +249,10 @@ class PathRouter(object):
 
             >>> r.path_for(r'unknown')
         """
-        route = self.route_map.get(name, None)
-        if route:
-            return route.path(kwargs).rstrip('/')
-        for inner, route in self.routers:
-            inner_path = inner.path_for(name, **kwargs)
+        if name in self.route_map:
+            return self.route_map[name](kwargs).rstrip('/')
+        for inner_path_for, route_path in self.routers:
+            inner_path = inner_path_for(name, **kwargs)
             if inner_path is not None:
-                return route.path(kwargs) + inner_path
+                return route_path(kwargs) + inner_path
         return None

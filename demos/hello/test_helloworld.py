@@ -19,7 +19,7 @@ class MainTestCase(unittest.TestCase):
 
         environ = {'PATH_INFO': '/'}
         response = list(map(lambda c: c.decode('utf-8'),
-            main(environ, start_response)))
+                            main(environ, start_response)))
 
         self.assertEquals(['Hello World!'], response)
 
@@ -34,6 +34,6 @@ class MainTestCase(unittest.TestCase):
         for path in ('/a', '/b'):
             environ = {'PATH_INFO': path}
             response = list(map(lambda c: c.decode('utf-8'),
-                main(environ, start_response)))
+                                main(environ, start_response)))
 
             self.assertEquals([''], response)

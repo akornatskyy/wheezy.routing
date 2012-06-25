@@ -111,7 +111,7 @@ class BuildRouteTestCase(unittest.TestCase):
         r = PlainRoute('', True)
 
         self.assertRaises(LookupError,
-                lambda: build_route(r, False, None, []))
+                          lambda: build_route(r, False, None, []))
 
     def test_found(self):
         """ Sutable route strategy has been found.
@@ -158,7 +158,7 @@ class BuildRouteTestCase(unittest.TestCase):
         m.replay()
 
         self.assertRaises(LookupError,
-                lambda: build_route(r'abc', False, None, builders))
+                          lambda: build_route(r'abc', False, None, builders))
         m.verify()
 
 
@@ -185,10 +185,10 @@ class BuildRouteIntegrationTestCase(unittest.TestCase):
         from wheezy.routing.route import RegexRoute
 
         r = build_route(
-                r'abc/{id}',
-                False,
-                None,
-                config.route_builders
+            r'abc/{id}',
+            False,
+            None,
+            config.route_builders
         )
 
         assert isinstance(r, RegexRoute)
@@ -202,10 +202,10 @@ class BuildRouteIntegrationTestCase(unittest.TestCase):
         from wheezy.routing.route import RegexRoute
 
         r = build_route(
-                r'abc/{id}',
-                True,
-                None,
-                config.route_builders
+            r'abc/{id}',
+            True,
+            None,
+            config.route_builders
         )
 
         assert isinstance(r, RegexRoute)
@@ -219,10 +219,10 @@ class BuildRouteIntegrationTestCase(unittest.TestCase):
         from wheezy.routing.route import RegexRoute
 
         r = build_route(
-                r'abc/(?P<id>\d+)',
-                False,
-                None,
-                config.route_builders
+            r'abc/(?P<id>\d+)',
+            False,
+            None,
+            config.route_builders
         )
 
         assert isinstance(r, RegexRoute)

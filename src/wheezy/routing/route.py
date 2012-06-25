@@ -61,7 +61,7 @@ class PlainRoute(object):
         self.matched = len(pattern)
         # Choose match strategy
         self.match = finishing and self.equals_match \
-                or self.startswith_match
+            or self.startswith_match
 
     def equals_match(self, path):
         """ If the ``path`` exactly equals pattern string,
@@ -164,7 +164,7 @@ def parse_pattern(pattern, value_provider):
     if len(parts) % 2 == 1 and not parts[-1]:
         parts = parts[:-1]
     parts[1::2] = [value_provider(RE_SPLIT.split(p)[1])
-            for p in parts[1::2]]
+                   for p in parts[1::2]]
     return parts
 
 

@@ -43,11 +43,9 @@ class PathRouter(object):
         self.mapping = []
         self.route_map = {}
         self.routers = []
-        self.route_builders = route_builders or \
-                default_route_builders
+        self.route_builders = route_builders or default_route_builders
 
-    def add_route(self, pattern, handler,
-            kwargs=None, name=None):
+    def add_route(self, pattern, handler, kwargs=None, name=None):
         """ Adds a pattern to route table
 
             >>> r = PathRouter()

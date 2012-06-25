@@ -128,15 +128,14 @@ class ParseTestCase(unittest.TestCase):
         self.assertEquals('abc', group_name)
         self.assertEquals('s', pattern_name)
         self.assertEquals(
-                config.curly_default_pattern,
-                pattern_name
+            config.curly_default_pattern,
+            pattern_name
         )
 
     def test_with_colon(self):
         """ there is colon in input string
         """
         from wheezy.routing.curly import parse
-        from wheezy.routing import config
 
         group_name, pattern_name = parse('abc:i')
 

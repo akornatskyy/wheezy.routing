@@ -17,8 +17,8 @@ if PY3:  # pragma: nocover
 
     #import collections
     #callable = lambda obj: isinstance(obj, collections.Callable)
-    callable = lambda obj: any("__call__" in klass.__dict__
-            for klass in type(obj).__mro__)
+    callable = lambda obj: any(
+        "__call__" in klass.__dict__ for klass in type(obj).__mro__)
 else:  # pragma: nocover
     basestring = basestring
 

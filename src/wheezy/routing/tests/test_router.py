@@ -272,9 +272,11 @@ class PathRouterMatchTestCase(unittest.TestCase):
         expect(mock_route.path)
         mock_build_route = self.m.replace(builders.build_route)
         expect(
-                mock_build_route('', True,
-                    {'route_name': 'x'},
-                    self.r.route_builders)
+            mock_build_route(
+                '', True,
+                {'route_name': 'x'},
+                self.r.route_builders
+            )
         ).result(mock_route)
         expect(mock_route.match('')).result((0, None))
         self.m.replay()
@@ -398,8 +400,8 @@ class PathRouterMatchInnerTestCase(unittest.TestCase):
     def test_merge_inner_override_outer(self):
         """ inner match kwargs override outer kwargs.
         """
-        expect(self.mock_inner.match('de')).result(('h',
-            {'a': 1000, 'b': 2}))
+        expect(self.mock_inner.match('de')).result((
+            'h', {'a': 1000, 'b': 2}))
         self.m.replay()
 
         self.r.include('abc/', [], {'a': 1})
@@ -438,11 +440,11 @@ class PathRouterPathForTestCase(unittest.TestCase):
         expect(mock_route.match)
         mock_build_route = self.m.replace(builders.build_route)
         expect(
-                mock_build_route(
-                    'abc',
-                    True,
-                    {'route_name': 'n'},
-                    self.r.route_builders)
+            mock_build_route(
+                'abc',
+                True,
+                {'route_name': 'n'},
+                self.r.route_builders)
         ).result(mock_route)
         expect(mock_route.path({'a': 1})).result('abc')
         self.m.replay()

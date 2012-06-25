@@ -25,7 +25,7 @@ class RouteTestCase(unittest.TestCase):
 
         r = Route()
         self.assertRaises(NotImplementedError,
-                lambda: r.match(''))
+                          lambda: r.match(''))
 
     def test_path_raise_error(self):
         """ ``Route.match`` raises error
@@ -34,7 +34,7 @@ class RouteTestCase(unittest.TestCase):
 
         r = Route()
         self.assertRaises(NotImplementedError,
-                lambda: r.path())
+                          lambda: r.path())
 
 
 class PlainRouteInitTestCase(unittest.TestCase):

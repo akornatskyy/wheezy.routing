@@ -22,7 +22,7 @@ class RouteBuildersTestCase(unittest.TestCase):
             assert builder
             assert callable(builder)
             args, varargs, keywords, defaults = \
-                    inspect.getargspec(builder)
+                inspect.getargspec(builder)
             self.assertEqual(['pattern', 'finishing', 'kwargs'], args)
             self.assertEqual(None, varargs)
             self.assertEqual(None, keywords)

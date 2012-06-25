@@ -22,7 +22,7 @@ class FunctionalTestCase(unittest.TestCase):
 
         environ = {'PATH_INFO': path}
         return ''.join(map(lambda chunk: chunk.decode('utf-8'),
-            main(environ, start_response)))
+                           main(environ, start_response)))
 
     def test_welcome(self):
         """ Welcome page must have a valid path
@@ -45,7 +45,7 @@ class FunctionalTestCase(unittest.TestCase):
             intended request processors (views).
         """
         for path in ('/server', '/server/', '/server/time/x',
-            '/x', '/abc'):
+                     '/x', '/abc'):
             response = self.go(path, '404 Not Found')
 
             assert 'Not Found' in response

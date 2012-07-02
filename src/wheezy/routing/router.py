@@ -35,14 +35,14 @@ def url(pattern, handler, kwargs=None, name=None):
 class PathRouter(object):
     """
     """
-    __slots__ = ('mapping', 'route_map', 'routers', 'route_builders')
+    __slots__ = ('mapping', 'route_map', 'inner_route_map', 'route_builders')
 
     def __init__(self, route_builders=None):
         """
         """
         self.mapping = []
         self.route_map = {}
-        self.routers = []
+        self.inner_route_map = {}
         self.route_builders = route_builders or default_route_builders
 
     def add_route(self, pattern, handler, kwargs=None, name=None):
@@ -94,8 +94,20 @@ class PathRouter(object):
             >>> route, inner = r.mapping[0]
             >>> assert isinstance(inner, PathRouter)
             >>> r = PathRouter()
-            >>> r.include(r'admin/', PathRouter())
-            >>> assert r.routers
+            >>> inner = PathRouter()
+            >>> inner.add_routes([(r'login', Login)])
+            >>> r.include(r'admin/', inner)
+            >>> assert r.inner_route_map
+
+            If ``name`` already mapped to some route allow
+            override it but show a warning.
+
+            >>> import warnings
+            >>> warnings.simplefilter('ignore')
+            >>> r.include(r'admin/', admin_routes)
+            >>> top_router = PathRouter()
+            >>> r.include(r'x/', r)
+            >>> warnings.simplefilter('default')
         """
         # try build intermediate route
         route = build_route(pattern, False, kwargs, self.route_builders)
@@ -105,7 +117,15 @@ class PathRouter(object):
             inner = PathRouter(self.route_builders)
             inner.add_routes(included)
         self.mapping.append((route.match, inner))
-        self.routers.append((inner.path_for, route.path))
+        route_path = route.path
+        for name, path in inner.route_map.items():
+            if name in self.inner_route_map:
+                warn('PathRouter: overriding route: %s.' % name)
+            self.inner_route_map[name] = [route_path, path]
+        for name, paths in inner.inner_route_map.items():
+            if name in self.inner_route_map:
+                warn('PathRouter: overriding route: %s.' % name)
+            self.inner_route_map[name] = [route_path] + paths
 
     def add_routes(self, mapping):
         """ Adds routes represented as a list of tuple
@@ -128,7 +148,7 @@ class PathRouter(object):
             >>> r.add_routes([
             ...     (r'admin/', admin_routes)
             ... ])
-            >>> len(r.routers)
+            >>> len(r.inner_route_map)
             1
             >>> len(r.mapping)
             1
@@ -241,7 +261,7 @@ class PathRouter(object):
             ...     (r'{lang}/', admin_routes, {'lang': 'en'})
             ... ])
             >>> r.path_for(r'signin')
-            'en/'
+            'en'
 
             Otherwise None
 
@@ -249,8 +269,9 @@ class PathRouter(object):
         """
         if name in self.route_map:
             return self.route_map[name](kwargs).rstrip('/')
-        for inner_path_for, route_path in self.routers:
-            inner_path = inner_path_for(name, **kwargs)
-            if inner_path is not None:
-                return route_path(kwargs) + inner_path
-        return None
+        else:
+            try:
+                return ''.join([path(kwargs) for path
+                                in self.inner_route_map[name]]).rstrip('/')
+            except KeyError:
+                return None

@@ -60,7 +60,7 @@ class PathRouterInitTestCase(unittest.TestCase):
 
         assert isinstance(r.mapping, list)
         assert isinstance(r.route_map, dict)
-        assert isinstance(r.routers, list)
+        assert isinstance(r.inner_route_map, dict)
         assert r.route_builders is config.route_builders
 
     def test_init(self):
@@ -73,7 +73,7 @@ class PathRouterInitTestCase(unittest.TestCase):
 
         assert isinstance(r.mapping, list)
         assert isinstance(r.route_map, dict)
-        assert isinstance(r.routers, list)
+        assert isinstance(r.inner_route_map, dict)
         assert r.route_builders is route_builders
 
 
@@ -196,7 +196,7 @@ class PathRouterIncludeTestCase(unittest.TestCase):
 
         self.r.include('abc', [])
 
-        assert self.r.routers[0][0]
+        assert self.r.mapping[0]
 
 
 class PathRouterAddRoutesTestCase(unittest.TestCase):
@@ -234,11 +234,13 @@ class PathRouterAddRoutesTestCase(unittest.TestCase):
         """ ``include`` call.
         """
         from wheezy.routing.router import PathRouter
-        for h in ([], (), PathRouter()):
+        router = PathRouter()
+        router.include('pattern', [('pattern', 'handler')])
+        for h in ([('pattern', 'handler')], (('pattern', 'handler'),), router):
             r = PathRouter()
             r.add_routes([('pattern', h, {})])
             assert r.mapping
-            assert r.routers
+            assert r.inner_route_map
 
 
 class PathRouterMatchTestCase(unittest.TestCase):
@@ -478,7 +480,8 @@ class PathRouterPathForInnerTestCase(unittest.TestCase):
     def test_no_match(self):
         """ no match
         """
-        expect(self.mock_inner.path_for('n')).result(None)
+        expect(self.mock_inner.route_map).result({})
+        expect(self.mock_inner.inner_route_map).result({})
         self.m.replay()
 
         self.r.include('abc/', [])
@@ -489,7 +492,8 @@ class PathRouterPathForInnerTestCase(unittest.TestCase):
     def test_match(self):
         """ match inner router
         """
-        expect(self.mock_inner.path_for('n')).result('de')
+        expect(self.mock_inner.route_map).result({'n': lambda kwargs: 'de'})
+        expect(self.mock_inner.inner_route_map).result({})
         self.m.replay()
 
         self.r.include('abc/', [])
@@ -497,7 +501,7 @@ class PathRouterPathForInnerTestCase(unittest.TestCase):
 
         self.assertEquals('abc/de', p)
 
-    def test_match_first(self):
+    def test_match_last(self):
         """ match inner router
         """
         from wheezy.routing import router
@@ -508,11 +512,14 @@ class PathRouterPathForInnerTestCase(unittest.TestCase):
         ).result(mock_inner2)
         expect(mock_inner2.add_routes([]))
 
-        expect(self.mock_inner.path_for('n')).result('de')
+        expect(self.mock_inner.route_map).result({'n': lambda kwargs: 'de'})
+        expect(self.mock_inner.inner_route_map).result({})
+        expect(mock_inner2.route_map).result({'n': lambda kwargs: 'de'})
+        expect(mock_inner2.inner_route_map).result({})
         self.m.replay()
 
         self.r.include('abc/', [])
         self.r.include('cbd/', [])
         p = self.r.path_for('n')
 
-        self.assertEquals('abc/de', p)
+        self.assertEquals('cbd/de', p)

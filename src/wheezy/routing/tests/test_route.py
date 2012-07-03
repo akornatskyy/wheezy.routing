@@ -196,34 +196,6 @@ class RegexRouteInitTestCase(unittest.TestCase):
         assert r.match == r.match_no_kwargs
 
 
-class RegexRouteInitPartsTestCase(unittest.TestCase):
-    """ Test the ``RegexRoute.__init__`` self.parts.
-    """
-
-    def test_no_groups(self):
-        """ ``pattern`` has no named groups.
-        """
-        from wheezy.routing.route import RegexRoute
-
-        r = RegexRoute(r'abc', {'a': 1})
-
-    def test_groups(self):
-        """ ``pattern`` has named groups.
-        """
-        from wheezy.routing.comp import callable
-        from wheezy.routing.route import RegexRoute
-
-        kw = {'a': 1, 'b': 2}
-        r = RegexRoute(r'abc/(?P<a>\d+)/(?P<b>\d+)', {'a': 1})
-
-        self.assertEquals('abc/', r.parts[0])
-        assert callable(r.parts[1])
-        self.assertEquals('1', r.parts[1](kw))
-        self.assertEquals('/', r.parts[2])
-        assert callable(r.parts[3])
-        self.assertEquals('2', r.parts[3](kw))
-
-
 class RegexRouteMatchNoKwargsPartsTestCase(unittest.TestCase):
     """ Test the ``RegexRoute.match_no_kwargs``.
     """
@@ -312,7 +284,7 @@ class RegexRouteMatchWithKwargsPartsTestCase(unittest.TestCase):
 
         self.assertEquals(5, matched)
         self.assertEquals({'a': 1, 'b': '2'}, kwargs)
-        self.assertEquals(kw, r.kwargs)
+        self.assertEquals({'a': 1, 'b': ''}, r.kwargs)
 
 
 class RegexRoutePathTestCase(unittest.TestCase):

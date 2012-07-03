@@ -139,33 +139,32 @@ class PlainRoute(object):
 RE_SPLIT = re.compile(r'\<(\w+)\>')
 
 
-def parse_pattern(pattern, value_provider):
+def parse_pattern(pattern):
     """
-        >>> f = lambda v: '{%s}' % v
-        >>> parse_pattern('abc/(?P<id>[^/]+)', f)
-        ['abc/', '{id}']
-        >>> parse_pattern('abc/(?P<n>[^/]+)/(?P<x>\\\w+)', f)
-        ['abc/', '{n}', '/', '{x}']
-        >>> parse_pattern('(?P<locale>(en|ru))/home', f)
-        ['', '{locale}', '/home']
+        >>> parse_pattern('abc/(?P<id>[^/]+)')
+        ('abc/%(id)s', ['id'])
+        >>> parse_pattern('abc/(?P<n>[^/]+)/(?P<x>\\\w+)')
+        ('abc/%(n)s/%(x)s', ['n', 'x'])
+        >>> parse_pattern('(?P<locale>(en|ru))/home')
+        ('%(locale)s/home', ['locale'])
 
         >>> from wheezy.routing.curly import convert
-        >>> parse_pattern(convert('[{locale:(en|ru)}/]home'), f)
-        ['', '{locale}', '/home']
-        >>> parse_pattern(convert('item[/{id:i}]'), f)
-        ['item/', '{id}']
+        >>> parse_pattern(convert('[{locale:(en|ru)}/]home'))
+        ('%(locale)s/home', ['locale'])
+        >>> parse_pattern(convert('item[/{id:i}]'))
+        ('item/%(id)s', ['id'])
 
-        >> p = convert(r'{controller:w}[/{action:w}[/{id:i}]]')
-        >> parse_pattern(p, f)
-        ['', '{controller}', '/', '{action}', '/', '{id}']
+        >>> p = convert(r'{controller:w}[/{action:w}[/{id:i}]]')
+        >>> parse_pattern(p)
+        ('%(controller)s/%(action)s/%(id)s', ['controller', 'action', 'id'])
     """
     pattern = strip_optional(pattern)
     parts = outer_split(pattern, sep='()')
     if len(parts) % 2 == 1 and not parts[-1]:
         parts = parts[:-1]
-    parts[1::2] = [value_provider(RE_SPLIT.split(p)[1])
-                   for p in parts[1::2]]
-    return parts
+    parts[1::2] = values = [RE_SPLIT.split(p)[1] for p in parts[1::2]]
+    parts[1::2] = ['%(' + p + ')s' for p in parts[1::2]]
+    return ''.join(parts), values
 
 
 def strip_optional(pattern):
@@ -202,28 +201,23 @@ def strip_optional(pattern):
 class RegexRoute(object):
     """ Route based on regular expression matching.
     """
-    __slots__ = ('match', 'path', 'parts', 'kwargs', 'regex')
+    __slots__ = ('match', 'path', 'path_format', 'kwargs', 'regex')
 
     def __init__(self, pattern, finishing, kwargs=None):
         pattern = pattern.lstrip('^').rstrip('$')
         # Choose match strategy
+        self.path_format, default_values = parse_pattern(pattern)
+        default_values = dict.fromkeys(default_values, '')
         if kwargs:
-            def value_provider(name):
-                kwargs.setdefault(name, '')
-                return lambda values: str(values[name])
             self.match = self.match_with_kwargs
-            self.path = self.path_with_kwargs
+            self.kwargs = dict(default_values, **kwargs)
         else:
-            def value_provider(name):
-                return lambda values: str(values.get(name, ''))
             self.match = self.match_no_kwargs
-            self.path = self.path_no_kwargs
+            self.kwargs = default_values
 
-        self.parts = parse_pattern(pattern, value_provider)
         pattern = '^' + pattern
         if finishing:
             pattern = pattern + '$'
-        self.kwargs = kwargs
         self.regex = re.compile(pattern)
 
     def match_no_kwargs(self, path):
@@ -289,7 +283,7 @@ class RegexRoute(object):
             return (m.end(), merge(self.kwargs.copy(), kwargs))
         return -1, None
 
-    def path_no_kwargs(self, values=None):
+    def path(self, values=None):
         """ Build the path for the given route by substituting
             the named places of the regual expression.
 
@@ -297,40 +291,27 @@ class RegexRoute(object):
             ...     r'abc/(?P<month>\d+)/(?P<day>\d+)',
             ...     True
             ... )
-            >>> r.path_no_kwargs(dict(month=6, day=9))
+            >>> r.path(dict(month=6, day=9))
             'abc/6/9'
-            >>> r.path_no_kwargs(dict(month=6))
+            >>> r.path(dict(month=6))
             'abc/6/'
             >>> r.path()  # stripped by router
             'abc//'
-        """
 
-        if values is None:
-            values = {}
-        parts = self.parts[:]
-        parts[1::2] = [f(values) for f in parts[1::2]]
-        return ''.join(parts)
-
-    def path_with_kwargs(self, values=None):
-        """ Build the path for the given route by substituting
-            the named places of the regual expression.
-
+            path for route with default values
             >>> r = RegexRoute(
             ...     r'abc/(?P<month>\d+)/(?P<day>\d+)',
             ...     True,
             ...     dict(month=1, day=1)
             ... )
-            >>> r.path_with_kwargs(dict(month=6, day=9))
+            >>> r.path(dict(month=6, day=9))
             'abc/6/9'
-            >>> r.path_with_kwargs(dict(month=6))
+            >>> r.path(dict(month=6))
             'abc/6/1'
             >>> r.path()
             'abc/1/1'
         """
         if values:
-            values = dict(self.kwargs, **values)
+            return self.path_format % dict(self.kwargs, **values)
         else:
-            values = self.kwargs
-        parts = self.parts[:]
-        parts[1::2] = [f(values) for f in parts[1::2]]
-        return ''.join(parts)
+            return self.path_format % self.kwargs

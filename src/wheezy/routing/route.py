@@ -201,7 +201,7 @@ def strip_optional(pattern):
 class RegexRoute(object):
     """ Route based on regular expression matching.
     """
-    __slots__ = ('match', 'path', 'path_format', 'kwargs', 'regex')
+    __slots__ = ('match', 'path_format', 'kwargs', 'regex')
 
     def __init__(self, pattern, finishing, kwargs=None):
         pattern = pattern.lstrip('^').rstrip('$')
@@ -256,8 +256,8 @@ class RegexRoute(object):
             ...     'lang': 'en'
             ... })
             >>> matched, kwargs = r.match_with_kwargs('abc/1234')
-            >>> kwargs
-            {'lang': 'en', 'id': '1234'}
+            >>> sorted(kwargs.items())
+            [('id', '1234'), ('lang', 'en')]
 
             ``kwargs`` from ``pattern`` match must override
             defaults.

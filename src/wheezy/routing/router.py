@@ -203,8 +203,8 @@ class PathRouter(object):
             ... ])
             >>> handler, kwargs = r.match(r'en/msg')
             >>> assert handler == Message
-            >>> kwargs
-            {'lang': 'en', 'id': 1, 'route_name': 'message'}
+            >>> sorted(kwargs.items())
+            [('id', 1), ('lang', 'en'), ('route_name', 'message')]
 
             Otherwise return (None, None)
 

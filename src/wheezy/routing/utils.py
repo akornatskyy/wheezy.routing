@@ -67,8 +67,8 @@ def merge(d1, d2):
 
         >>> d1 = dict(a=1,b=None,c=2, d=3)
         >>> d2 = dict(a=None,b=2,c=1, e=4)
-        >>> merge(d1, d2)
-        {'a': 1, 'c': 1, 'b': 2, 'e': 4, 'd': 3}
+        >>> sorted(merge(d1, d2).items())
+        [('a', 1), ('b', 2), ('c', 1), ('d', 3), ('e', 4)]
     """
     #d1.update(((k, v) for k, v in d2.iteritems() if v))
     #d1.update(((k, d2[k]) for k in d2 if d2[k]))

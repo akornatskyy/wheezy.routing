@@ -38,7 +38,11 @@ env:
 		echo 'done.'; \
 	fi
 	$(EASY_INSTALL) -i $(PYPI) -O2 coverage nose pytest \
-		pytest-pep8 pytest-cov wsgiref
+		pytest-pep8 pytest-cov
+	# The following packages available for python == 2.4
+	if [ "$$(echo $(VERSION) | sed 's/\.//')" -eq 24 ]; then \
+		$(EASY_INSTALL) -i $(PYPI) -O2 wsgiref; \
+	fi
 	# The following packages available for python < 3.0
 	if [ "$$(echo $(VERSION) | sed 's/\.//')" -lt 30 ]; then \
 		$(EASY_INSTALL) -i $(PYPI) -O2 mocker; \
@@ -73,7 +77,7 @@ test:
 		$(PYTEST) -q -x --pep8 --doctest-modules \
 			src/wheezy/routing; \
 	else \
-		echo 'WARNING: unit tests skipped'; \
+		echo 'WARNING: unit tests skipped due to mocker'; \
 	fi
 
 doctest-cover:

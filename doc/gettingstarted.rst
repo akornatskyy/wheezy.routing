@@ -5,12 +5,12 @@ Getting Started
 Install
 -------
 
-:ref:`wheezy.routing` requires `python`_ version 2.4 to 2.7 or 3.2.
-It is independent of operating system. You can install it from `pypi`_ 
+:ref:`wheezy.routing` requires `python`_ version 2.4 to 2.7 or 3.2+.
+It is independent of operating system. You can install it from `pypi`_
 site using `setuptools`_::
 
     $ easy_install wheezy.routing
-    
+
 If you are using `virtualenv`_::
 
     $ virtualenv env
@@ -32,14 +32,14 @@ Prepare `virtualenv`_ environment in *env* directory ::
 
     $ make test
 
-You can read how to compile from source code different versions of 
+You can read how to compile from source code different versions of
 `python`_ in the `article`_ published on `mind reference`_ blog.
 
 You can run certain make targets with specific python version. Here
 we are going to run `doctest`_ with python3.2::
 
     $ make env doctest-cover VERSION=3.2
-    
+
 Generate documentation with `sphinx`_::
 
 	$ make doc

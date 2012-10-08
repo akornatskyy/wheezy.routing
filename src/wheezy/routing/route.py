@@ -41,7 +41,7 @@ class Route(object):
 class PlainRoute(object):
     """ Route based on string equalty operation.
     """
-    __slots__ = ('pattern', 'kwargs', 'matched', 'match')
+    __slots__ = ('pattern', 'kwargs', 'matched', 'match', 'exact_matches')
 
     def __init__(self, pattern, finishing, kwargs=None):
         """ Initializes the route by given ``pattern``. If
@@ -50,6 +50,8 @@ class PlainRoute(object):
 
             >>> r = PlainRoute(r'abc', True)
             >>> assert r.match == r.equals_match
+            >>> r.exact_matches
+            (('abc', None),)
 
             Otherwise ``startswith_match`` strategy is selected.
 
@@ -60,8 +62,12 @@ class PlainRoute(object):
         self.kwargs = kwargs
         self.matched = len(pattern)
         # Choose match strategy
-        self.match = finishing and self.equals_match \
-            or self.startswith_match
+        if finishing:
+            self.match = self.equals_match
+            self.exact_matches = ((pattern, kwargs), )
+        else:
+            self.match = self.startswith_match
+            self.exact_matches = None
 
     def equals_match(self, path):
         """ If the ``path`` exactly equals pattern string,

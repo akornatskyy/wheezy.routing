@@ -146,7 +146,8 @@ class PathRouterAddRouteTestCase(unittest.TestCase):
         """
         self.r.add_route(r'abc', 'x', kwargs=None, name='n')
 
-        assert 1 == len(self.r.route_map) == len(self.r.mapping)
+        assert 1 == len(self.r.route_map) == len(self.r.path_map)
+        assert 0 == len(self.r.mapping)
         assert self.r.route_map['n']
 
 
@@ -210,7 +211,8 @@ class PathRouterAddRoutesTestCase(unittest.TestCase):
         r = PathRouter()
         r.add_routes([('pattern', 'handler')])
         assert r.route_map
-        assert r.mapping
+        assert r.path_map
+        assert not r.mapping
 
     def test_mapping_is_tuple_of_three(self):
         """ ``mapping`` is a tuple of three elements.
@@ -219,7 +221,8 @@ class PathRouterAddRoutesTestCase(unittest.TestCase):
         r = PathRouter()
         r.add_routes([('pattern', 'handler', {})])
         assert r.route_map
-        assert r.mapping
+        assert r.path_map
+        assert not r.mapping
 
     def test_mapping_is_tuple_of_four(self):
         """ ``mapping`` is a tuple of four elements.
@@ -228,7 +231,8 @@ class PathRouterAddRoutesTestCase(unittest.TestCase):
         r = PathRouter()
         r.add_routes([('pattern', 'handler', {}, 'name')])
         assert r.route_map
-        assert r.mapping
+        assert r.path_map
+        assert not r.mapping
 
     def test_include(self):
         """ ``include`` call.
@@ -331,19 +335,6 @@ class PathRouterMatchInnerTestCase(unittest.TestCase):
 
         assert handler is None
         assert kwargs == {}
-
-    def test_no_match_continue(self):
-        """ there is no match, continue with the rest
-            in ``self.mapping``.
-        """
-        expect(self.mock_inner.match('de')).result((None, None))
-        self.m.replay()
-
-        self.r.include('abc/', [])
-        self.r.add_route('abc/de', 'h')
-        handler, kwargs = self.r.match('abc/de')
-
-        self.assertEquals('h', handler)
 
     def test_no_kwargs(self):
         """ there is a match is inner, kwargs and kwargs2

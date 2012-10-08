@@ -35,13 +35,15 @@ def url(pattern, handler, kwargs=None, name=None):
 class PathRouter(object):
     """
     """
-    __slots__ = ('mapping', 'route_map', 'inner_route_map', 'route_builders')
+    __slots__ = ('mapping', 'path_map', 'route_map', 'inner_route_map',
+                 'route_builders')
 
     def __init__(self, route_builders=None):
         """
         """
         self.mapping = []
         self.route_map = {}
+        self.path_map = {}
         self.inner_route_map = {}
         self.route_builders = route_builders or default_route_builders
 
@@ -80,7 +82,13 @@ class PathRouter(object):
         # build finishing route
         route = build_route(pattern, True, kwargs, self.route_builders)
         self.route_map[name] = route.path
-        self.mapping.append((route.match, handler))
+        if hasattr(route, 'exact_matches'):
+            for pattern, kwargs in route.exact_matches:
+                if pattern in self.path_map:
+                    warn('PathRouter: overriding path: %s.' % pattern)
+                self.path_map[pattern] = (handler, kwargs)
+        else:
+            self.mapping.append((route.match, handler))
 
     def include(self, pattern, included, kwargs=None):
         """ Includes nested routes below the current.
@@ -136,8 +144,9 @@ class PathRouter(object):
             >>> r.add_routes([
             ...     (r'login', Login)
             ... ])
-            >>> assert r.mapping
-            >>> assert r.route_map
+
+            >> assert r.mapping
+            >> assert r.route_map
 
             If ``handler`` is tuple, list or an instance of
             PathRouter than we proceed with ``include`` function
@@ -214,6 +223,8 @@ class PathRouter(object):
             >>> kwargs
             {}
         """
+        if path in self.path_map:
+            return self.path_map[path]
         for route_match, handler in self.mapping:
             matched, kwargs = route_match(path)
             if matched >= 0:

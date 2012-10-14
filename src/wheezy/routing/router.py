@@ -278,12 +278,12 @@ class PathRouter(object):
             Otherwise None
 
             >>> r.path_for(r'unknown')
+            Traceback (most recent call last):
+                ...
+            KeyError: 'unknown'
         """
         if name in self.route_map:
             return self.route_map[name](kwargs)
         else:
-            try:
-                return ''.join([path(kwargs) for path
-                                in self.inner_route_map[name]])
-            except KeyError:
-                return None
+            return ''.join([path(kwargs) for path
+                            in self.inner_route_map[name]])

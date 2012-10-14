@@ -421,8 +421,7 @@ class PathRouterPathForTestCase(unittest.TestCase):
     def test_no_match(self):
         """ no match
         """
-        path = self.r.path_for('n', a=1)
-        self.assertEquals(None, path)
+        self.assertRaises(KeyError, lambda: self.r.path_for('n', a=1))
 
     def test_route_map(self):
         """ the name exists in ``route_map``.
@@ -476,9 +475,7 @@ class PathRouterPathForInnerTestCase(unittest.TestCase):
         self.m.replay()
 
         self.r.include('abc/', [])
-        p = self.r.path_for('n')
-
-        assert p is None
+        self.assertRaises(KeyError, lambda: self.r.path_for('n'))
 
     def test_match(self):
         """ match inner router

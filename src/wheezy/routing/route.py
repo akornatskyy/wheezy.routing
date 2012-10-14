@@ -207,7 +207,7 @@ def strip_optional(pattern):
 class RegexRoute(object):
     """ Route based on regular expression matching.
     """
-    __slots__ = ('match', 'path_format', 'kwargs', 'regex')
+    __slots__ = ('match', 'path', 'path_format', 'kwargs', 'regex')
 
     def __init__(self, pattern, finishing, kwargs=None):
         pattern = pattern.lstrip('^').rstrip('$')
@@ -216,9 +216,11 @@ class RegexRoute(object):
         default_values = dict.fromkeys(default_values, '')
         if kwargs:
             self.match = self.match_with_kwargs
+            self.path = self.path_with_kwargs
             self.kwargs = dict(default_values, **kwargs)
         else:
             self.match = self.match_no_kwargs
+            self.path = self.path_no_kwargs
             self.kwargs = default_values
 
         pattern = '^' + pattern
@@ -289,22 +291,13 @@ class RegexRoute(object):
             return (m.end(), merge(self.kwargs.copy(), kwargs))
         return -1, None
 
-    def path(self, values=None):
+    def path_with_kwargs(self, values=None):
         """ Build the path for the given route by substituting
             the named places of the regual expression.
 
-            >>> r = RegexRoute(
-            ...     r'abc/(?P<month>\d+)/(?P<day>\d+)',
-            ...     True
-            ... )
-            >>> r.path(dict(month=6, day=9))
-            'abc/6/9'
-            >>> r.path(dict(month=6))
-            'abc/6/'
-            >>> r.path()  # stripped by router
-            'abc//'
+            Specialization case: route was initialized with
+            default kwargs.
 
-            path for route with default values
             >>> r = RegexRoute(
             ...     r'abc/(?P<month>\d+)/(?P<day>\d+)',
             ...     True,
@@ -321,3 +314,23 @@ class RegexRoute(object):
             return self.path_format % dict(self.kwargs, **values)
         else:
             return self.path_format % self.kwargs
+
+    def path_no_kwargs(self, values):
+        """ Build the path for the given route by substituting
+            the named places of the regual expression.
+
+            Specialization case: route was initialized with
+            no default kwargs.
+
+            >>> r = RegexRoute(
+            ...     r'abc/(?P<month>\d+)/(?P<day>\d+)',
+            ...     True
+            ... )
+            >>> r.path(dict(month=6, day=9))
+            'abc/6/9'
+            >>> r.path(dict(month=6))
+            Traceback (most recent call last):
+                ...
+            KeyError: 'day'
+        """
+        return self.path_format % values

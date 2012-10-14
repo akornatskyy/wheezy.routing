@@ -77,10 +77,11 @@ class PathRouter(object):
         name = name or route_name(handler)
         if name in self.route_map:
             warn('PathRouter: overriding route: %s.' % name)
-        kwargs = kwargs or {}
-        kwargs['route_name'] = name
         # build finishing route
+        kwargs = kwargs or {}
         route = build_route(pattern, True, kwargs, self.route_builders)
+        # allow build strategy specialize math/path cases
+        kwargs['route_name'] = name
         self.route_map[name] = route.path
         if hasattr(route, 'exact_matches'):
             for pattern, kwargs in route.exact_matches:

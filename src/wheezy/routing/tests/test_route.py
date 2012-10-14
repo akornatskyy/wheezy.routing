@@ -299,9 +299,7 @@ class RegexRoutePathTestCase(unittest.TestCase):
     def test_no_values(self):
         """
         """
-        path = self.r.path()
-
-        self.assertEquals('abc/', path)
+        self.assertRaises(TypeError, lambda: self.r.path())
 
     def test_with_values(self):
         """
@@ -323,9 +321,7 @@ class RegexRoutePathNoDefaultsTestCase(unittest.TestCase):
     def test_no_values(self):
         """
         """
-        path = self.r.path()
-
-        self.assertEquals('abc/', path)
+        self.assertRaises(TypeError, lambda: self.r.path())
 
     def test_with_values(self):
         """

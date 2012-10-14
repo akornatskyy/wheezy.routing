@@ -280,7 +280,7 @@ class PathRouterMatchTestCase(unittest.TestCase):
         expect(
             mock_build_route(
                 '', True,
-                {'route_name': 'x'},
+                {},
                 self.r.route_builders
             )
         ).result(mock_route)
@@ -436,7 +436,7 @@ class PathRouterPathForTestCase(unittest.TestCase):
             mock_build_route(
                 'abc',
                 True,
-                {'route_name': 'n'},
+                {},
                 self.r.route_builders)
         ).result(mock_route)
         expect(mock_route.path({'a': 1})).result('abc')

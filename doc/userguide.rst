@@ -249,14 +249,18 @@ You can pass optional values (``kwargs`` argument) that will be used
 to replace named groups of the path matching pattern::
 
     >>> r = RegexRoute(
-    ...     r'abc/(?P<month>\d+)/(?P<day>\d+)'
+    ...     r'abc/(?P<month>\d+)/(?P<day>\d+)',
+    ...     kwargs=dict(month=1, day=1)
     ... )
     >>> r.path_for(dict(month=6, day=9))
     'abc/6/9'
     >>> r.path_for(dict(month=6))
-    'abc/6'
+    'abc/6/1'
     >>> r.path_for()
-    'abc'
+    'abc/1/1'
 
 Values passed to :py:meth:`~wheezy.routing.router.PathRouter.path_for`
 method override any values used during initialization of url mapping.
+
+:py:class:`KeyError` is raised in case you try to build a path
+that doesn't exist or insufficient arguments for building a path.

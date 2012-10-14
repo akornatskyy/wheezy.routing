@@ -273,17 +273,17 @@ class PathRouter(object):
             ...     (r'{lang}/', admin_routes, {'lang': 'en'})
             ... ])
             >>> r.path_for(r'signin')
-            'en'
+            'en/'
 
             Otherwise None
 
             >>> r.path_for(r'unknown')
         """
         if name in self.route_map:
-            return self.route_map[name](kwargs).rstrip('/')
+            return self.route_map[name](kwargs)
         else:
             try:
                 return ''.join([path(kwargs) for path
-                                in self.inner_route_map[name]]).rstrip('/')
+                                in self.inner_route_map[name]])
             except KeyError:
                 return None

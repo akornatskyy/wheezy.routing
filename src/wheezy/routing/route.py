@@ -207,21 +207,22 @@ def strip_optional(pattern):
 class RegexRoute(object):
     """ Route based on regular expression matching.
     """
-    __slots__ = ('match', 'path', 'path_format', 'kwargs', 'regex')
+    __slots__ = ('match', 'path', 'path_value',
+                 'path_format', 'kwargs', 'regex')
 
     def __init__(self, pattern, finishing, kwargs=None):
         pattern = pattern.lstrip('^').rstrip('$')
         # Choose match strategy
         self.path_format, default_values = parse_pattern(pattern)
-        default_values = dict.fromkeys(default_values, '')
+        self.kwargs = dict.fromkeys(default_values, '')
         if kwargs:
             self.match = self.match_with_kwargs
             self.path = self.path_with_kwargs
-            self.kwargs = dict(default_values, **kwargs)
+            self.kwargs.update(kwargs)
+            self.path_value = self.path_format % self.kwargs
         else:
             self.match = self.match_no_kwargs
             self.path = self.path_no_kwargs
-            self.kwargs = default_values
 
         pattern = '^' + pattern
         if finishing:
@@ -313,7 +314,7 @@ class RegexRoute(object):
         if values:
             return self.path_format % dict(self.kwargs, **values)
         else:
-            return self.path_format % self.kwargs
+            return self.path_value
 
     def path_no_kwargs(self, values):
         """ Build the path for the given route by substituting

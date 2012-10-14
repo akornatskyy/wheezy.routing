@@ -78,7 +78,7 @@ class PathRouter(object):
         if name in self.route_map:
             warn('PathRouter: overriding route: %s.' % name)
         # build finishing route
-        kwargs = kwargs or {}
+        kwargs = kwargs and kwargs.copy() or {}
         route = build_route(pattern, True, kwargs, self.route_builders)
         # allow build strategy specialize math/path cases
         kwargs['route_name'] = name

@@ -70,7 +70,7 @@ class PlainRouteInitTestCase(unittest.TestCase):
         self.assertEquals(r'abc', r.pattern)
         self.assertEquals(kw, r.kwargs)
         self.assertEquals(3, r.matched)
-        assert kw is r.kwargs
+        assert kw == r.kwargs
 
 
 class PlainRouteEqualsMatchTestCase(unittest.TestCase):
@@ -88,7 +88,7 @@ class PlainRouteEqualsMatchTestCase(unittest.TestCase):
         matched, kwargs = r.equals_match(r'abc')
         self.assertEquals(3, matched)
         self.assertEquals({'a': 1}, r.kwargs)
-        assert kw is kwargs
+        assert kw == kwargs
 
     def test_no_kwargs(self):
         """ ``equals_match`` strategy when no kwargs supplied.
@@ -98,7 +98,7 @@ class PlainRouteEqualsMatchTestCase(unittest.TestCase):
         r = PlainRoute(r'abc', True)
         matched, kwargs = r.equals_match(r'abc')
         self.assertEquals(3, matched)
-        self.assertEquals(None, r.kwargs)
+        self.assertEquals({}, r.kwargs)
 
     def test_no_match(self):
         """ ``equals_match`` strategy when there is no match.
@@ -124,7 +124,7 @@ class PlainRouteStartswithMatchTestCase(unittest.TestCase):
         matched, kwargs = r.startswith_match(r'abc/de')
         self.assertEquals(4, matched)
         self.assertEquals(kw, kwargs)
-        assert kw is kwargs
+        assert kw == kwargs
 
     def test_no_kwargs(self):
         """ ``startswith_match`` strategy when no
@@ -135,7 +135,7 @@ class PlainRouteStartswithMatchTestCase(unittest.TestCase):
         r = PlainRoute(r'abc/', False)
         matched, kwargs = r.startswith_match(r'abc/de')
         self.assertEquals(4, matched)
-        self.assertEquals(None, r.kwargs)
+        self.assertEquals({}, r.kwargs)
 
     def test_no_match(self):
         """ ``startswith_match`` strategy when there

@@ -13,7 +13,7 @@ from wheezy.routing.curly import convert as curly_convert
 RE_PLAIN_ROUTE = re.compile(r'^[\w/-]+$')
 
 
-def try_build_plain_route(pattern, finishing, kwargs=None):
+def try_build_plain_route(pattern, finishing, kwargs=None, name=None):
     """ If the plain route regular expression match the pattern
         than create a PlainRoute instance.
 
@@ -31,11 +31,11 @@ def try_build_plain_route(pattern, finishing, kwargs=None):
     if isinstance(pattern, PlainRoute):
         return pattern
     if pattern == '' or RE_PLAIN_ROUTE.match(pattern):
-        return PlainRoute(pattern, finishing, kwargs)
+        return PlainRoute(pattern, finishing, kwargs, name)
     return None
 
 
-def try_build_curly_route(pattern, finishing, kwargs=None):
+def try_build_curly_route(pattern, finishing, kwargs=None, name=None):
     """ Convert pattern expression into regex with
         named groups and create regex route.
 
@@ -52,11 +52,11 @@ def try_build_curly_route(pattern, finishing, kwargs=None):
     if isinstance(pattern, RegexRoute):
         return pattern
     if RE_CURLY_ROUTE.search(pattern):
-        return RegexRoute(curly_convert(pattern), finishing, kwargs)
+        return RegexRoute(curly_convert(pattern), finishing, kwargs, name)
     return None
 
 
-def try_build_regex_route(pattern, finishing, kwargs=None):
+def try_build_regex_route(pattern, finishing, kwargs=None, name=None):
     """ There is no special tests to match regex selection
         strategy.
 
@@ -68,27 +68,29 @@ def try_build_regex_route(pattern, finishing, kwargs=None):
     """
     if isinstance(pattern, RegexRoute):
         return pattern
-    return RegexRoute(pattern, finishing, kwargs)
+    return RegexRoute(pattern, finishing, kwargs, name)
 
 
-def build_route(pattern, finishing, kwargs, route_builders):
+def build_route(pattern, finishing, kwargs, name, route_builders):
     """ Try to find suitable route builder to create a route.
 
         >>> from wheezy.routing.config import route_builders
-        >>> r = build_route(r'abc', False, {'a': 1}, route_builders)
+        >>> r = build_route(r'abc', False, {'a': 1}, None, route_builders)
         >>> assert isinstance(r, PlainRoute)
         >>> r.kwargs
         {'a': 1}
 
         Otherwise raise LookupError
 
-        >>> r = build_route(r'abc', None, False, [])
+        >>> r = build_route(r'abc', None, False, None, [])
         Traceback (most recent call last):
             ...
         LookupError: No matching route factory found
     """
+    if not finishing:
+        assert not name
     for try_build_route in route_builders:
-        route = try_build_route(pattern, finishing, kwargs)
+        route = try_build_route(pattern, finishing, kwargs, name)
         if route:
             return route
     else:

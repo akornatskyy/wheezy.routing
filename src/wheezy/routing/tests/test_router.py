@@ -135,7 +135,7 @@ class PathRouterAddRouteTestCase(unittest.TestCase):
         expect(mock_route.path)
         mock_build_route = self.m.replace(builders.build_route)
         expect(
-            mock_build_route('abc', True, kw, self.r.route_builders)
+            mock_build_route('abc', True, kw, 'n', self.r.route_builders)
         ).result(mock_route)
         self.m.replay()
 
@@ -176,7 +176,7 @@ class PathRouterIncludeTestCase(unittest.TestCase):
         expect(mock_route.path)
         mock_build_route = self.m.replace(builders.build_route)
         expect(
-            mock_build_route('abc', False, kw, self.r.route_builders)
+            mock_build_route('abc', False, kw, None, self.r.route_builders)
         ).result(mock_route)
         self.m.replay()
 
@@ -280,7 +280,7 @@ class PathRouterMatchTestCase(unittest.TestCase):
         expect(
             mock_build_route(
                 '', True,
-                {},
+                None, 'x',
                 self.r.route_builders
             )
         ).result(mock_route)
@@ -362,7 +362,7 @@ class PathRouterMatchInnerTestCase(unittest.TestCase):
 
         self.assertEquals('h', handler)
         self.assertEquals(kw, kwargs)
-        assert kw is kwargs
+        assert kw == kwargs
 
     def test_kwargs_inner(self):
         """ there is a match is inner, kwargs is None
@@ -435,7 +435,8 @@ class PathRouterPathForTestCase(unittest.TestCase):
             mock_build_route(
                 'abc',
                 True,
-                {},
+                None,
+                'n',
                 self.r.route_builders)
         ).result(mock_route)
         expect(mock_route.path({'a': 1})).result('abc')

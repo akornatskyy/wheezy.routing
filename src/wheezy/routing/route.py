@@ -43,7 +43,7 @@ class PlainRoute(object):
     """
     __slots__ = ('pattern', 'kwargs', 'matched', 'match', 'exact_matches')
 
-    def __init__(self, pattern, finishing, kwargs=None):
+    def __init__(self, pattern, finishing, kwargs=None, name=None):
         """ Initializes the route by given ``pattern``. If
             ``finishing`` is True than choose ``equals_math``
             strategy
@@ -51,7 +51,7 @@ class PlainRoute(object):
             >>> r = PlainRoute(r'abc', True)
             >>> assert r.match == r.equals_match
             >>> r.exact_matches
-            (('abc', None),)
+            (('abc', {}),)
 
             Otherwise ``startswith_match`` strategy is selected.
 
@@ -59,12 +59,14 @@ class PlainRoute(object):
             >>> assert r.match == r.startswith_match
         """
         self.pattern = pattern
-        self.kwargs = kwargs
+        self.kwargs = kwargs and kwargs.copy() or {}
         self.matched = len(pattern)
         # Choose match strategy
         if finishing:
+            if name:
+                self.kwargs['route_name'] = name
             self.match = self.equals_match
-            self.exact_matches = ((pattern, kwargs), )
+            self.exact_matches = ((pattern, self.kwargs), )
         else:
             self.match = self.startswith_match
             self.exact_matches = None
@@ -79,6 +81,7 @@ class PlainRoute(object):
             >>> matched
             3
             >>> kwargs
+            {}
 
             Match returns ``self.kwargs``.
 
@@ -111,6 +114,7 @@ class PlainRoute(object):
             >>> matched
             3
             >>> kwargs
+            {}
 
             Match returns ``self.kwargs``.
 
@@ -207,21 +211,27 @@ def strip_optional(pattern):
 class RegexRoute(object):
     """ Route based on regular expression matching.
     """
-    __slots__ = ('match', 'path', 'path_value',
+    __slots__ = ('match', 'path', 'path_value', 'name',
                  'path_format', 'kwargs', 'regex')
 
-    def __init__(self, pattern, finishing, kwargs=None):
+    def __init__(self, pattern, finishing, kwargs=None, name=None):
         pattern = pattern.lstrip('^').rstrip('$')
         # Choose match strategy
         self.path_format, default_values = parse_pattern(pattern)
-        self.kwargs = dict.fromkeys(default_values, '')
         if kwargs:
+            self.kwargs = dict.fromkeys(default_values, '')
+            self.kwargs.update(kwargs)
+            if finishing and name:
+                self.kwargs['route_name'] = name
             self.match = self.match_with_kwargs
             self.path = self.path_with_kwargs
-            self.kwargs.update(kwargs)
             self.path_value = self.path_format % self.kwargs
         else:
-            self.match = self.match_no_kwargs
+            if finishing and name:
+                self.name = name
+                self.match = self.match_no_kwargs_finishing
+            else:
+                self.match = self.match_no_kwargs
             self.path = self.path_no_kwargs
 
         pattern = '^' + pattern
@@ -249,6 +259,30 @@ class RegexRoute(object):
         m = self.regex.match(path)
         if m:
             return m.end(), m.groupdict()
+        return -1, None
+
+    def match_no_kwargs_finishing(self, path):
+        """ If the ``path`` match the regex pattern.
+
+            >>> r = RegexRoute(r'abc/(?P<id>\d+$)', True)
+            >>> matched, kwargs = r.match_no_kwargs('abc/1234')
+            >>> matched
+            8
+            >>> kwargs
+            {'id': '1234'}
+
+            Otherwise return ``(-1, None)``.
+
+            >>> matched, kwargs = r.match_no_kwargs('abc/x')
+            >>> matched
+            -1
+            >>> kwargs
+        """
+        m = self.regex.match(path)
+        if m:
+            kwargs = m.groupdict()
+            kwargs['route_name'] = self.name
+            return m.end(), kwargs
         return -1, None
 
     def match_with_kwargs(self, path):
@@ -335,3 +369,9 @@ class RegexRoute(object):
             KeyError: 'day'
         """
         return self.path_format % values
+
+
+if __name__ == '__main__':
+    r = RegexRoute(r'abc/(?P<id>\d+$)', True, {
+        'lang': 'en'
+    })

@@ -78,10 +78,7 @@ class PathRouter(object):
         if name in self.route_map:
             warn('PathRouter: overriding route: %s.' % name)
         # build finishing route
-        kwargs = kwargs and kwargs.copy() or {}
-        route = build_route(pattern, True, kwargs, self.route_builders)
-        # allow build strategy specialize math/path cases
-        kwargs['route_name'] = name
+        route = build_route(pattern, True, kwargs, name, self.route_builders)
         self.route_map[name] = route.path
         if hasattr(route, 'exact_matches'):
             for pattern, kwargs in route.exact_matches:
@@ -119,7 +116,7 @@ class PathRouter(object):
             >>> warnings.simplefilter('default')
         """
         # try build intermediate route
-        route = build_route(pattern, False, kwargs, self.route_builders)
+        route = build_route(pattern, False, kwargs, None, self.route_builders)
         if isinstance(included, PathRouter):
             inner = included
         else:

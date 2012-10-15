@@ -111,7 +111,7 @@ class BuildRouteTestCase(unittest.TestCase):
         r = PlainRoute('', True)
 
         self.assertRaises(LookupError,
-                          lambda: build_route(r, False, None, []))
+                          lambda: build_route(r, False, None, None, []))
 
     def test_found(self):
         """ Sutable route strategy has been found.
@@ -119,7 +119,7 @@ class BuildRouteTestCase(unittest.TestCase):
         from wheezy.routing.builders import build_route
         from wheezy.routing import config
 
-        r = build_route(r'abc', False, {'a': 1}, config.route_builders)
+        r = build_route(r'abc', False, {'a': 1}, None, config.route_builders)
 
         assert r
         self.assertEqual({'a': 1}, r.kwargs)
@@ -133,12 +133,12 @@ class BuildRouteTestCase(unittest.TestCase):
         mock = m.mock
         builders = mock(), mock(), mock(), mock(), mock()
         b1, b2, b3, b4, b5 = builders
-        expect(b1(r'abc', False, None)).result(None)
-        expect(b2(r'abc', False, None)).result(None)
-        expect(b3(r'abc', False, None)).result('x')
+        expect(b1(r'abc', False, None, None)).result(None)
+        expect(b2(r'abc', False, None, None)).result(None)
+        expect(b3(r'abc', False, None, None)).result('x')
         m.replay()
 
-        r = build_route(r'abc', False, None, builders)
+        r = build_route(r'abc', False, None, None, builders)
 
         self.assertEqual('x', r)
         m.verify()
@@ -153,12 +153,12 @@ class BuildRouteTestCase(unittest.TestCase):
         mock = m.mock
         builders = mock(), mock()
         b1, b2 = builders
-        expect(b1(r'abc', False, None)).result(None)
-        expect(b2(r'abc', False, None)).result(None)
+        expect(b1(r'abc', False, None, None)).result(None)
+        expect(b2(r'abc', False, None, None)).result(None)
         m.replay()
 
-        self.assertRaises(LookupError,
-                          lambda: build_route(r'abc', False, None, builders))
+        self.assertRaises(LookupError, lambda: build_route(
+            r'abc', False, None, None, builders))
         m.verify()
 
 
@@ -173,7 +173,7 @@ class BuildRouteIntegrationTestCase(unittest.TestCase):
         from wheezy.routing.builders import build_route
         from wheezy.routing.route import PlainRoute
 
-        r = build_route(r'abc', False, None, config.route_builders)
+        r = build_route(r'abc', False, None, None, config.route_builders)
 
         assert isinstance(r, PlainRoute)
 
@@ -187,6 +187,7 @@ class BuildRouteIntegrationTestCase(unittest.TestCase):
         r = build_route(
             r'abc/{id}',
             False,
+            None,
             None,
             config.route_builders
         )
@@ -205,6 +206,7 @@ class BuildRouteIntegrationTestCase(unittest.TestCase):
             r'abc/{id}',
             True,
             None,
+            None,
             config.route_builders
         )
 
@@ -221,6 +223,7 @@ class BuildRouteIntegrationTestCase(unittest.TestCase):
         r = build_route(
             r'abc/(?P<id>\d+)',
             False,
+            None,
             None,
             config.route_builders
         )

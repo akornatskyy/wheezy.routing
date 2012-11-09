@@ -2,7 +2,7 @@
 """ ``urls`` module.
 """
 
-from config import url
+from wheezy.routing import url
 from views import welcome, server_time, not_found
 
 server_urls = [

@@ -1,5 +1,5 @@
-.SILENT: clean env doctest-cover test doc release upload
-.PHONY: clean env doctest-cover test doc release upload
+.SILENT: clean env doctest-cover qa test doc release upload
+.PHONY: clean env doctest-cover qa test doc release upload
 
 VERSION=2.7
 PYPI=http://pypi.python.org/simple
@@ -71,6 +71,12 @@ upload:
 		bdist_egg --dist-dir=$(DIST_DIR) \
 		rotate --match=$(VERSION).egg --keep=1 --dist-dir=$(DIST_DIR) \
 		upload;
+
+qa:
+	if [ "$$(echo $(VERSION) | sed 's/\.//')" -eq 27 ]; then \
+		flake8 --max-complexity 10 demos doc src setup.py && \
+		pep8 demos doc src setup.py ; \
+	fi
 
 test:
 	if [ "$$(echo $(VERSION) | sed 's/\.//')" -lt 30 ]; then \

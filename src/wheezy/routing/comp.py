@@ -22,7 +22,7 @@ if PY3:  # pragma: nocover
 else:  # pragma: nocover
     basestring = basestring
 
-    def ntob(n, encoding):
+    def ntob(n, encoding):  # noqa
         """ Converts native string to bytes
         """
         return n

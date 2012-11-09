@@ -74,12 +74,12 @@ Server Time
 
 Server `time`_ application consists of two screens. The first one has a link
 to the second that shows the time on server. The second page will be mapped
-as a separate application with its own routing. The disign used in this
-sample is moular. Let's start with ``config`` module. The only thing we
-need here is an instance of ``Route``.
+as a separate application with its own routing. The design used in this
+sample is modular. Let's start with ``config`` module. The only thing we
+need here is an instance of ``PathRouter``.
 
 .. literalinclude:: ../demos/time/config.py
-   :lines: 5-9
+   :lines: 5-8
 
 ``view`` module is pretty straight: a ``welcome`` view with a link to
 ``server_time`` view. The server time page returns server time. And finally

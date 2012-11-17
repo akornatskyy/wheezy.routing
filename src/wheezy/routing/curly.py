@@ -63,11 +63,11 @@ def convert(s):
     """
     parts = outer_split(s, sep='[]')
     parts[1::2] = ['(%s)?' % p for p in map(convert, parts[1::2])]
-    parts[::2] = map(conver_single, parts[::2])
+    parts[::2] = map(convert_single, parts[::2])
     return ''.join(parts)
 
 
-def conver_single(s):
+def convert_single(s):
     """ Convert curly expression into regex with
         named groups.
     """

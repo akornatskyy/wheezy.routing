@@ -38,7 +38,7 @@ class RouterTestCase(unittest.TestCase):
         assert 'a' in self.r.path_map
         assert 'pa' in self.r.match_map
 
-    def test_include(self):
+    def test_include_no_exact_matches(self):
         """ Multilevel include.
         """
         mock_route = Mock()
@@ -108,9 +108,12 @@ class RouterPathForTestCase(unittest.TestCase):
         self.assertRaises(KeyError, lambda: self.r.path_for('x'))
 
     def test_hierarchical(self):
-        self.r.include('/{locale:(en|ru)}/', [
+        membership_urls = [
             ('signin', 'h', None, 'signin')
-        ], {'locale': 'en'})
+        ]
+
+        self.r.include('/{locale:(en|ru)}/', membership_urls,
+                       {'locale': 'en'})
 
         assert '/en/signin' == self.r.path_for('signin')
         self.assertRaises(KeyError, lambda: self.r.path_for('x'))

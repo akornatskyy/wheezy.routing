@@ -50,6 +50,7 @@ class PathRouter(object):
                 if pattern in self.match_map:  # pragma: nocover
                     warn('PathRouter: overriding path: %s.' % pattern)
                 self.match_map[pattern] = (handler, kwargs)
+            route.exact_matches = None
         else:
             self.mapping.append((route.match, handler))
 
@@ -62,7 +63,20 @@ class PathRouter(object):
             router = PathRouter(self.route_builders)
             router.add_routes(included)
             included = router
-        self.mapping.append((route.match, included))
+        if route.exact_matches:
+            for p, kwargs in route.exact_matches:
+                for k, v in included.match_map.items():
+                    k = p + k
+                    if k in self.match_map:  # pragma: nocover
+                        warn('PathRouter: overriding path: %s.' % k)
+                    h, kw = v
+                    self.match_map[k] = (h, dict(kwargs, **kw))
+            route.exact_matches = None
+            included.match_map = {}
+            if included.mapping:
+                self.mapping.append((route.match, included))
+        else:
+            self.mapping.append((route.match, included))
         route_path = route.path
         for name, path in included.path_map.items():
             if name in self.inner_path_map:  # pragma: nocover
@@ -74,6 +88,8 @@ class PathRouter(object):
                 warn('PathRouter: overriding route: %s.' % name)
             self.inner_path_map[name] = tuple([route_path] + list(paths))
         included.inner_path_map = None
+        #print('include %s => %s / %s' % (pattern, len(self.match_map),
+        #                                 len(included.mapping)))
 
     def add_routes(self, mapping):
         """ Adds routes represented as a list of tuple
@@ -92,6 +108,8 @@ class PathRouter(object):
                 self.include(pattern, handler, kwargs)
             else:
                 self.add_route(pattern, handler, kwargs, name)
+        #print('add_routes => %s / %s' % (len(self.match_map),
+        #                                 len(self.mapping)))
 
     def match(self, path):
         """ Tries to find a match for the given path in route table.

@@ -3,10 +3,24 @@
 """
 
 import re
+
+from wheezy.routing.regex import RegexRoute
 from wheezy.routing.utils import outer_split
 
 
 RE_SPLIT = re.compile('(?P<n>\{[\w:]+.*?\})')
+
+
+def try_build_curly_route(pattern, finishing=True, kwargs=None, name=None):
+    """ Convert pattern expression into regex with
+        named groups and create regex route.
+    """
+    if isinstance(pattern, RegexRoute):
+        return pattern
+    if RE_SPLIT.search(pattern):
+        return RegexRoute(convert(pattern), finishing, kwargs, name)
+    return None
+
 
 patterns = {
     # one or more digits
@@ -34,32 +48,6 @@ default_pattern = 's'
 def convert(s):
     """ Convert curly expression into regex with
         named groups.
-
-        >>> convert(r'abc/{id}')
-        'abc/(?P<id>[^/]+)'
-
-        >>> convert(r'abc/{id:i}')
-        'abc/(?P<id>\\\d+)'
-
-        >>> convert(r'abc/{n}/{x:w}')
-        'abc/(?P<n>[^/]+)/(?P<x>\\\w+)'
-
-        >>> convert(r'{locale:(en|ru)}/home')
-        '(?P<locale>(en|ru))/home'
-
-        >>> convert(r'{locale:(en|ru)}/home')
-        '(?P<locale>(en|ru))/home'
-
-        Operates with optional values in square brackets
-
-        >>> convert(r'[{locale:(en|ru)}/]home')
-        '((?P<locale>(en|ru))/)?home'
-
-        >>> convert(r'item[/{id:i}]')
-        'item(/(?P<id>\\\d+))?'
-
-        >>> convert(r'{controller:w}[/{action:w}[/{id:i}]]')
-        '(?P<controller>\\\w+)(/(?P<action>\\\w+)(/(?P<id>\\\d+))?)?'
     """
     parts = outer_split(s, sep='[]')
     parts[1::2] = ['(%s)?' % p for p in map(convert, parts[1::2])]
@@ -78,29 +66,6 @@ def convert_single(s):
 def replace(val):
     """ Replace ``{group_name:pattern_name}`` by regex with
         named groups.
-
-        If the ``val`` is not an expression in curly brackets
-        simply return it.
-
-        >>> replace('abc')
-        'abc'
-
-        If the ``pattern_name`` is not specified, use
-        default one.
-
-        >>> replace('{abc}')
-        '(?P<abc>[^/]+)'
-
-        Replace the ``pattern_name`` with regex from
-        ``patterns`` dict.
-
-        >>> replace('{abc:i}')
-        '(?P<abc>\\\d+)'
-
-        The ``pattern_name`` not found use it as pattern.
-
-        >>> replace('{locale:(en|ru)}')
-        '(?P<locale>(en|ru))'
     """
     if val.startswith('{') and val.endswith('}'):
         group_name, pattern_name = parse(val[1:-1])
@@ -114,13 +79,6 @@ def parse(s):
 
         There is just ``group_name``, return default
         ``pattern_name``.
-
-        >>> parse('abc')
-        ('abc', 's')
-
-        Otherwise both.
-        >>> parse('abc:i')
-        ('abc', 'i')
     """
     if ':' in s:
         return tuple(s.split(':', 1))

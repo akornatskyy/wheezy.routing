@@ -2,8 +2,14 @@
 """ ``helloworld`` module.
 """
 
+import sys
+
 from wheezy.routing import PathRouter
-from wheezy.routing.comp import ntob
+
+if sys.version_info[0] >= 3:
+    ntob = lambda n, encoding: n.encode(encoding)
+else:
+    ntob = lambda n, encoding: n
 
 
 def hello_world(environ, start_response):

@@ -20,7 +20,7 @@ patterns interpretation) and/or ``handler``. If you have a look at
 :ref:`helloworld` example you notice the following:
 
 .. literalinclude:: ../demos/hello/helloworld.py
-   :lines: 29-31
+   :lines: 36-38
 
 or more precisely::
 
@@ -31,7 +31,7 @@ router for matching against available mapping. ``handler`` in this case is a
 simple callable that represents WSGI call handler.
 
 .. literalinclude:: ../demos/hello/helloworld.py
-   :lines: 9-13
+   :lines: 15-19
 
 Extend Mapping
 --------------
@@ -72,11 +72,6 @@ Named groups is something that you can get out from url mapping::
         ('posts/{year}', posts_by_year),
         ('posts/(?P<year>\d+)/(?P<month>\d+)', posts_by_month)
     ]
-
-If we get back to :ref:`helloworld` example:
-
-.. literalinclude:: ../demos/hello/helloworld.py
-   :lines: 22-24
 
 ``kwargs`` is assigned with ``dict`` that represends a key-value pair
 from match::
@@ -142,7 +137,7 @@ to add any pattern mapping you have. Here is how we do it in
 :ref:`helloworld` example:
 
 .. literalinclude:: ../demos/hello/helloworld.py
-   :lines: 24-27
+   :lines: 30-33
 
 ... or :ref:`server time`:
 

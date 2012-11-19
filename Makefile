@@ -38,14 +38,10 @@ env:
 		echo 'done.'; \
 	fi
 	$(EASY_INSTALL) -i $(PYPI) -O2 coverage nose pytest \
-		pytest-pep8 pytest-cov
+		pytest-pep8 pytest-cov mock
 	# The following packages available for python == 2.4
 	if [ "$$(echo $(VERSION) | sed 's/\.//')" -eq 24 ]; then \
 		$(EASY_INSTALL) -i $(PYPI) -O2 wsgiref; \
-	fi
-	# The following packages available for python < 3.0
-	if [ "$$(echo $(VERSION) | sed 's/\.//')" -lt 30 ]; then \
-		$(EASY_INSTALL) -i $(PYPI) -O2 mocker; \
 	fi
 	$(PYTHON) setup.py develop -i $(PYPI)
 
@@ -74,21 +70,17 @@ upload:
 
 qa:
 	if [ "$$(echo $(VERSION) | sed 's/\.//')" -eq 27 ]; then \
-		flake8 --max-complexity 10 demos doc src setup.py && \
+		flake8 --max-complexity 9 demos doc src setup.py && \
 		pep8 demos doc src setup.py ; \
 	fi
 
 test:
-	if [ "$$(echo $(VERSION) | sed 's/\.//')" -lt 30 ]; then \
-		$(PYTEST) -q -x --pep8 --doctest-modules \
-			src/wheezy/routing; \
-	else \
-		echo 'WARNING: unit tests skipped due to mocker'; \
-	fi
+	$(PYTEST) -q -x --pep8 --doctest-modules \
+		src/wheezy/routing
 
 doctest-cover:
-	$(NOSE) --with-doctest --detailed-errors --with-coverage \
-		--cover-package=wheezy.routing src/wheezy/routing/*.py
+	$(NOSE) --stop --with-doctest --detailed-errors \
+		--with-coverage --cover-package=wheezy.routing
 
 test-cover:
 	$(PYTEST) -q --cov wheezy.routing \
@@ -97,10 +89,6 @@ test-cover:
 
 doc:
 	$(SPHINX) -a -b html doc/ doc/_build/
-
-pdf:
-	$(SPHINX) -b latex -d doc/_build/doctrees doc/ doc/_build/latex
-	make -C doc/_build/latex all-pdf
 
 test-demos:
 	$(PYTEST) -q -x --pep8 demos/

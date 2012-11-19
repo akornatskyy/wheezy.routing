@@ -5,6 +5,18 @@
 import unittest
 
 
+class TryBuildCurlyRouteTestCase(unittest.TestCase):
+
+    def test_build(self):
+        """ Ensure curly route is built.
+        """
+        from wheezy.routing.curly import try_build_curly_route
+        route = try_build_curly_route('{locale:(en|ru)}')
+        assert route
+        assert route == try_build_curly_route(route)
+        assert not try_build_curly_route('.*')
+
+
 class PatternsTestCase(unittest.TestCase):
     """ Test the ``curly.patterns`` dict.
     """
@@ -16,7 +28,7 @@ class PatternsTestCase(unittest.TestCase):
 
         from wheezy.routing.curly import patterns
 
-        for p in tuple(patterns.values()):
+        for p in patterns.values():
             assert re.compile(p)
 
     def test_default(self):
@@ -37,7 +49,7 @@ class PatternsTestCase(unittest.TestCase):
             ('i', ('int', 'digits', 'number')),
             ('w', ('word', )),
             ('s', ('segment', 'part')),
-            ('a', ('any', 'rest'))
+            ('a', ('any', 'rest', '*'))
         )
 
         for n, syns in synonyms_map:
@@ -64,7 +76,7 @@ class ConvertTestCase(unittest.TestCase):
         """
         from wheezy.routing.curly import convert
 
-        pattern = convert(r'abc/{n1}/{n2}')
+        pattern = convert(r'abc/{n1}/{n2:s}')
 
         self.assertEquals(
             'abc/(?P<n1>[^/]+)/(?P<n2>[^/]+)',

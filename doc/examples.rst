@@ -26,24 +26,24 @@ import :py:class:`~wheezy.routing.PathRouter` that is actually just an
 exporting name for :py:class:`~wheezy.routing.router.PathRouter`:
 
 .. literalinclude:: ../demos/hello/helloworld.py
-   :lines: 5
+   :lines: 7
 
 Next we create a pretty simple WSGI handler to provide a response.
 
 .. literalinclude:: ../demos/hello/helloworld.py
-   :lines: 9-13
+   :lines: 15-19
 
 In addition let add a handler for not found response.
 
 .. literalinclude:: ../demos/hello/helloworld.py
-   :lines: 16-20
+   :lines: 22-26
 
 The declaration and mapping of pattern to handler following. We create an
 instance of ``PathRouter`` class and pass mapping that in this partucular case
 is a tuple of two values: ``pattern`` and ``handler``.
 
 .. literalinclude:: ../demos/hello/helloworld.py
-   :lines: 23-27
+   :lines: 29-33
 
 The first pattern ``'/'`` will match only root path of the request (it is
 finishing route in match chain). The second pattern ``'/{any}'`` is a curly
@@ -58,7 +58,7 @@ get ``handler`` and ``kwargs`` (parameters discovered from matching rule,
 that we ignore for now).
 
 .. literalinclude:: ../demos/hello/helloworld.py
-   :lines: 30-32
+   :lines: 36-38
 
 The rest in the ``helloworld`` application launch a simple wsgi server.
 Try it by running::

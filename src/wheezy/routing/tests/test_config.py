@@ -4,6 +4,13 @@
 
 import unittest
 
+from wheezy.routing.comp import PY3
+
+
+if PY3:  # pragma: nocover
+    callable = lambda obj: any(
+        "__call__" in klass.__dict__ for klass in type(obj).__mro__)
+
 
 class RouteBuildersTestCase(unittest.TestCase):
     """ Test the ``config.route_builders`` setting.
@@ -15,7 +22,6 @@ class RouteBuildersTestCase(unittest.TestCase):
         """
         import inspect
 
-        from wheezy.routing.comp import callable
         from wheezy.routing import config
 
         for builder in config.route_builders:
@@ -26,4 +32,4 @@ class RouteBuildersTestCase(unittest.TestCase):
             self.assertEqual(['pattern', 'finishing', 'kwargs', 'name'], args)
             self.assertEqual(None, varargs)
             self.assertEqual(None, keywords)
-            self.assertEqual((None, None), defaults)
+            self.assertEqual((True, None, None), defaults)

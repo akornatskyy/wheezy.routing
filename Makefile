@@ -9,7 +9,7 @@ PYTHON=env/bin/python$(VERSION)
 EASY_INSTALL=env/bin/easy_install-$(VERSION)
 PYTEST=env/bin/py.test-$(VERSION)
 NOSE=env/bin/nosetests-$(VERSION)
-SPHINX=/usr/bin/python /usr/bin/sphinx-build
+SPHINX=env/bin/python$(VERSION) env/bin/sphinx-build
 
 all: clean doctest-cover test test-demos release
 
@@ -23,10 +23,13 @@ debian:
 		mercurial
 
 env:
-	PYTHON_EXE=/usr/local/bin/python$(VERSION); \
+	PYTHON_EXE=/usr/local/bin/python$(VERSION) ; \
 	if [ ! -x $$PYTHON_EXE ]; then \
-		PYTHON_EXE=/usr/bin/python$(VERSION); \
-	fi;\
+		PYTHON_EXE=/opt/local/bin/python$(VERSION) ; \
+		if [ ! -x $$PYTHON_EXE ]; then \
+			PYTHON_EXE=/usr/bin/python$(VERSION) ; \
+		fi ; \
+	fi ; \
 	VIRTUALENV_USE_SETUPTOOLS=1; \
 	export VIRTUALENV_USE_SETUPTOOLS; \
 	virtualenv --python=$$PYTHON_EXE \

@@ -40,8 +40,7 @@ class ChoiceRoute(object):
         self.exact_matches = [(prefix + c + suffix,
                                dict(kwargs, **{self.name: c}))
                               for c in choices]
-        self.patterns = [(pattern, (len(pattern), kwargs))
-                         for pattern, kwargs in self.exact_matches]
+        self.patterns = [(p, (len(p), kw)) for p, kw in self.exact_matches]
         self.path_format = prefix + '%s' + suffix
 
     def match(self, path):

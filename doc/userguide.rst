@@ -91,8 +91,8 @@ can also merge these with some extra values during initialization of the mapping
         ('posts', latest_posts, {'blog_id': 100})
     ]
 
-Note, that any non-empty values from the path match override extra parameters
-passed during initialization.
+Note, that any values from the path match override extra parameters passed
+during initialization.
 
 ``url`` helper
 --------------

@@ -61,22 +61,6 @@ def camelcase_to_underscore(s):
     return RE_CAMELCASE_TO_UNDERSCOPE_2.sub(r'\1_\2', s).lower()
 
 
-def merge(d1, d2):
-    """ Update ``d1`` from ``d2`` only if a value in ``d2``
-        is evaluated to boolean True.
-
-        >>> d1 = dict(a=1,b=None,c=2, d=3)
-        >>> d2 = dict(a=None,b=2,c=1, e=4)
-        >>> sorted(merge(d1, d2).items())
-        [('a', 1), ('b', 2), ('c', 1), ('d', 3), ('e', 4)]
-    """
-    #d1.update(((k, v) for k, v in d2.iteritems() if v))
-    #d1.update(((k, d2[k]) for k in d2 if d2[k]))
-    #d1.update([(k, v) for k, v in iteritems(d2) if v])
-    d1.update([(k, v) for k, v in d2.items() if v])
-    return d1
-
-
 def outer_split(expression, sep='()'):
     """ Splits given ``expression`` by outer most separators.
 

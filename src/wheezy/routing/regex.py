@@ -4,7 +4,6 @@
 
 import re
 
-from wheezy.routing.utils import merge
 from wheezy.routing.utils import outer_split
 
 
@@ -74,7 +73,7 @@ class RegexRoute(object):
         m = self.regex.match(path)
         if m:
             kwargs = m.groupdict()
-            return (m.end(), merge(self.kwargs.copy(), kwargs))
+            return (m.end(), dict(self.kwargs, **kwargs))
         return -1, None
 
     def path_with_kwargs(self, values=None):

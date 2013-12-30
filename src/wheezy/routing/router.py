@@ -6,7 +6,6 @@ from warnings import warn
 
 from wheezy.routing.builders import build_route
 from wheezy.routing.config import route_builders as default_route_builders
-from wheezy.routing.utils import merge
 from wheezy.routing.utils import route_name
 
 
@@ -129,8 +128,7 @@ class PathRouter(object):
                     if not kwargs:
                         return handler, kwargs_inner
                     if kwargs_inner:
-                        kwargs = kwargs.copy()
-                        merge(kwargs, kwargs_inner)
+                        kwargs = dict(kwargs, **kwargs_inner)
                     return handler, kwargs
         return None, {}
 

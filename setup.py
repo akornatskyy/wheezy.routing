@@ -7,6 +7,16 @@ try:
 except:
     from distutils.core import setup  # noqa
 
+extra = {}
+try:
+    from Cython.Build import cythonize
+    path = os.path.join('src', 'wheezy', 'routing')
+    extra['ext_modules'] = cythonize(
+        [os.path.join(path, '*.py')],
+        quiet=True)
+except ImportError:
+    pass
+
 README = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 
 setup(
@@ -64,5 +74,6 @@ setup(
         ]
     },
 
-    platforms='any'
+    platforms='any',
+    **extra
 )

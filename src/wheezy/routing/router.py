@@ -87,7 +87,7 @@ class PathRouter(object):
                 warn('PathRouter: overriding route: %s.' % name)
             self.inner_path_map[name] = tuple([route_path] + list(paths))
         included.inner_path_map = None
-        #print('include %s => %s / %s' % (pattern, len(self.match_map),
+        # print('include %s => %s / %s' % (pattern, len(self.match_map),
         #                                 len(included.mapping)))
 
     def add_routes(self, mapping):
@@ -107,7 +107,7 @@ class PathRouter(object):
                 self.include(pattern, handler, kwargs)
             else:
                 self.add_route(pattern, handler, kwargs, name)
-        #print('add_routes => %s / %s' % (len(self.match_map),
+        # print('add_routes => %s / %s' % (len(self.match_map),
         #                                 len(self.mapping)))
 
     def match(self, path):

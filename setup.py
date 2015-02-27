@@ -10,10 +10,11 @@ except:
 extra = {}
 try:
     from Cython.Build import cythonize
-    path = os.path.join('src', 'wheezy', 'routing')
+    p = os.path.join('src', 'wheezy', 'routing')
     extra['ext_modules'] = cythonize(
-        [os.path.join(path, '*.py')],
-        quiet=True)
+        [os.path.join(p, '*.py')],
+        exclude=os.path.join(p, '__init__.py'),
+        nthreads=2, quiet=True)
 except ImportError:
     pass
 

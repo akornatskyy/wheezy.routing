@@ -8,8 +8,9 @@ from wheezy.routing.comp import PY3
 
 
 if PY3:  # pragma: nocover
-    callable = lambda obj: any(
-        "__call__" in klass.__dict__ for klass in type(obj).__mro__)
+    def callable(obj):
+        return any("__call__" in klass.__dict__
+                   for klass in type(obj).__mro__)
 
 
 class RouteBuildersTestCase(unittest.TestCase):

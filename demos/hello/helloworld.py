@@ -7,9 +7,11 @@ import sys
 from wheezy.routing import PathRouter
 
 if sys.version_info[0] >= 3:
-    ntob = lambda n, encoding: n.encode(encoding)
+    def ntob(n, encoding):
+        return n.encode(encoding)
 else:
-    ntob = lambda n, encoding: n
+    def ntob(n, encoding):
+        return n
 
 
 def hello_world(environ, start_response):

@@ -2,10 +2,7 @@
 
 import os
 
-try:
-    from setuptools import setup
-except:
-    from distutils.core import setup  # noqa
+from setuptools import setup
 
 extra = {}
 try:
@@ -18,13 +15,14 @@ try:
 except ImportError:
     pass
 
-README = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
+README = open(os.path.join(os.path.dirname(__file__), 'README.md')).read()
 
 setup(
     name='wheezy.routing',
     version='0.1',
     description='A lightweight path routing library',
     long_description=README,
+    long_description_content_type='text/markdown',
     url='https://bitbucket.org/akorn/wheezy.routing',
 
     author='Andriy Kornatskyy',
@@ -65,13 +63,10 @@ setup(
     ],
     extras_require={
         'dev': [
-            'wsgiref',
-            'coverage',
-            'nose',
+            'mock',
             'pytest',
             'pytest-pep8',
-            'pytest-cov',
-            'mocker'
+            'pytest-cov'
         ]
     },
 

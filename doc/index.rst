@@ -1,16 +1,16 @@
 .. _`wheezy.routing`:
 
-Wheezy Routing
+wheezy.routing
 ==============
 
 Introduction
 ------------
 
-:ref:`wheezy.routing` is a `python`_ package written in pure Python code 
-with no dependencies to other python packages. It is a simple 
-extensible mapping between URL patterns (as plain simple strings, curly 
-expressions or regular expressions) to a handler that can be anything 
-you like (there is no limitation or prescription what handler is 
+:ref:`wheezy.routing` is a `python`_ package written in pure Python code
+with no dependencies to other python packages. It is a simple
+extensible mapping between URL patterns (as plain simple strings, curly
+expressions or regular expressions) to a handler that can be anything
+you like (there is no limitation or prescription what handler is
 or should be).
 
 The mapping can include other mappings and constructed dynamically.
@@ -20,9 +20,8 @@ It is optimized for performance, well tested and documented.
 Resources:
 
 * `source code`_, `examples`_ and `issues`_ tracker are available
-  on `bitbucket`_
-* `documentation`_, `readthedocs`_
-* `eggs`_ on `pypi`_
+  on `github`_
+* `documentation`_
 
 Contents
 --------
@@ -35,12 +34,9 @@ Contents
    userguide
    modules
 
-.. _`bitbucket`: https://bitbucket.org/akorn/wheezy.routing
-.. _`documentation`: http://packages.python.org/wheezy.routing
-.. _`eggs`: http://pypi.python.org/pypi/wheezy.routing
-.. _`examples`: https://bitbucket.org/akorn/wheezy.routing/src/tip/demos
-.. _`issues`: https://bitbucket.org/akorn/wheezy.routing/issues
-.. _`pypi`: http://pypi.python.org
-.. _`python`: http://www.python.org
-.. _`readthedocs`: http://readthedocs.org/builds/wheezyrouting/
-.. _`source code`: https://bitbucket.org/akorn/wheezy.routing/src
+.. _`github`: https://github.com/akornatskyy/wheezy.routing
+.. _`documentation`: https://wheezyrouting.readthedocs.io/en/latest/
+.. _`examples`: https://github.com/akornatskyy/wheezy.routing/tree/master/demos
+.. _`issues`: https://github.com/akornatskyy/wheezy.routing/issues
+.. _`python`: https://www.python.org
+.. _`source code`: https://github.com/akornatskyy/wheezy.routing

@@ -13,6 +13,12 @@ wheezy.routing.builders
 .. automodule:: wheezy.routing.builders
    :members:
 
+wheezy.routing.choice
+-----------------------
+
+.. automodule:: wheezy.routing.choice
+   :members:
+
 wheezy.routing.config
 ---------------------
 

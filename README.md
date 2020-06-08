@@ -3,8 +3,8 @@
 [![Build Status](https://travis-ci.org/akornatskyy/wheezy.routing.svg?branch=master)](https://travis-ci.org/akornatskyy/wheezy.routing)
 [![Documentation Status](https://readthedocs.org/projects/wheezyrouting/badge/?version=latest)](https://wheezyrouting.readthedocs.io/en/latest/?badge=latest)
 
-[wheezy.routing](https://pypi.org/project/wheezy.routing) is a
-[python](http://www.python.org) package written in pure Python code. It
+[wheezy.routing](https://pypi.org/project/wheezy.routing/) is a
+[python](https://www.python.org) package written in pure Python code. It
 is a simple mapping between URL patterns (as plain simple strings, curly
 expressions or regular expressions) to a handler that can be anything
 you like (there is no limitation or prescription what handler is or
@@ -20,15 +20,15 @@ Resources:
   [examples](https://github.com/akornatskyy/wheezy.routing/tree/master/demos)
   and [issues](https://github.com/akornatskyy/wheezy.routing/issues)
   tracker are available on
-  [github](https://github.com/akornatskyy/wheezy.template)
-- [documentation](http://readthedocs.org/builds/wheezyrouting)
+  [github](https://github.com/akornatskyy/wheezy.routing)
+- [documentation](https://wheezyrouting.readthedocs.io/en/latest/)
 
 ## Install
 
 [wheezy.routing](https://pypi.org/project/wheezy.routing) requires
-[python](http://www.python.org) version 2.4 to 2.7 or 3.2+. It is
+[python](https://www.python.org) version 2.4 to 2.7 or 3.2+. It is
 independent of operating system. You can install it from
-[pypi](https://pypi.org/project/wheezy.template/):
+[pypi](https://pypi.org/project/wheezy.routing/):
 
 ```sh
 pip install wheezy.routing

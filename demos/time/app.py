@@ -3,6 +3,7 @@
 """
 
 from config import router
+
 from urls import all_urls
 
 
@@ -14,6 +15,7 @@ def main(environ, start_response):
     environ['routing.kwargs'] = kwargs
     return map(lambda chunk: chunk.encode('utf8'),
                handler(environ, start_response))
+
 
 if __name__ == '__main__':
     from wsgiref.simple_server import make_server

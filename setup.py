@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import re
 
 from setuptools import setup
 
@@ -16,21 +17,26 @@ except ImportError:
     pass
 
 README = open(os.path.join(os.path.dirname(__file__), 'README.md')).read()
+VERSION = (
+    re.search(
+        r'__version__ = "(.+)"',
+        open("src/wheezy/routing/__init__.py").read(),
+    )
+    .group(1)
+    .strip()
+)
 
 setup(
     name='wheezy.routing',
-    version='0.1',
+    version=VERSION,
     description='A lightweight path routing library',
     long_description=README,
     long_description_content_type='text/markdown',
     url='https://bitbucket.org/akorn/wheezy.routing',
-
     author='Andriy Kornatskyy',
-    author_email='andriy.kornatskyy at live.com',
-
+    author_email='andriy.kornatskyy@live.com',
     license='MIT',
     classifiers=[
-        'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
@@ -57,19 +63,7 @@ setup(
     packages=['wheezy', 'wheezy.routing'],
     package_dir={'': 'src'},
     namespace_packages=['wheezy'],
-
     zip_safe=False,
-    install_requires=[
-    ],
-    extras_require={
-        'dev': [
-            'mock',
-            'pytest',
-            'pytest-pep8',
-            'pytest-cov'
-        ]
-    },
-
     platforms='any',
     **extra
 )

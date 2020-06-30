@@ -2,6 +2,8 @@
 """
 """
 
+# flake8: noqa: W605
+
 import re
 
 from wheezy.routing.utils import outer_split
@@ -104,20 +106,20 @@ RE_SPLIT = re.compile(r'\<(\w+)\>')
 def parse_pattern(pattern):
     """ Returns path_format and names.
 
-        >>> parse_pattern('abc/(?P<id>[^/]+)')
+        >>> parse_pattern(r'abc/(?P<id>[^/]+)')
         ('abc/%(id)s', ['id'])
-        >>> parse_pattern('abc/(?P<n>[^/]+)/(?P<x>\\\w+)')
+        >>> parse_pattern(r'abc/(?P<n>[^/]+)/(?P<x>\\\w+)')
         ('abc/%(n)s/%(x)s', ['n', 'x'])
-        >>> parse_pattern('(?P<locale>(en|ru))/home')
+        >>> parse_pattern(r'(?P<locale>(en|ru))/home')
         ('%(locale)s/home', ['locale'])
 
         >>> from wheezy.routing.curly import convert
-        >>> parse_pattern(convert('[{locale:(en|ru)}/]home'))
+        >>> parse_pattern(convert(r'[{locale:(en|ru)}/]home'))
         ('%(locale)s/home', ['locale'])
-        >>> parse_pattern(convert('item[/{id:i}]'))
+        >>> parse_pattern(convert(r'item[/{id:i}]'))
         ('item/%(id)s', ['id'])
 
-        >>> p = convert(r'{controller:w}[/{action:w}[/{id:i}]]')
+        >>> p = convert('{controller:w}[/{action:w}[/{id:i}]]')
         >>> parse_pattern(p)
         ('%(controller)s/%(action)s/%(id)s', ['controller', 'action', 'id'])
     """

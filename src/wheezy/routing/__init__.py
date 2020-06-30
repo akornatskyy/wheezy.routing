@@ -8,4 +8,5 @@ from wheezy.routing.router import PathRouter
 from wheezy.routing.router import url
 
 
-__version__ = '0.1'
+__all__ = ("PathRouter", "url")
+__version__ = "0.1"

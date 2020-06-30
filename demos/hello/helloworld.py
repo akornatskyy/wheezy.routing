@@ -36,8 +36,9 @@ r.add_routes([
 
 
 def main(environ, start_response):
-    handler, kwargs = r.match(environ['PATH_INFO'])
+    handler, _ = r.match(environ['PATH_INFO'])
     return handler(environ, start_response)
+
 
 if __name__ == '__main__':
     from wsgiref.simple_server import make_server

@@ -6,9 +6,9 @@ import re
 
 
 RE_CHOICE_ROUTE = re.compile(
-    '^(?P<p>[\w/]*)'
-    '\{(?P<n>\w+):\((?P<c>[\w|]+)\)\}'
-    '(?P<s>[\w/]*)$')
+    r'^(?P<p>[\w/]*)'
+    r'\{(?P<n>\w+):\((?P<c>[\w|]+)\)\}'
+    r'(?P<s>[\w/]*)$')
 
 
 def try_build_choice_route(pattern, finishing=True, kwargs=None, name=None):

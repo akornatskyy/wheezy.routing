@@ -8,7 +8,7 @@ from wheezy.routing.regex import RegexRoute
 from wheezy.routing.utils import outer_split
 
 
-RE_SPLIT = re.compile('(?P<n>\{[\w:]+.*?\})')
+RE_SPLIT = re.compile(r'(?P<n>{[\w:]+.*?})')
 
 
 def try_build_curly_route(pattern, finishing=True, kwargs=None, name=None):

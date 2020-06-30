@@ -95,11 +95,11 @@ class PathRouter(object):
             (pattern, handler, kwargs=None, name=None) to route table.
         """
         for m in mapping:
-            l = len(m)
+            length = len(m)
             kwargs, name = None, None
-            if l == 2:
+            if length == 2:
                 pattern, handler = m
-            elif l == 3:
+            elif length == 3:
                 pattern, handler, kwargs = m
             else:
                 pattern, handler, kwargs, name = m

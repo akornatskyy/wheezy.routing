@@ -2,8 +2,9 @@
 """ ``urls`` module.
 """
 
+from views import not_found, server_time, welcome
+
 from wheezy.routing import url
-from views import welcome, server_time, not_found
 
 server_urls = [
     url('time', server_time, name='now')

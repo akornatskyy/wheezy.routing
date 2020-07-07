@@ -2,12 +2,10 @@
 Examples
 ========
 
-We start with a simple `helloworld`_ example, than add a bit more
-modularity in the example `server time`_. Before we proceed with examples below
-let's setup a `virtualenv`_ environment::
+Before we proceed let's setup a `virtualenv`_ environment, activate it and
+install::
 
-    $ virtualenv env
-    $ env/bin/easy_install wheezy.routing
+    $ pip install wheezy.routing
 
 
 .. _helloworld:

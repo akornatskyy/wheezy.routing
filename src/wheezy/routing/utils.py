@@ -1,13 +1,11 @@
-
 """ ``utils`` module.
 """
 
 import re
 
-
-RE_STRIP_NAME = re.compile(r'(Handler|Controller|Page|View)$')
-RE_CAMELCASE_TO_UNDERSCOPE_1 = re.compile('(.)([A-Z][a-z]+)')
-RE_CAMELCASE_TO_UNDERSCOPE_2 = re.compile('([a-z0-9])([A-Z])')
+RE_STRIP_NAME = re.compile(r"(Handler|Controller|Page|View)$")
+RE_CAMELCASE_TO_UNDERSCOPE_1 = re.compile("(.)([A-Z][a-z]+)")
+RE_CAMELCASE_TO_UNDERSCOPE_2 = re.compile("([a-z0-9])([A-Z])")
 
 
 def route_name(handler):
@@ -46,7 +44,7 @@ def strip_name(s):
         >>> strip_name('LoginHandler2')
         'LoginHandler2'
     """
-    return RE_STRIP_NAME.sub('', s)
+    return RE_STRIP_NAME.sub("", s)
 
 
 def camelcase_to_underscore(s):
@@ -57,11 +55,11 @@ def camelcase_to_underscore(s):
         >>> camelcase_to_underscore('Login')
         'login'
     """
-    s = RE_CAMELCASE_TO_UNDERSCOPE_1.sub(r'\1_\2', s)
-    return RE_CAMELCASE_TO_UNDERSCOPE_2.sub(r'\1_\2', s).lower()
+    s = RE_CAMELCASE_TO_UNDERSCOPE_1.sub(r"\1_\2", s)
+    return RE_CAMELCASE_TO_UNDERSCOPE_2.sub(r"\1_\2", s).lower()
 
 
-def outer_split(expression, sep='()'):
+def outer_split(expression, sep="()"):
     """ Splits given ``expression`` by outer most separators.
 
         >>> outer_split('123')
@@ -80,12 +78,12 @@ def outer_split(expression, sep='()'):
     start_sep, end_sep = sep
     start_count = end_count = 0
     parts = []
-    part = ''
+    part = ""
     for token in expression:
         if token == start_sep:
             if start_count == end_count:
                 parts.append(part)
-                part = ''
+                part = ""
                 start_count += 1
                 continue
             start_count += 1
@@ -93,10 +91,10 @@ def outer_split(expression, sep='()'):
             end_count += 1
             if start_count == end_count:
                 parts.append(part)
-                part = ''
+                part = ""
                 continue
         part += token
     if start_count != end_count:
-        raise ValueError('Expression is not balanced')
+        raise ValueError("Expression is not balanced")
     parts.append(part)
     return parts

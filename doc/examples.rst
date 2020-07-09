@@ -77,7 +77,7 @@ sample is modular. Let's start with ``config`` module. The only thing we
 need here is an instance of ``PathRouter``.
 
 .. literalinclude:: ../demos/time/config.py
-   :lines: 5-8
+   :lines: 4-6
 
 The ``view`` module is pretty straight: a ``welcome`` view with a link to
 ``server_time`` view. The server time page returns the server time. And finally

@@ -1,4 +1,3 @@
-
 """ ``router`` module.
 """
 
@@ -21,8 +20,13 @@ class PathRouter(object):
     """
     """
 
-    __slots__ = ('mapping', 'match_map', 'path_map', 'inner_path_map',
-                 'route_builders')
+    __slots__ = (
+        "mapping",
+        "match_map",
+        "path_map",
+        "inner_path_map",
+        "route_builders",
+    )
 
     def __init__(self, route_builders=None):
         """
@@ -40,14 +44,14 @@ class PathRouter(object):
         """
         name = name or route_name(handler)
         if name in self.path_map:  # pragma: nocover
-            warn('PathRouter: overriding route: %s.' % name)
+            warn("PathRouter: overriding route: %s." % name)
         # build finishing route
         route = build_route(pattern, True, kwargs, name, self.route_builders)
         self.path_map[name] = route.path
         if route.exact_matches:
             for pattern, kwargs in route.exact_matches:
                 if pattern in self.match_map:  # pragma: nocover
-                    warn('PathRouter: overriding path: %s.' % pattern)
+                    warn("PathRouter: overriding path: %s." % pattern)
                 self.match_map[pattern] = (handler, kwargs)
             route.exact_matches = None
         else:
@@ -67,7 +71,7 @@ class PathRouter(object):
                 for k, v in included.match_map.items():
                     k = p + k
                     if k in self.match_map:  # pragma: nocover
-                        warn('PathRouter: overriding path: %s.' % k)
+                        warn("PathRouter: overriding path: %s." % k)
                     h, kw = v
                     self.match_map[k] = (h, dict(kwargs, **kw))
             route.exact_matches = None
@@ -79,12 +83,12 @@ class PathRouter(object):
         route_path = route.path
         for name, path in included.path_map.items():
             if name in self.inner_path_map:  # pragma: nocover
-                warn('PathRouter: overriding route: %s.' % name)
+                warn("PathRouter: overriding route: %s." % name)
             self.inner_path_map[name] = (route_path, path)
         included.path_map = None
         for name, paths in included.inner_path_map.items():
             if name in self.inner_path_map:  # pragma: nocover
-                warn('PathRouter: overriding route: %s.' % name)
+                warn("PathRouter: overriding route: %s." % name)
             self.inner_path_map[name] = tuple([route_path] + list(paths))
         included.inner_path_map = None
         # print('include %s => %s / %s' % (pattern, len(self.match_map),
@@ -120,7 +124,7 @@ class PathRouter(object):
             matched, kwargs = match(path)
             if matched >= 0:
                 # TODO: isinstance(handler, PathRouter)
-                match = getattr(handler, 'match', None)
+                match = getattr(handler, "match", None)
                 if not match:
                     return handler, kwargs
                 handler, kwargs_inner = match(path[matched:])
@@ -138,5 +142,6 @@ class PathRouter(object):
         if name in self.path_map:
             return self.path_map[name](kwargs)
         else:
-            return ''.join([path(kwargs) for path
-                            in self.inner_path_map[name]])
+            return "".join(
+                [path(kwargs) for path in self.inner_path_map[name]]
+            )

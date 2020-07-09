@@ -1,4 +1,3 @@
-
 """
 """
 
@@ -21,20 +20,28 @@ def try_build_regex_route(pattern, finishing=True, kwargs=None, name=None):
 class RegexRoute(object):
     """ Route based on regular expression matching.
     """
-    __slots__ = ('match', 'path', 'path_value', 'name',
-                 'path_format', 'kwargs', 'regex')
+
+    __slots__ = (
+        "match",
+        "path",
+        "path_value",
+        "name",
+        "path_format",
+        "kwargs",
+        "regex",
+    )
 
     exact_matches = None
 
     def __init__(self, pattern, finishing=True, kwargs=None, name=None):
-        pattern = pattern.lstrip('^').rstrip('$')
+        pattern = pattern.lstrip("^").rstrip("$")
         # Choose match strategy
         self.path_format, names = parse_pattern(pattern)
         if kwargs:
-            self.kwargs = dict.fromkeys(names, '')
+            self.kwargs = dict.fromkeys(names, "")
             self.kwargs.update(kwargs)
             if finishing:
-                self.kwargs['route_name'] = name
+                self.kwargs["route_name"] = name
             self.match = self.match_with_kwargs
             self.path = self.path_with_kwargs
             self.path_value = self.path_format % self.kwargs
@@ -46,9 +53,9 @@ class RegexRoute(object):
                 self.match = self.match_no_kwargs
             self.path = self.path_no_kwargs
 
-        pattern = '^' + pattern
+        pattern = "^" + pattern
         if finishing:
-            pattern = pattern + '$'
+            pattern = pattern + "$"
         self.regex = re.compile(pattern)
 
     def match_no_kwargs(self, path):
@@ -65,7 +72,7 @@ class RegexRoute(object):
         m = self.regex.match(path)
         if m:
             kwargs = m.groupdict()
-            kwargs['route_name'] = self.name
+            kwargs["route_name"] = self.name
             return m.end(), kwargs
         return -1, None
 
@@ -100,7 +107,7 @@ class RegexRoute(object):
         return self.path_format % values
 
 
-RE_SPLIT = re.compile(r'\<(\w+)\>')
+RE_SPLIT = re.compile(r"\<(\w+)\>")
 
 
 def parse_pattern(pattern):
@@ -124,12 +131,12 @@ def parse_pattern(pattern):
         ('%(controller)s/%(action)s/%(id)s', ['controller', 'action', 'id'])
     """
     pattern = strip_optional(pattern)
-    parts = outer_split(pattern, sep='()')
+    parts = outer_split(pattern, sep="()")
     if len(parts) % 2 == 1 and not parts[-1]:
         parts = parts[:-1]
     names = [RE_SPLIT.split(p)[1] for p in parts[1::2]]
-    parts[1::2] = ['%%(%s)s' % p for p in names]
-    return ''.join(parts), names
+    parts[1::2] = ["%%(%s)s" % p for p in names]
+    return "".join(parts), names
 
 
 def strip_optional(pattern):
@@ -151,14 +158,14 @@ def strip_optional(pattern):
         >>> strip_optional(p)
         '(?P<controller>\\\w+)/(?P<action>\\\w+)/(?P<id>\\\d+)'
     """
-    if ')?' not in pattern:
+    if ")?" not in pattern:
         return pattern
-    parts = outer_split(pattern, sep='()')
+    parts = outer_split(pattern, sep="()")
     for i in range(2, len(parts), 2):
         part = parts[i]
-        if part.startswith('?'):
+        if part.startswith("?"):
             parts[i] = part[1:]
             parts[i - 1] = strip_optional(parts[i - 1])
         else:
             parts[i - 1] = "(%s)" % parts[i - 1]
-    return ''.join(parts)
+    return "".join(parts)

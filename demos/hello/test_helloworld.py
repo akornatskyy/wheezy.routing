@@ -1,4 +1,3 @@
-
 """ Unit tests for ``helloworld`` module.
 """
 
@@ -15,13 +14,14 @@ class MainTestCase(unittest.TestCase):
         from helloworld import main
 
         def start_response(status, response_headers):
-            self.assertEquals('200 OK', status)
+            self.assertEquals("200 OK", status)
 
-        environ = {'PATH_INFO': '/'}
-        response = list(map(lambda c: c.decode('utf-8'),
-                            main(environ, start_response)))
+        environ = {"PATH_INFO": "/"}
+        response = list(
+            map(lambda c: c.decode("utf-8"), main(environ, start_response))
+        )
 
-        self.assertEquals(['Hello World!'], response)
+        self.assertEquals(["Hello World!"], response)
 
     def test_any_path_match(self):
         """
@@ -29,11 +29,12 @@ class MainTestCase(unittest.TestCase):
         from helloworld import main
 
         def start_response(status, response_headers):
-            self.assertEquals('404 Not Found', status)
+            self.assertEquals("404 Not Found", status)
 
-        for path in ('/a', '/b'):
-            environ = {'PATH_INFO': path}
-            response = list(map(lambda c: c.decode('utf-8'),
-                                main(environ, start_response)))
+        for path in ("/a", "/b"):
+            environ = {"PATH_INFO": path}
+            response = list(
+                map(lambda c: c.decode("utf-8"), main(environ, start_response))
+            )
 
-            self.assertEquals([''], response)
+            self.assertEquals([""], response)

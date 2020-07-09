@@ -41,7 +41,7 @@ manipulation you like, e.g. add other mappings, construct them dynamically,
 etc. Here is snippet from :ref:`server time` example:
 
 .. literalinclude:: ../demos/time/urls.py
-   :lines: 12-19
+   :lines: 10-
 
 ``home`` mapping has been extended by simple adding another list.
 
@@ -54,7 +54,7 @@ system checks if the handler is another mapping it creates nested
 ``PathRouter``). Here is an example from :ref:`server time`:
 
 .. literalinclude:: ../demos/time/urls.py
-   :lines: 8-15
+   :lines: 8-
 
 ``server_urls`` included into ``server/`` subpath. So effective path for
 ``server_time`` handler is ``server/time``.

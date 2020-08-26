@@ -14,8 +14,7 @@ class RouterTestCase(unittest.TestCase):
         self.r = PathRouter(route_builders=[self.mock_builder])
 
     def test_add_route_no_exact_matches(self):
-        """ No exact matches.
-        """
+        """No exact matches."""
         mock_route = Mock()
         mock_route.exact_matches = None
         self.mock_builder.return_value = mock_route
@@ -26,8 +25,7 @@ class RouterTestCase(unittest.TestCase):
         assert self.r.mapping
 
     def test_add_route_with_exact_matches(self):
-        """ With exact matches.
-        """
+        """With exact matches."""
         mock_route = Mock()
         mock_route.exact_matches = [("pa", {})]
         self.mock_builder.return_value = mock_route
@@ -38,8 +36,7 @@ class RouterTestCase(unittest.TestCase):
         assert "pa" in self.r.match_map
 
     def test_include_no_exact_matches(self):
-        """ Multilevel include.
-        """
+        """Multilevel include."""
         mock_route = Mock()
         mock_route.exact_matches = None
         self.mock_builder.return_value = mock_route
@@ -111,8 +108,7 @@ class RouterPathForTestCase(unittest.TestCase):
 
 class UrlTestCase(unittest.TestCase):
     def test_url(self):
-        """ Check returns tuple.
-        """
+        """Check returns tuple."""
         from wheezy.routing.router import url
 
         assert ("pattern", "handler", "kwargs", "name") == url(

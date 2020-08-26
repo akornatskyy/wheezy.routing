@@ -3,8 +3,8 @@
 
 
 def build_route(pattern, finishing, kwargs, name, route_builders):
-    """ Try to find suitable route builder to create a route.
-        Raises ``LookupError`` if none found.
+    """Try to find suitable route builder to create a route.
+    Raises ``LookupError`` if none found.
     """
     if not finishing:
         assert not name

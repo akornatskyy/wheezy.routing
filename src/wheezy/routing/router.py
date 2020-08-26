@@ -9,16 +9,15 @@ from wheezy.routing.utils import route_name
 
 
 def url(pattern, handler, kwargs=None, name=None):
-    """ Converts parameters to tupple of length four.
-        Used for convenience to name parameters and skip
-        unused.
+    """Converts parameters to tupple of length four.
+    Used for convenience to name parameters and skip
+    unused.
     """
     return pattern, handler, kwargs, name
 
 
 class PathRouter(object):
-    """
-    """
+    """"""
 
     __slots__ = (
         "mapping",
@@ -29,8 +28,7 @@ class PathRouter(object):
     )
 
     def __init__(self, route_builders=None):
-        """
-        """
+        """"""
         self.route_builders = route_builders or default_route_builders
         # match
         self.match_map = {}
@@ -40,8 +38,7 @@ class PathRouter(object):
         self.inner_path_map = {}
 
     def add_route(self, pattern, handler, kwargs=None, name=None):
-        """ Adds a pattern to route table
-        """
+        """Adds a pattern to route table"""
         name = name or route_name(handler)
         if name in self.path_map:  # pragma: nocover
             warn("PathRouter: overriding route: %s." % name)
@@ -58,8 +55,7 @@ class PathRouter(object):
             self.mapping.append((route.match, handler))
 
     def include(self, pattern, included, kwargs=None):
-        """ Includes nested routes below the current.
-        """
+        """Includes nested routes below the current."""
         # try build intermediate route
         route = build_route(pattern, False, kwargs, None, self.route_builders)
         if not isinstance(included, PathRouter):
@@ -95,8 +91,8 @@ class PathRouter(object):
         #                                 len(included.mapping)))
 
     def add_routes(self, mapping):
-        """ Adds routes represented as a list of tuple
-            (pattern, handler, kwargs=None, name=None) to route table.
+        """Adds routes represented as a list of tuple
+        (pattern, handler, kwargs=None, name=None) to route table.
         """
         for m in mapping:
             length = len(m)
@@ -115,8 +111,8 @@ class PathRouter(object):
         #                                 len(self.mapping)))
 
     def match(self, path):
-        """ Tries to find a match for the given path in route table.
-            Returns a tupple of (handler, kwargs)
+        """Tries to find a match for the given path in route table.
+        Returns a tupple of (handler, kwargs)
         """
         if path in self.match_map:
             return self.match_map[path]
@@ -137,8 +133,7 @@ class PathRouter(object):
         return None, {}
 
     def path_for(self, name, **kwargs):
-        """ Returns the url for the given route name.
-        """
+        """Returns the url for the given route name."""
         if name in self.path_map:
             return self.path_map[name](kwargs)
         else:

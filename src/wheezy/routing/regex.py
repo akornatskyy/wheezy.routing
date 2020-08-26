@@ -9,8 +9,8 @@ from wheezy.routing.utils import outer_split
 
 
 def try_build_regex_route(pattern, finishing=True, kwargs=None, name=None):
-    """ There is no special tests to match regex selection
-        strategy.
+    """There is no special tests to match regex selection
+    strategy.
     """
     if isinstance(pattern, RegexRoute):
         return pattern
@@ -18,8 +18,7 @@ def try_build_regex_route(pattern, finishing=True, kwargs=None, name=None):
 
 
 class RegexRoute(object):
-    """ Route based on regular expression matching.
-    """
+    """Route based on regular expression matching."""
 
     __slots__ = (
         "match",
@@ -59,16 +58,14 @@ class RegexRoute(object):
         self.regex = re.compile(pattern)
 
     def match_no_kwargs(self, path):
-        """ If the ``path`` match the regex pattern.
-        """
+        """If the ``path`` match the regex pattern."""
         m = self.regex.match(path)
         if m:
             return m.end(), m.groupdict()
         return -1, None
 
     def match_no_kwargs_finishing(self, path):
-        """ If the ``path`` match the regex pattern.
-        """
+        """If the ``path`` match the regex pattern."""
         m = self.regex.match(path)
         if m:
             kwargs = m.groupdict()
@@ -77,8 +74,7 @@ class RegexRoute(object):
         return -1, None
 
     def match_with_kwargs(self, path):
-        """ If the ``path`` match the regex pattern.
-        """
+        """If the ``path`` match the regex pattern."""
         m = self.regex.match(path)
         if m:
             kwargs = m.groupdict()
@@ -86,11 +82,11 @@ class RegexRoute(object):
         return -1, None
 
     def path_with_kwargs(self, values=None):
-        """ Build the path for the given route by substituting
-            the named places of the regual expression.
+        """Build the path for the given route by substituting
+        the named places of the regual expression.
 
-            Specialization case: route was initialized with
-            default kwargs.
+        Specialization case: route was initialized with
+        default kwargs.
         """
         if values:
             return self.path_format % dict(self.kwargs, **values)
@@ -98,11 +94,11 @@ class RegexRoute(object):
             return self.path_value
 
     def path_no_kwargs(self, values):
-        """ Build the path for the given route by substituting
-            the named places of the regual expression.
+        """Build the path for the given route by substituting
+        the named places of the regual expression.
 
-            Specialization case: route was initialized with
-            no default kwargs.
+        Specialization case: route was initialized with
+        no default kwargs.
         """
         return self.path_format % values
 
@@ -111,24 +107,24 @@ RE_SPLIT = re.compile(r"\<(\w+)\>")
 
 
 def parse_pattern(pattern):
-    """ Returns path_format and names.
+    """Returns path_format and names.
 
-        >>> parse_pattern(r'abc/(?P<id>[^/]+)')
-        ('abc/%(id)s', ['id'])
-        >>> parse_pattern(r'abc/(?P<n>[^/]+)/(?P<x>\\\w+)')
-        ('abc/%(n)s/%(x)s', ['n', 'x'])
-        >>> parse_pattern(r'(?P<locale>(en|ru))/home')
-        ('%(locale)s/home', ['locale'])
+    >>> parse_pattern(r'abc/(?P<id>[^/]+)')
+    ('abc/%(id)s', ['id'])
+    >>> parse_pattern(r'abc/(?P<n>[^/]+)/(?P<x>\\\w+)')
+    ('abc/%(n)s/%(x)s', ['n', 'x'])
+    >>> parse_pattern(r'(?P<locale>(en|ru))/home')
+    ('%(locale)s/home', ['locale'])
 
-        >>> from wheezy.routing.curly import convert
-        >>> parse_pattern(convert(r'[{locale:(en|ru)}/]home'))
-        ('%(locale)s/home', ['locale'])
-        >>> parse_pattern(convert(r'item[/{id:i}]'))
-        ('item/%(id)s', ['id'])
+    >>> from wheezy.routing.curly import convert
+    >>> parse_pattern(convert(r'[{locale:(en|ru)}/]home'))
+    ('%(locale)s/home', ['locale'])
+    >>> parse_pattern(convert(r'item[/{id:i}]'))
+    ('item/%(id)s', ['id'])
 
-        >>> p = convert('{controller:w}[/{action:w}[/{id:i}]]')
-        >>> parse_pattern(p)
-        ('%(controller)s/%(action)s/%(id)s', ['controller', 'action', 'id'])
+    >>> p = convert('{controller:w}[/{action:w}[/{id:i}]]')
+    >>> parse_pattern(p)
+    ('%(controller)s/%(action)s/%(id)s', ['controller', 'action', 'id'])
     """
     pattern = strip_optional(pattern)
     parts = outer_split(pattern, sep="()")
@@ -140,23 +136,23 @@ def parse_pattern(pattern):
 
 
 def strip_optional(pattern):
-    """ Strip optional regex group flag.
+    """Strip optional regex group flag.
 
-        at the beginning
+    at the beginning
 
-        >>> strip_optional('((?P<locale>(en|ru))/)?home')
-        '(?P<locale>(en|ru))/home'
+    >>> strip_optional('((?P<locale>(en|ru))/)?home')
+    '(?P<locale>(en|ru))/home'
 
-        at the end
+    at the end
 
-        >>> strip_optional('item(/(?P<id>\\\d+))?')
-        'item/(?P<id>\\\d+)'
+    >>> strip_optional('item(/(?P<id>\\\d+))?')
+    'item/(?P<id>\\\d+)'
 
-        nested:
+    nested:
 
-        >>> p = '(?P<controller>\\\w+)(/(?P<action>\\\w+)(/(?P<id>\\\d+))?)?'
-        >>> strip_optional(p)
-        '(?P<controller>\\\w+)/(?P<action>\\\w+)/(?P<id>\\\d+)'
+    >>> p = '(?P<controller>\\\w+)(/(?P<action>\\\w+)(/(?P<id>\\\d+))?)?'
+    >>> strip_optional(p)
+    '(?P<controller>\\\w+)/(?P<action>\\\w+)/(?P<id>\\\d+)'
     """
     if ")?" not in pattern:
         return pattern

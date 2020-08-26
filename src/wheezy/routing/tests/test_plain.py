@@ -6,8 +6,7 @@ import unittest
 
 class TryPlainRouteTestCase(unittest.TestCase):
     def test_build(self):
-        """ Ensure plain route is built.
-        """
+        """Ensure plain route is built."""
         from wheezy.routing.plain import try_build_plain_route
 
         route = try_build_plain_route("favicon.ico")
@@ -18,8 +17,7 @@ class TryPlainRouteTestCase(unittest.TestCase):
 
 class PlainRouteTestCase(unittest.TestCase):
     def test_match_finishing(self):
-        """ Equals match strategy.
-        """
+        """Equals match strategy."""
         from wheezy.routing.plain import PlainRoute
 
         r = PlainRoute("abc", finishing=True, kwargs={"x": 2}, name="test")
@@ -36,8 +34,7 @@ class PlainRouteTestCase(unittest.TestCase):
         r.exact_matches = None
 
     def test_match_intermediate(self):
-        """ Starts with strategy.
-        """
+        """Starts with strategy."""
         from wheezy.routing.plain import PlainRoute
 
         r = PlainRoute("abc", finishing=False, kwargs={"x": 2}, name="ignore")
@@ -51,8 +48,7 @@ class PlainRouteTestCase(unittest.TestCase):
         r.exact_matches = None
 
     def test_path(self):
-        """ Returns pattern.
-        """
+        """Returns pattern."""
         from wheezy.routing.plain import PlainRoute
 
         r = PlainRoute("abc", finishing=False, kwargs={}, name=None)

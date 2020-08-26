@@ -9,8 +9,8 @@ RE_CHOICE_ROUTE = re.compile(
 
 
 def try_build_choice_route(pattern, finishing=True, kwargs=None, name=None):
-    """ If the choince route regular expression match the pattern
-        than create a ChoiceRoute instance.
+    """If the choince route regular expression match the pattern
+    than create a ChoiceRoute instance.
     """
     if isinstance(pattern, ChoiceRoute):
         return pattern
@@ -21,8 +21,7 @@ def try_build_choice_route(pattern, finishing=True, kwargs=None, name=None):
 
 
 class ChoiceRoute(object):
-    """ Route based on choice match, e.g. {locale:(en|ru)}.
-    """
+    """Route based on choice match, e.g. {locale:(en|ru)}."""
 
     __slots__ = ("kwargs", "name", "exact_matches", "patterns", "path_format")
 
@@ -42,9 +41,9 @@ class ChoiceRoute(object):
         self.path_format = prefix + "%s" + suffix
 
     def match(self, path):
-        """ If the ``path`` matches, return the end of
-            substring matched and kwargs. Otherwise
-            return ``(-1, None)``.
+        """If the ``path`` matches, return the end of
+        substring matched and kwargs. Otherwise
+        return ``(-1, None)``.
         """
         for pattern, result in self.patterns:
             if path.startswith(pattern):
@@ -52,8 +51,7 @@ class ChoiceRoute(object):
         return (-1, None)
 
     def path(self, values=None):
-        """ Build the path for given route.
-        """
+        """Build the path for given route."""
         if not values or self.name not in values:
             values = self.kwargs
         return self.path_format % values[self.name]

@@ -9,15 +9,15 @@ RE_CAMELCASE_TO_UNDERSCOPE_2 = re.compile("([a-z0-9])([A-Z])")
 
 
 def route_name(handler):
-    """ Return a name for the given handler.
-        ``handler`` can be an object, class or callable.
+    """Return a name for the given handler.
+    ``handler`` can be an object, class or callable.
 
-        >>> class Login: pass
-        >>> route_name(Login)
-        'login'
-        >>> l = Login()
-        >>> route_name(l)
-        'login'
+    >>> class Login: pass
+    >>> route_name(Login)
+    'login'
+    >>> l = Login()
+    >>> route_name(l)
+    'login'
     """
 
     try:
@@ -29,50 +29,50 @@ def route_name(handler):
 
 
 def strip_name(s):
-    """ Strips the name per RE_STRIP_NAME regex.
+    """Strips the name per RE_STRIP_NAME regex.
 
-        >>> strip_name('Login')
-        'Login'
-        >>> strip_name('LoginHandler')
-        'Login'
-        >>> strip_name('LoginController')
-        'Login'
-        >>> strip_name('LoginPage')
-        'Login'
-        >>> strip_name('LoginView')
-        'Login'
-        >>> strip_name('LoginHandler2')
-        'LoginHandler2'
+    >>> strip_name('Login')
+    'Login'
+    >>> strip_name('LoginHandler')
+    'Login'
+    >>> strip_name('LoginController')
+    'Login'
+    >>> strip_name('LoginPage')
+    'Login'
+    >>> strip_name('LoginView')
+    'Login'
+    >>> strip_name('LoginHandler2')
+    'LoginHandler2'
     """
     return RE_STRIP_NAME.sub("", s)
 
 
 def camelcase_to_underscore(s):
-    """ Convert CamelCase to camel_case.
+    """Convert CamelCase to camel_case.
 
-        >>> camelcase_to_underscore('MainPage')
-        'main_page'
-        >>> camelcase_to_underscore('Login')
-        'login'
+    >>> camelcase_to_underscore('MainPage')
+    'main_page'
+    >>> camelcase_to_underscore('Login')
+    'login'
     """
     s = RE_CAMELCASE_TO_UNDERSCOPE_1.sub(r"\1_\2", s)
     return RE_CAMELCASE_TO_UNDERSCOPE_2.sub(r"\1_\2", s).lower()
 
 
 def outer_split(expression, sep="()"):
-    """ Splits given ``expression`` by outer most separators.
+    """Splits given ``expression`` by outer most separators.
 
-        >>> outer_split('123')
-        ['123']
-        >>> outer_split('123(45(67)89)123(45)67')
-        ['123', '45(67)89', '123', '45', '67']
+    >>> outer_split('123')
+    ['123']
+    >>> outer_split('123(45(67)89)123(45)67')
+    ['123', '45(67)89', '123', '45', '67']
 
-        If expression is not balanced raises ``ValueError``.
+    If expression is not balanced raises ``ValueError``.
 
-        >>> outer_split('123(') # doctest: +ELLIPSIS
-        Traceback (most recent call last):
-            ...
-        ValueError: ...
+    >>> outer_split('123(') # doctest: +ELLIPSIS
+    Traceback (most recent call last):
+        ...
+    ValueError: ...
     """
     assert 2 == len(sep)
     start_sep, end_sep = sep

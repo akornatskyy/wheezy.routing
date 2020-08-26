@@ -10,8 +10,8 @@ RE_SPLIT = re.compile(r"(?P<n>{[\w:]+.*?})")
 
 
 def try_build_curly_route(pattern, finishing=True, kwargs=None, name=None):
-    """ Convert pattern expression into regex with
-        named groups and create regex route.
+    """Convert pattern expression into regex with
+    named groups and create regex route.
     """
     if isinstance(pattern, RegexRoute):
         return pattern
@@ -44,8 +44,8 @@ default_pattern = "s"
 
 
 def convert(s):
-    """ Convert curly expression into regex with
-        named groups.
+    """Convert curly expression into regex with
+    named groups.
     """
     parts = outer_split(s, sep="[]")
     parts[1::2] = ["(%s)?" % p for p in map(convert, parts[1::2])]
@@ -54,16 +54,16 @@ def convert(s):
 
 
 def convert_single(s):
-    """ Convert curly expression into regex with
-        named groups.
+    """Convert curly expression into regex with
+    named groups.
     """
     parts = RE_SPLIT.split(s)
     return "".join(map(replace, parts))
 
 
 def replace(val):
-    """ Replace ``{group_name:pattern_name}`` by regex with
-        named groups.
+    """Replace ``{group_name:pattern_name}`` by regex with
+    named groups.
     """
     if val.startswith("{") and val.endswith("}"):
         group_name, pattern_name = parse(val[1:-1])
@@ -73,10 +73,10 @@ def replace(val):
 
 
 def parse(s):
-    """ Parse ``s`` according to ``group_name:pattern_name``.
+    """Parse ``s`` according to ``group_name:pattern_name``.
 
-        There is just ``group_name``, return default
-        ``pattern_name``.
+    There is just ``group_name``, return default
+    ``pattern_name``.
     """
     if ":" in s:
         return tuple(s.split(":", 1))

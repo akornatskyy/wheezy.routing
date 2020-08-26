@@ -12,12 +12,11 @@ if PY3:  # pragma: nocover
 
 
 class RouteBuildersTestCase(unittest.TestCase):
-    """ Test the ``config.route_builders`` setting.
-    """
+    """Test the ``config.route_builders`` setting."""
 
     def test_builder_callable(self):
-        """ Ensure items in ``route_builders`` list are
-            callable(pattern, kwargs=None)
+        """Ensure items in ``route_builders`` list are
+        callable(pattern, kwargs=None)
         """
         import inspect
 

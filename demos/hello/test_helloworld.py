@@ -5,12 +5,10 @@ import unittest
 
 
 class MainTestCase(unittest.TestCase):
-    """ Test the ``main`` funcation call.
-    """
+    """Test the ``main`` funcation call."""
 
     def test_hello_match(self):
-        """
-        """
+        """"""
         from helloworld import main
 
         def start_response(status, response_headers):
@@ -24,8 +22,7 @@ class MainTestCase(unittest.TestCase):
         self.assertEquals(["Hello World!"], response)
 
     def test_any_path_match(self):
-        """
-        """
+        """"""
         from helloworld import main
 
         def start_response(status, response_headers):

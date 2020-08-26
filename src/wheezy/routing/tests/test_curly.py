@@ -6,8 +6,7 @@ import unittest
 
 class TryBuildCurlyRouteTestCase(unittest.TestCase):
     def test_build(self):
-        """ Ensure curly route is built.
-        """
+        """Ensure curly route is built."""
         from wheezy.routing.curly import try_build_curly_route
 
         route = try_build_curly_route("{locale:(en|ru)}")
@@ -17,12 +16,10 @@ class TryBuildCurlyRouteTestCase(unittest.TestCase):
 
 
 class PatternsTestCase(unittest.TestCase):
-    """ Test the ``curly.patterns`` dict.
-    """
+    """Test the ``curly.patterns`` dict."""
 
     def test_values(self):
-        """ Ensure patterns values are valid regex.
-        """
+        """Ensure patterns values are valid regex."""
         import re
 
         from wheezy.routing.curly import patterns
@@ -31,15 +28,13 @@ class PatternsTestCase(unittest.TestCase):
             assert re.compile(p)
 
     def test_default(self):
-        """ Make sure ``default_pattern`` is in ``patterns``.
-        """
+        """Make sure ``default_pattern`` is in ``patterns``."""
         from wheezy.routing.curly import default_pattern, patterns
 
         assert default_pattern in patterns
 
     def test_synonyms(self):
-        """ Make sure ``default_pattern`` is in ``patterns``.
-        """
+        """Make sure ``default_pattern`` is in ``patterns``."""
         from wheezy.routing.curly import patterns
 
         self.assertEquals(13, len(patterns))
@@ -57,12 +52,10 @@ class PatternsTestCase(unittest.TestCase):
 
 
 class ConvertTestCase(unittest.TestCase):
-    """ Test the ``curly.convert`` function.
-    """
+    """Test the ``curly.convert`` function."""
 
     def test_sigle_group_name(self):
-        """ A single group name.
-        """
+        """A single group name."""
         from wheezy.routing.curly import convert
 
         pattern = convert(r"abc/{id}")
@@ -70,8 +63,7 @@ class ConvertTestCase(unittest.TestCase):
         self.assertEquals("abc/(?P<id>[^/]+)", pattern)
 
     def test_two_groups(self):
-        """ Take two group names.
-        """
+        """Take two group names."""
         from wheezy.routing.curly import convert
 
         pattern = convert(r"abc/{n1}/{n2:s}")
@@ -80,12 +72,10 @@ class ConvertTestCase(unittest.TestCase):
 
 
 class ReplaceTestCase(unittest.TestCase):
-    """ Test the ``curly.replace`` function.
-    """
+    """Test the ``curly.replace`` function."""
 
     def test_no_curly_brackets(self):
-        """ ``val`` is not an expression in curly brackets.
-        """
+        """``val`` is not an expression in curly brackets."""
         from wheezy.routing.curly import replace
 
         p = replace("abc")
@@ -93,8 +83,7 @@ class ReplaceTestCase(unittest.TestCase):
         self.assertEquals("abc", p)
 
     def test_group_name_only(self):
-        """ ``val`` has group name only.
-        """
+        """``val`` has group name only."""
         from wheezy.routing.curly import replace
 
         p = replace("{abc}")
@@ -102,8 +91,7 @@ class ReplaceTestCase(unittest.TestCase):
         self.assertEquals("(?P<abc>[^/]+)", p)
 
     def test_pattern_name(self):
-        """ ``val`` has pattern name.
-        """
+        """``val`` has pattern name."""
         from wheezy.routing.curly import replace
 
         p = replace("{abc:int}")
@@ -111,8 +99,7 @@ class ReplaceTestCase(unittest.TestCase):
         self.assertEquals(r"(?P<abc>\d+)", p)
 
     def test_unknown_pattern_name(self):
-        """ ``val`` has pattern name that is unknown.
-        """
+        """``val`` has pattern name that is unknown."""
         from wheezy.routing.curly import replace
 
         p = replace("{abc:(x|y)}")
@@ -121,12 +108,10 @@ class ReplaceTestCase(unittest.TestCase):
 
 
 class ParseTestCase(unittest.TestCase):
-    """ Test the ``curly.parse`` function.
-    """
+    """Test the ``curly.parse`` function."""
 
     def test_no_colon(self):
-        """ there is no colon in input string
-        """
+        """there is no colon in input string"""
         from wheezy.routing import config
         from wheezy.routing.curly import parse
 
@@ -137,8 +122,7 @@ class ParseTestCase(unittest.TestCase):
         self.assertEquals(config.curly_default_pattern, pattern_name)
 
     def test_with_colon(self):
-        """ there is colon in input string
-        """
+        """there is colon in input string"""
         from wheezy.routing.curly import parse
 
         group_name, pattern_name = parse("abc:i")

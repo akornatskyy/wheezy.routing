@@ -8,8 +8,7 @@ from mock import Mock
 
 class BuildersTestCase(unittest.TestCase):
     def test_name_raises_error(self):
-        """ Name for intermediate route has no sense.
-        """
+        """Name for intermediate route has no sense."""
         from wheezy.routing.builders import build_route
 
         self.assertRaises(
@@ -24,8 +23,7 @@ class BuildersTestCase(unittest.TestCase):
         )
 
     def test_first_match(self):
-        """ First route builder match is returned.
-        """
+        """First route builder match is returned."""
         from wheezy.routing.builders import build_route
 
         mock_builders = [Mock(), Mock(), Mock()]
@@ -43,8 +41,7 @@ class BuildersTestCase(unittest.TestCase):
         assert not mock_builders[2].called
 
     def test_no_match(self):
-        """ If no match found raise error.
-        """
+        """If no match found raise error."""
         from wheezy.routing.builders import build_route
 
         self.assertRaises(

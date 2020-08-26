@@ -6,8 +6,7 @@ import unittest
 
 class TryRegexRouteTestCase(unittest.TestCase):
     def test_build(self):
-        """ Ensure plain route is built.
-        """
+        """Ensure plain route is built."""
         from wheezy.routing.regex import try_build_regex_route
 
         route = try_build_regex_route(".*")

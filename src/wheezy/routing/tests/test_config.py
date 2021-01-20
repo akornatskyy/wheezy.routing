@@ -1,7 +1,10 @@
 """ Unit tests for ``wheezy.routing.config``.
 """
 
+import inspect
 import unittest
+
+from wheezy.routing import config
 
 
 def callable(obj):
@@ -15,10 +18,6 @@ class RouteBuildersTestCase(unittest.TestCase):
         """Ensure items in ``route_builders`` list are
         callable(pattern, kwargs=None)
         """
-        import inspect
-
-        from wheezy.routing import config
-
         for builder in config.route_builders:
             assert builder
             assert callable(builder)

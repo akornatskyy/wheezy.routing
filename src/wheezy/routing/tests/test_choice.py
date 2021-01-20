@@ -3,12 +3,12 @@
 
 import unittest
 
+from wheezy.routing.choice import ChoiceRoute, try_build_choice_route
+
 
 class TryChoiceRouteTestCase(unittest.TestCase):
     def test_build(self):
         """Ensure choice route is built."""
-        from wheezy.routing.choice import try_build_choice_route
-
         route = try_build_choice_route("{locale:(en|ru)}")
         assert route
         assert route == try_build_choice_route(route)
@@ -18,8 +18,6 @@ class TryChoiceRouteTestCase(unittest.TestCase):
 class ChoiceRouteTestCase(unittest.TestCase):
     def test_match(self):
         """Ensure matches."""
-        from wheezy.routing.choice import ChoiceRoute
-
         r = ChoiceRoute("{locale:(en|ru)}/", True, {"x": "1"}, "test")
 
         matched, kwargs = r.match("en/")
@@ -42,8 +40,6 @@ class ChoiceRouteTestCase(unittest.TestCase):
 
     def test_path(self):
         """Ensure path is built correctly."""
-        from wheezy.routing.choice import ChoiceRoute
-
         r = ChoiceRoute("{locale:(en|ru)}/", True, {"locale": "en"}, "test")
 
         assert "ru/" == r.path({"locale": "ru"})

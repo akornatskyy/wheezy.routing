@@ -3,12 +3,12 @@
 
 import unittest
 
+from wheezy.routing.plain import PlainRoute, try_build_plain_route
+
 
 class TryPlainRouteTestCase(unittest.TestCase):
     def test_build(self):
         """Ensure plain route is built."""
-        from wheezy.routing.plain import try_build_plain_route
-
         route = try_build_plain_route("favicon.ico")
         assert route
         assert route == try_build_plain_route(route)
@@ -18,8 +18,6 @@ class TryPlainRouteTestCase(unittest.TestCase):
 class PlainRouteTestCase(unittest.TestCase):
     def test_match_finishing(self):
         """Equals match strategy."""
-        from wheezy.routing.plain import PlainRoute
-
         r = PlainRoute("abc", finishing=True, kwargs={"x": 2}, name="test")
 
         assert 1 == len(r.exact_matches)
@@ -35,8 +33,6 @@ class PlainRouteTestCase(unittest.TestCase):
 
     def test_match_intermediate(self):
         """Starts with strategy."""
-        from wheezy.routing.plain import PlainRoute
-
         r = PlainRoute("abc", finishing=False, kwargs={"x": 2}, name="ignore")
 
         assert (("abc", {"x": 2}),) == r.exact_matches
@@ -49,7 +45,5 @@ class PlainRouteTestCase(unittest.TestCase):
 
     def test_path(self):
         """Returns pattern."""
-        from wheezy.routing.plain import PlainRoute
-
         r = PlainRoute("abc", finishing=False, kwargs={}, name=None)
         assert "abc" == r.path()

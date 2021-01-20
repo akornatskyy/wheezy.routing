@@ -3,12 +3,12 @@
 
 import unittest
 
+from wheezy.routing.regex import RegexRoute, try_build_regex_route
+
 
 class TryRegexRouteTestCase(unittest.TestCase):
     def test_build(self):
         """Ensure plain route is built."""
-        from wheezy.routing.regex import try_build_regex_route
-
         route = try_build_regex_route(".*")
         assert route
         assert route == try_build_regex_route(route)
@@ -16,8 +16,6 @@ class TryRegexRouteTestCase(unittest.TestCase):
 
 class RegexRouteTestCase(unittest.TestCase):
     def test_match_no_kwargs(self):
-        from wheezy.routing.regex import RegexRoute
-
         r = RegexRoute(
             "abc/(?P<id>[^/]+)", finishing=True, kwargs=None, name="test"
         )
@@ -39,8 +37,6 @@ class RegexRouteTestCase(unittest.TestCase):
         assert (-1, None) == r.match("abc/")
 
     def test_match_with_kwargs(self):
-        from wheezy.routing.regex import RegexRoute
-
         defaults = {"lang": "en", "id": "0"}
         r = RegexRoute(
             "abc/(?P<id>[^/]+)", finishing=True, kwargs=defaults, name="test"
@@ -68,8 +64,6 @@ class RegexRouteTestCase(unittest.TestCase):
         assert (-1, None) == r.match("abc/")
 
     def test_path_no_kwargs(self):
-        from wheezy.routing.regex import RegexRoute
-
         r = RegexRoute(
             "abc/(?P<id>[^/]+)", finishing=True, kwargs=None, name="test"
         )
@@ -79,8 +73,6 @@ class RegexRouteTestCase(unittest.TestCase):
         self.assertRaises(KeyError, lambda: r.path({}))
 
     def test_path_with_kwargs(self):
-        from wheezy.routing.regex import RegexRoute
-
         r = RegexRoute(
             "abc/(?P<id>[^/]+)",
             finishing=True,

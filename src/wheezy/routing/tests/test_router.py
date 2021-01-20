@@ -2,14 +2,13 @@
 """
 
 import unittest
+from unittest.mock import Mock
 
-from mock import Mock
+from wheezy.routing.router import PathRouter, url
 
 
 class RouterTestCase(unittest.TestCase):
     def setUp(self):
-        from wheezy.routing.router import PathRouter
-
         self.mock_builder = Mock()
         self.r = PathRouter(route_builders=[self.mock_builder])
 
@@ -49,8 +48,6 @@ class RouterTestCase(unittest.TestCase):
 
 class RouterMatchTestCase(unittest.TestCase):
     def setUp(self):
-        from wheezy.routing.router import PathRouter
-
         self.r = PathRouter()
 
     def test_exact(self):
@@ -85,8 +82,6 @@ class RouterMatchTestCase(unittest.TestCase):
 
 class RouterPathForTestCase(unittest.TestCase):
     def setUp(self):
-        from wheezy.routing.router import PathRouter
-
         self.r = PathRouter()
 
     def test_exact(self):
@@ -109,8 +104,6 @@ class RouterPathForTestCase(unittest.TestCase):
 class UrlTestCase(unittest.TestCase):
     def test_url(self):
         """Check returns tuple."""
-        from wheezy.routing.router import url
-
         assert ("pattern", "handler", "kwargs", "name") == url(
             "pattern", "handler", "kwargs", "name"
         )

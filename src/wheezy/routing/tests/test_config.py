@@ -21,8 +21,10 @@ class RouteBuildersTestCase(unittest.TestCase):
         for builder in config.route_builders:
             assert builder
             assert callable(builder)
-            args, varargs, keywords, defaults = inspect.getargspec(builder)
-            self.assertEqual(["pattern", "finishing", "kwargs", "name"], args)
-            self.assertEqual(None, varargs)
-            self.assertEqual(None, keywords)
-            self.assertEqual((True, None, None), defaults)
+            spec = inspect.getfullargspec(builder)
+            self.assertEqual(
+                ["pattern", "finishing", "kwargs", "name"], spec.args
+            )
+            self.assertEqual(None, spec.varargs)
+            self.assertEqual(None, spec.varkw)
+            self.assertEqual((True, None, None), spec.defaults)

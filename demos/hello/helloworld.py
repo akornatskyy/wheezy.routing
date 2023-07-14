@@ -10,7 +10,6 @@ if sys.version_info[0] >= 3:
     def ntob(n, encoding):
         return n.encode(encoding)
 
-
 else:
 
     def ntob(n, encoding):

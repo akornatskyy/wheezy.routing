@@ -38,7 +38,7 @@ class PatternsTestCase(unittest.TestCase):
 
     def test_synonyms(self):
         """Make sure ``default_pattern`` is in ``patterns``."""
-        self.assertEquals(13, len(patterns))
+        self.assertEqual(13, len(patterns))
         synonyms_map = (
             ("i", ("int", "digits", "number")),
             ("w", ("word",)),
@@ -59,13 +59,13 @@ class ConvertTestCase(unittest.TestCase):
         """A single group name."""
         pattern = convert(r"abc/{id}")
 
-        self.assertEquals("abc/(?P<id>[^/]+)", pattern)
+        self.assertEqual("abc/(?P<id>[^/]+)", pattern)
 
     def test_two_groups(self):
         """Take two group names."""
         pattern = convert(r"abc/{n1}/{n2:s}")
 
-        self.assertEquals("abc/(?P<n1>[^/]+)/(?P<n2>[^/]+)", pattern)
+        self.assertEqual("abc/(?P<n1>[^/]+)/(?P<n2>[^/]+)", pattern)
 
 
 class ReplaceTestCase(unittest.TestCase):
@@ -75,25 +75,25 @@ class ReplaceTestCase(unittest.TestCase):
         """``val`` is not an expression in curly brackets."""
         p = replace("abc")
 
-        self.assertEquals("abc", p)
+        self.assertEqual("abc", p)
 
     def test_group_name_only(self):
         """``val`` has group name only."""
         p = replace("{abc}")
 
-        self.assertEquals("(?P<abc>[^/]+)", p)
+        self.assertEqual("(?P<abc>[^/]+)", p)
 
     def test_pattern_name(self):
         """``val`` has pattern name."""
         p = replace("{abc:int}")
 
-        self.assertEquals(r"(?P<abc>\d+)", p)
+        self.assertEqual(r"(?P<abc>\d+)", p)
 
     def test_unknown_pattern_name(self):
         """``val`` has pattern name that is unknown."""
         p = replace("{abc:(x|y)}")
 
-        self.assertEquals(r"(?P<abc>(x|y))", p)
+        self.assertEqual(r"(?P<abc>(x|y))", p)
 
 
 class ParseTestCase(unittest.TestCase):
@@ -103,13 +103,13 @@ class ParseTestCase(unittest.TestCase):
         """there is no colon in input string"""
         group_name, pattern_name = parse("abc")
 
-        self.assertEquals("abc", group_name)
-        self.assertEquals("s", pattern_name)
-        self.assertEquals(config.curly_default_pattern, pattern_name)
+        self.assertEqual("abc", group_name)
+        self.assertEqual("s", pattern_name)
+        self.assertEqual(config.curly_default_pattern, pattern_name)
 
     def test_with_colon(self):
         """there is colon in input string"""
         group_name, pattern_name = parse("abc:i")
 
-        self.assertEquals("abc", group_name)
-        self.assertEquals("i", pattern_name)
+        self.assertEqual("abc", group_name)
+        self.assertEqual("i", pattern_name)

@@ -12,21 +12,21 @@ class MainTestCase(unittest.TestCase):
         from helloworld import main
 
         def start_response(status, response_headers):
-            self.assertEquals("200 OK", status)
+            self.assertEqual("200 OK", status)
 
         environ = {"PATH_INFO": "/"}
         response = list(
             map(lambda c: c.decode("utf-8"), main(environ, start_response))
         )
 
-        self.assertEquals(["Hello World!"], response)
+        self.assertEqual(["Hello World!"], response)
 
     def test_any_path_match(self):
         """"""
         from helloworld import main
 
         def start_response(status, response_headers):
-            self.assertEquals("404 Not Found", status)
+            self.assertEqual("404 Not Found", status)
 
         for path in ("/a", "/b"):
             environ = {"PATH_INFO": path}
@@ -34,4 +34,4 @@ class MainTestCase(unittest.TestCase):
                 map(lambda c: c.decode("utf-8"), main(environ, start_response))
             )
 
-            self.assertEquals([""], response)
+            self.assertEqual([""], response)

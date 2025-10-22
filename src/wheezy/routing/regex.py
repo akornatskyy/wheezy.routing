@@ -111,7 +111,7 @@ def parse_pattern(pattern):
 
     >>> parse_pattern(r'abc/(?P<id>[^/]+)')
     ('abc/%(id)s', ['id'])
-    >>> parse_pattern(r'abc/(?P<n>[^/]+)/(?P<x>\\\w+)')
+    >>> parse_pattern(r'abc/(?P<n>[^/]+)/(?P<x>\\w+)')
     ('abc/%(n)s/%(x)s', ['n', 'x'])
     >>> parse_pattern(r'(?P<locale>(en|ru))/home')
     ('%(locale)s/home', ['locale'])
@@ -145,14 +145,14 @@ def strip_optional(pattern):
 
     at the end
 
-    >>> strip_optional('item(/(?P<id>\\\d+))?')
-    'item/(?P<id>\\\d+)'
+    >>> strip_optional('item(/(?P<id>\\\\d+))?')
+    'item/(?P<id>\\\\d+)'
 
     nested:
 
-    >>> p = '(?P<controller>\\\w+)(/(?P<action>\\\w+)(/(?P<id>\\\d+))?)?'
+    >>> p = '(?P<controller>\\\\w+)(/(?P<action>\\\\w+)(/(?P<id>\\\\d+))?)?'
     >>> strip_optional(p)
-    '(?P<controller>\\\w+)/(?P<action>\\\w+)/(?P<id>\\\d+)'
+    '(?P<controller>\\\\w+)/(?P<action>\\\\w+)/(?P<id>\\\\d+)'
     """
     if ")?" not in pattern:
         return pattern

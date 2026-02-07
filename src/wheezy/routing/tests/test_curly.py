@@ -1,6 +1,3 @@
-""" Unit tests for ``wheezy.routing.curly``.
-"""
-
 import re
 import unittest
 

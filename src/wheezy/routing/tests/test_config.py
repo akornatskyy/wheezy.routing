@@ -1,6 +1,3 @@
-""" Unit tests for ``wheezy.routing.config``.
-"""
-
 import inspect
 import unittest
 

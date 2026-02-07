@@ -1,6 +1,3 @@
-""" ``utils`` module.
-"""
-
 import re
 
 RE_STRIP_NAME = re.compile(r"(Handler|Controller|Page|View)$")

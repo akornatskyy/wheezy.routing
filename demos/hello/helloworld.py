@@ -1,6 +1,3 @@
-""" ``helloworld`` module.
-"""
-
 import sys
 
 from wheezy.routing import PathRouter

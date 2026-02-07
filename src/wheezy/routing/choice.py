@@ -1,6 +1,3 @@
-""" ``plain`` module.
-"""
-
 import re
 
 RE_CHOICE_ROUTE = re.compile(

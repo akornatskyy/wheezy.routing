@@ -1,6 +1,3 @@
-""" ``curly`` module.
-"""
-
 import re
 
 from wheezy.routing.regex import RegexRoute

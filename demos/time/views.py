@@ -1,6 +1,3 @@
-""" ``views`` module.
-"""
-
 from datetime import datetime
 
 from config import router as r

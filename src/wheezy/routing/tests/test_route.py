@@ -1,6 +1,3 @@
-""" Unit test for ``wheezy.routing.route``.
-"""
-
 import unittest
 
 from wheezy.routing.route import Route

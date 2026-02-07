@@ -1,7 +1,3 @@
-""" ``route`` module.
-"""
-
-
 class Route(object):
     """Route abstract contract."""
 

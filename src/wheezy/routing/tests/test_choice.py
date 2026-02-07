@@ -1,6 +1,3 @@
-""" Unit tests for ``wheezy.routing.plain``.
-"""
-
 import unittest
 
 from wheezy.routing.choice import ChoiceRoute, try_build_choice_route

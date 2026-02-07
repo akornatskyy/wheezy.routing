@@ -1,6 +1,3 @@
-""" ``router`` module.
-"""
-
 from warnings import warn
 
 from wheezy.routing.builders import build_route

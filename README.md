@@ -1,6 +1,6 @@
 # wheezy.routing
 
-[![Build Status](https://travis-ci.org/akornatskyy/wheezy.routing.svg?branch=master)](https://travis-ci.org/akornatskyy/wheezy.routing)
+[![tests](https://github.com/akornatskyy/wheezy.routing/actions/workflows/tests.yml/badge.svg)](https://github.com/akornatskyy/wheezy.routing/actions/workflows/tests.yml)
 [![Coverage Status](https://coveralls.io/repos/github/akornatskyy/wheezy.routing/badge.svg?branch=master)](https://coveralls.io/github/akornatskyy/wheezy.routing?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/wheezyrouting/badge/?version=latest)](https://wheezyrouting.readthedocs.io/en/latest/?badge=latest)
 [![pypi version](https://badge.fury.io/py/wheezy.routing.svg)](https://badge.fury.io/py/wheezy.routing)

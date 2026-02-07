@@ -1,2 +1,0 @@
-""" Package ``wheezy.routing.tests``.
-"""

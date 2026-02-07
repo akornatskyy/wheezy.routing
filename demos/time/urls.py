@@ -1,6 +1,3 @@
-""" ``urls`` module.
-"""
-
 from views import not_found, server_time, welcome
 
 from wheezy.routing import url

@@ -1,6 +1,3 @@
-""" Unit tests for ``wheezy.routing.regex``.
-"""
-
 import unittest
 
 from wheezy.routing.regex import RegexRoute, try_build_regex_route

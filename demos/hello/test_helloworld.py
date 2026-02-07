@@ -1,6 +1,3 @@
-""" Unit tests for ``helloworld`` module.
-"""
-
 import unittest
 
 

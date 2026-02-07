@@ -1,6 +1,3 @@
-""" Functional tests for ``time`` applications.
-"""
-
 import unittest
 
 

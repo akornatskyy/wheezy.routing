@@ -1,6 +1,3 @@
-""" Unit test for ``wheezy.routing.router``.
-"""
-
 import unittest
 from unittest.mock import Mock
 

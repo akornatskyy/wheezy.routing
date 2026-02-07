@@ -1,6 +1,3 @@
-""" ``app`` module.
-"""
-
 from config import router
 from urls import all_urls  # noqa: I201
 

@@ -1,6 +1,3 @@
-"""
-"""
-
 # flake8: noqa: W605
 
 import re

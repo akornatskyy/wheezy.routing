@@ -1,6 +1,3 @@
-""" ``config`` module.
-"""
-
 from wheezy.routing.choice import try_build_choice_route
 from wheezy.routing.curly import (
     default_pattern as curly_default_pattern,

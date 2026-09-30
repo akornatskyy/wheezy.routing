@@ -31,8 +31,7 @@ class ChoiceRoute(object):
         prefix, self.name, choice, suffix = m.groups()
         choices = choice.split("|")
         self.exact_matches = [
-            (prefix + c + suffix, dict(kwargs, **{self.name: c}))
-            for c in choices
+            (prefix + c + suffix, {**kwargs, self.name: c}) for c in choices
         ]
         self.patterns = [(p, (len(p), kw)) for p, kw in self.exact_matches]
         self.path_format = prefix + "%s" + suffix
